@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapitre 7 MANOVA à 1 facteur dans R | Mes apprentissages avec R</title>
+  <meta name="description" content="The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapitre 7 MANOVA à 1 facteur dans R | Mes apprentissages avec R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapitre 7 MANOVA à 1 facteur dans R | Mes apprentissages avec R" />
+  
+  <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="zco" />
+
+
+<meta name="date" content="2021-08-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"/>
+<link rel="next" href="visualisation-boxplots-avec-p-values-1.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#abc"><i class="fa fa-check"></i><b>1.1</b> Abc</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#def"><i class="fa fa-check"></i><b>1.2</b> Def</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#ghi"><i class="fa fa-check"></i><b>1.3</b> Ghi</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#jkl"><i class="fa fa-check"></i><b>1.4</b> Jkl</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html"><i class="fa fa-check"></i><b>2</b> ANOVA à mesures répétées avec R</a><ul>
+<li class="chapter" data-level="2.1" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#librairies"><i class="fa fa-check"></i><b>2.1</b> Librairies</a></li>
+<li class="chapter" data-level="2.2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#données"><i class="fa fa-check"></i><b>2.2</b> Données</a></li>
+<li class="chapter" data-level="2.3" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sommaire-des-données"><i class="fa fa-check"></i><b>2.3</b> Sommaire des données</a></li>
+<li class="chapter" data-level="2.4" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#visualisation-boxplots"><i class="fa fa-check"></i><b>2.4</b> Visualisation boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#détection-valeurs-aberrantes"><i class="fa fa-check"></i><b>2.5</b> Détection valeurs aberrantes</a></li>
+<li class="chapter" data-level="2.6" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#normalité"><i class="fa fa-check"></i><b>2.6</b> Normalité</a></li>
+<li class="chapter" data-level="2.7" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité"><i class="fa fa-check"></i><b>2.7</b> Sphéricité</a></li>
+<li class="chapter" data-level="2.8" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité-et-anova-mesures-repétées"><i class="fa fa-check"></i><b>2.8</b> Sphéricité et ANOVA, mesures repétées</a></li>
+<li class="chapter" data-level="2.9" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#test-post-hoc-mesures-repétées"><i class="fa fa-check"></i><b>2.9</b> Test post-hoc, mesures repétées</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html"><i class="fa fa-check"></i><b>3</b> Test de friedman avec R</a><ul>
+<li class="chapter" data-level="3.1" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#les-librairies"><i class="fa fa-check"></i><b>3.1</b> Les librairies</a></li>
+<li class="chapter" data-level="3.2" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#jeu-de-données"><i class="fa fa-check"></i><b>3.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="3.3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#statistiques-sommaires"><i class="fa fa-check"></i><b>3.3</b> Statistiques sommaires</a></li>
+<li class="chapter" data-level="3.4" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation"><i class="fa fa-check"></i><b>3.4</b> Visualisation</a></li>
+<li class="chapter" data-level="3.5" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#le-test"><i class="fa fa-check"></i><b>3.5</b> Le test</a></li>
+<li class="chapter" data-level="3.6" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#taille-de-leffet"><i class="fa fa-check"></i><b>3.6</b> Taille de l’effet</a></li>
+<li class="chapter" data-level="3.7" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#comparaisons-multiples-par-paires"><i class="fa fa-check"></i><b>3.7</b> Comparaisons multiples par paires</a></li>
+<li class="chapter" data-level="3.8" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#interprétation"><i class="fa fa-check"></i><b>3.8</b> Interprétation</a></li>
+<li class="chapter" data-level="3.9" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation-boxplots-avec-p-values"><i class="fa fa-check"></i><b>3.9</b> Visualisation : boxplots avec p-values</a></li>
+<li class="chapter" data-level="3.10" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#references"><i class="fa fa-check"></i><b>3.10</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html"><i class="fa fa-check"></i><b>4</b> Test de Chi-deux avec R</a><ul>
+<li class="chapter" data-level="4.1" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#jeu-de-données-simulées"><i class="fa fa-check"></i><b>4.1</b> Jeu de données simulées</a></li>
+<li class="chapter" data-level="4.2" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#le-test-1"><i class="fa fa-check"></i><b>4.2</b> Le test</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><i class="fa fa-check"></i><b>5</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses sont satisfaites</span></a><ul>
+<li class="chapter" data-level="5.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#liste-des-packages"><i class="fa fa-check"></i><b>5.1</b> Liste des packages</a></li>
+<li class="chapter" data-level="5.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-1"><i class="fa fa-check"></i><b>5.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#exploration-visuelle"><i class="fa fa-check"></i><b>5.3</b> Exploration visuelle</a></li>
+<li class="chapter" data-level="5.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance"><i class="fa fa-check"></i><b>5.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="5.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-de-linteraction-probable"><i class="fa fa-check"></i><b>5.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="5.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#réalisation-de-lanova-à-deux-facteurs"><i class="fa fa-check"></i><b>5.6</b> Réalisation de l’ANOVA à deux facteurs</a></li>
+<li class="chapter" data-level="5.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-des-résultats"><i class="fa fa-check"></i><b>5.7</b> Visualisation des résultats</a></li>
+<li class="chapter" data-level="5.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#vérification-des-hypothèses-de-validité"><i class="fa fa-check"></i><b>5.8</b> Vérification des hypothèses de validité</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#indépendance-des-résidus"><i class="fa fa-check"></i><b>5.8.1</b> Indépendance des résidus</a></li>
+<li class="chapter" data-level="5.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#normalité-des-résidus"><i class="fa fa-check"></i><b>5.8.2</b> Normalité des résidus</a></li>
+<li class="chapter" data-level="5.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#homogénéité-des-variances"><i class="fa fa-check"></i><b>5.8.3</b> Homogénéité des variances</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-significative"><i class="fa fa-check"></i><b>5.9</b> Démarche en cas d’interaction significative</a><ul>
+<li class="chapter" data-level="5.9.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#anova-à-un-facteur-group-et-comparaisons-2-à-2"><i class="fa fa-check"></i><b>5.9.1</b> ANOVA à un facteur (<code>group</code>) et comparaisons 2 à 2</a></li>
+<li class="chapter" data-level="5.9.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-à-lintérieur-dune-modalité"><i class="fa fa-check"></i><b>5.9.2</b> Comparaisons à l’intérieur d’une modalité</a></li>
+</ul></li>
+<li class="chapter" data-level="5.10" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-quantitative-significative"><i class="fa fa-check"></i><b>5.10</b> Démarche en cas d’interaction quantitative significative</a></li>
+<li class="chapter" data-level="5.11" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-non-significative"><i class="fa fa-check"></i><b>5.11</b> Démarche en cas d’interaction non significative</a><ul>
+<li class="chapter" data-level="5.11.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-2"><i class="fa fa-check"></i><b>5.11.1</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.11.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-1"><i class="fa fa-check"></i><b>5.11.2</b> Visualisation</a></li>
+<li class="chapter" data-level="5.11.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#lanova"><i class="fa fa-check"></i><b>5.11.3</b> L’ANOVA</a></li>
+<li class="chapter" data-level="5.11.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#ajustement-du-modèle-sans-le-terme-dinteraction"><i class="fa fa-check"></i><b>5.11.4</b> Ajustement du modèle sans le terme d’interaction</a></li>
+<li class="chapter" data-level="5.11.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-multiples"><i class="fa fa-check"></i><b>5.11.5</b> Comparaisons multiples</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#conclusion"><i class="fa fa-check"></i><b>5.12</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>6</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses ne sont pas satisfaites</span></a><ul>
+<li class="chapter" data-level="6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.1</b> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#libraires"><i class="fa fa-check"></i><b>6.2</b> Libraires</a></li>
+<li class="chapter" data-level="6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-des-données"><i class="fa fa-check"></i><b>6.3</b> Visualisation des données</a></li>
+<li class="chapter" data-level="6.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance-1"><i class="fa fa-check"></i><b>6.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="6.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-de-linteraction-probable-1"><i class="fa fa-check"></i><b>6.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="6.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité"><i class="fa fa-check"></i><b>6.6</b> Mise en évidence des défauts de normalité et d’homogénéité</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.6.1</b> Réalisation de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus"><i class="fa fa-check"></i><b>6.6.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus"><i class="fa fa-check"></i><b>6.6.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7</b> Utilisation d’une transformation log de la réponse</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7.1</b> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</a></li>
+<li class="chapter" data-level="6.7.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité"><i class="fa fa-check"></i><b>6.7.2</b> Evaluation de l’hypothèse de normalité</a></li>
+<li class="chapter" data-level="6.7.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité"><i class="fa fa-check"></i><b>6.7.3</b> Evaluation de l’hypothèse d’homogénéité</a></li>
+<li class="chapter" data-level="6.7.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#résultats"><i class="fa fa-check"></i><b>6.7.4</b> Résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-boxcox-de-la-réponse"><i class="fa fa-check"></i><b>6.8</b> Utilisation d’une transformation BoxCox de la réponse</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#définition-et-réalisation"><i class="fa fa-check"></i><b>6.8.1</b> Définition et réalisation</a></li>
+<li class="chapter" data-level="6.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+<li class="chapter" data-level="6.8.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#exploitation-des-résultats"><i class="fa fa-check"></i><b>6.8.4</b> Exploitation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#conclusion-1"><i class="fa fa-check"></i><b>6.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html"><i class="fa fa-check"></i><b>7</b> <span>MANOVA à 1 facteur dans R</span></a><ul>
+<li class="chapter" data-level="7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#introduction-1"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#prérequis"><i class="fa fa-check"></i><b>7.2</b> Prérequis</a></li>
+<li class="chapter" data-level="7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#jeu-de-données-3"><i class="fa fa-check"></i><b>7.3</b> Jeu de données</a></li>
+<li class="chapter" data-level="7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-2"><i class="fa fa-check"></i><b>7.4</b> Visualisation</a></li>
+<li class="chapter" data-level="7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#statistiques-descriptives"><i class="fa fa-check"></i><b>7.5</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-de-linteraction-probable-2"><i class="fa fa-check"></i><b>7.6</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#hypothèses-et-tests-préliminaires"><i class="fa fa-check"></i><b>7.7</b> Hypothèses et tests préliminaires</a><ul>
+<li class="chapter" data-level="7.7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-taille-des-échantillons"><i class="fa fa-check"></i><b>7.7.1</b> Vérifier l’hypothèse de taille des échantillons</a></li>
+<li class="chapter" data-level="7.7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-les-valeurs-aberrantes-univariées"><i class="fa fa-check"></i><b>7.7.2</b> Identifier les valeurs aberrantes univariées</a></li>
+<li class="chapter" data-level="7.7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#détecter-les-valeurs-aberrantes-multivariées"><i class="fa fa-check"></i><b>7.7.3</b> Détecter les valeurs aberrantes multivariées</a></li>
+<li class="chapter" data-level="7.7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-normalité-univariée"><i class="fa fa-check"></i><b>7.7.4</b> Vérifier l’hypothèse de normalité univariée</a></li>
+<li class="chapter" data-level="7.7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#normalité-à-plusieurs-variables"><i class="fa fa-check"></i><b>7.7.5</b> Normalité à plusieurs variables</a></li>
+<li class="chapter" data-level="7.7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-la-multicollinéarité"><i class="fa fa-check"></i><b>7.7.6</b> Identifier la multicollinéarité</a></li>
+<li class="chapter" data-level="7.7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-linéarité"><i class="fa fa-check"></i><b>7.7.7</b> Vérifier l’hypothèse de linéarité</a></li>
+<li class="chapter" data-level="7.7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-des-covariances"><i class="fa fa-check"></i><b>7.7.8</b> Vérifier l’hypothèse d’homogénéité des covariances</a></li>
+<li class="chapter" data-level="7.7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-de-la-variance"><i class="fa fa-check"></i><b>7.7.9</b> Vérifier l’hypothèse d’homogénéité de la variance</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#manova-le-test"><i class="fa fa-check"></i><b>7.8</b> MANOVA, le test</a></li>
+<li class="chapter" data-level="7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#tests-post-hoc"><i class="fa fa-check"></i><b>7.9</b> Tests post-hoc</a><ul>
+<li class="chapter" data-level="7.9.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#calculer-lanova-à-un-facteur"><i class="fa fa-check"></i><b>7.9.1</b> Calculer l’ANOVA à un facteur</a></li>
+<li class="chapter" data-level="7.9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#les-comparaisons-par-paires"><i class="fa fa-check"></i><b>7.9.2</b> Les comparaisons par paires</a></li>
+</ul></li>
+<li class="chapter" data-level="7.10" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#interprétation-des-résultats"><i class="fa fa-check"></i><b>7.10</b> Interprétation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html"><i class="fa fa-check"></i><b>8</b> Visualisation : Boxplots avec p-values</a><ul>
+<li class="chapter" data-level="8.1" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html#résumé"><i class="fa fa-check"></i><b>8.1</b> Résumé</a></li>
+<li class="chapter" data-level="8.2" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html#references-1"><i class="fa fa-check"></i><b>8.2</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mes apprentissages avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="manova-à-1-facteur-dans-r" class="section level1">
+<h1><span class="header-section-number">Chapitre 7</span> <a href="https://www.datanovia.com/en/fr/lessons/manova-a-un-facteur-dans-r/">MANOVA à 1 facteur dans R</a></h1>
+<div id="introduction-1" class="section level2">
+<h2><span class="header-section-number">7.1</span> Introduction</h2>
+<p>L’Analyse Multivariée de la Variance (MANOVA pour Multivariate Analysis Of Variance) est une analyse de variance avec 2 ou plusieurs variables-réponses continues.</p>
+<p>Les tests MANOVA à 1 facteur testent simultanément les différences statistiques pour plusieurs variables-réponses en fonction d’une seule variable de groupement.</p>
+<blockquote>
+<p><strong>Par exemple :</strong></p>
+<p>Nous pouvons mener une expérience où nous donnons deux traitements (<strong>A et B</strong>) à deux groupes de souris, et nous sommes intéressés par le <strong>poids</strong> et la <strong>taille</strong> des souris.</p>
+<p>Dans ce cas, le <strong>poids</strong> et la <strong>taille</strong> des souris sont nos variables-réponses (ou dépendantes), et notre hypothèse est que les 2, ensemble, sont affectés par la différence de traitement.</p>
+<p>Une analyse multivariée de la variance pourrait être utilisée pour vérifier cette hypothèse.</p>
+</blockquote>
+<p>La procédure de MANOVA peut se résumer comme suit :</p>
+<ol style="list-style-type: decimal">
+<li>Créer une nouvelle variable composite qui est une combinaison linéaire de toutes les variables-réponses.</li>
+<li>Comparer les valeurs moyennes de cette nouvelle variable entre les groupes.</li>
+</ol>
+<p>Cet article décrit comment réaliser le test MANOVA à 1 facteur dans R.</p>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>MANOVA est approprié dans des situations expérimentales où nous avons plusieurs variables-réponses (variables-dépendantes) qui mesurent toutes différents aspects d’un thème cohésif.</p>
+<p>Par exemple :</p>
+<p>plusieurs notes d’examen pour avoir une mesure du niveau global de rendement scolaire.</p>
+</blockquote>
+</div>
+<div id="prérequis" class="section level2">
+<h2><span class="header-section-number">7.2</span> Prérequis</h2>
+<p>Assurez-vous d’avoir installé les paquets R suivants :</p>
+<ul>
+<li><code>tidyverse</code> pour la manipulation et la visualisation des données</li>
+<li><code>ggpubr</code> pour créer facilement des graphiques prêts à la publication</li>
+<li><code>rstatix</code> pour des analyses statistiques faciles</li>
+<li><code>car</code> pour les analyses MANOVA</li>
+<li><code>broom</code> pour l’affichage d’un beau résumé des tests statistiques sous forme de dataframe</li>
+<li><code>datarium</code> contient les jeux de données requis pour ce chapitre</li>
+</ul>
+<p>Commencez par charger ces paquets (ou modules) R.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(ggpubr)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(rstatix)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(car)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">library</span>(GGally)    <span class="co"># ggpairs(), matrice de nuage de points</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw">library</span>(Rmisc)     <span class="co"># summarySE(), moy et IC essais factoriels, ...</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<p>Il y a des conflits entre packages. Il faudra parfois rappeler le module avant la fonction. J’ai aussi chargé tidyverse en dernier en fonction.</p>
+</div>
+<div id="jeu-de-données-3" class="section level2">
+<h2><span class="header-section-number">7.3</span> Jeu de données</h2>
+<p>Nous utiliserons le jeu de données intégré à R <code>iris</code> en Sélectionnant les colonnes d’intérêt. Renommons les variables en français.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">df &lt;-<span class="st"> </span>iris <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="st">  </span><span class="kw">select</span>(Sepal.Length, Petal.Length, Species) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="st">  </span><span class="kw">add_column</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(iris), <span class="dt">.before =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">long_sepal =</span> Sepal.Length, </a>
+<a class="sourceLine" id="cb2-5" title="5">                <span class="dt">long_petal =</span> Petal.Length, </a>
+<a class="sourceLine" id="cb2-6" title="6">                <span class="dt">especes =</span> Species)</a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="kw">head</span>(df)</a></code></pre></div>
+<pre><code>##   id long_sepal long_petal especes
+## 1  1        5.1        1.4  setosa
+## 2  2        4.9        1.4  setosa
+## 3  3        4.7        1.3  setosa
+## 4  4        4.6        1.5  setosa
+## 5  5        5.0        1.4  setosa
+## 6  6        5.4        1.7  setosa</code></pre>
+</div>
+<div id="visualisation-2" class="section level2">
+<h2><span class="header-section-number">7.4</span> Visualisation</h2>
+<p>Le code R ci-dessous crée un boxplot fusionné de <code>long_sepal</code> et <code>long_petal</code> par groupes de <code>especes</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">ggboxplot</span>(df, <span class="dt">x =</span> <span class="st">&quot;especes&quot;</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;long_sepal&quot;</span>, <span class="st">&quot;long_petal&quot;</span>), <span class="dt">merge =</span> <span class="ot">TRUE</span>, <span class="dt">palette =</span> <span class="st">&quot;jco&quot;</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="statistiques-descriptives" class="section level2">
+<h2><span class="header-section-number">7.5</span> Statistiques descriptives</h2>
+<p>Calculer des statistiques descriptives (moyenne, écart-type, ic) par groupe pour chaque variable des résultats :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">df_moy &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="st">  </span><span class="kw">get_summary_stats</span>(long_sepal, long_petal, <span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</a></code></pre></div>
+</div>
+<div id="visualisation-de-linteraction-probable-2" class="section level2">
+<h2><span class="header-section-number">7.6</span> Visualisation de l’interaction probable</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">p &lt;-<span class="st"> </span><span class="kw">position_dodge</span>(<span class="fl">0.1</span>) <span class="co"># pour éviter le chevauchement sur le graph</span></a>
+<a class="sourceLine" id="cb6-2" title="2"></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw">ggplot</span>(df_moy, <span class="kw">aes</span>(<span class="dt">x =</span> especes, <span class="dt">y =</span> mean, <span class="dt">colour =</span> variable, <span class="dt">group =</span> variable)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="st">  </span><span class="co">#geom_errorbar(aes(ymin = variable - sd, ymax = variable + sd), width =.1, position = p) +</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>[=&gt; Une interaction entre les facteurs <code>espèces</code> et <code>la longueur de l'organe mesuré</code> pourrait être présente.]</p>
+</div>
+<div id="hypothèses-et-tests-préliminaires" class="section level2">
+<h2><span class="header-section-number">7.7</span> Hypothèses et tests préliminaires</h2>
+<p>Le test MANOVA formule les hypothèses suivantes au sujet des données :</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Taille adéquate de l’échantillon</strong>. Règle empirique : la taille <code>n</code> dans chaque cellule est supérieure au nombre de variables-réponses.</p></li>
+<li><p><strong>Indépendance des observations</strong>. Chaque sujet ne doit appartenir qu’à un seul groupe. Il n’y a aucun lien entre les observations de chaque groupe. Il n’est pas permis d’avoir des mesures répétées pour les mêmes participants. La sélection des échantillons doit être complètement aléatoire.</p></li>
+<li><p><strong>Absence de valeurs aberrantes univariées ou multivariées</strong>.</p></li>
+<li><p><strong>Normalité à plusieurs variables</strong>. La fonction R <code>mshapiro_test( )</code> [paquet <code>rstatix</code>] peut être utilisée pour effectuer le test de Shapiro-Wilk de normalité multivariée.</p></li>
+<li><p><strong>Absence de multicollinéarité</strong>. Les variables dépendantes (variables-réponses) ne peuvent pas être trop corrélées les unes aux autres. Aucune corrélation ne doit être supérieure à <strong>r = 0,90</strong> (Tabachnick and Fidell (2012)).</p></li>
+<li><p><strong>Linéarité entre toutes les variables-réponses pour chaque groupe</strong>.</p></li>
+<li><p><strong>Homogénéité des variances</strong>. Le test de Levene peut être utilisé pour tester l’égalité des variances entre les groupes. Les valeurs non significatives du test de Levene indiquent une variance égale entre les groupes.</p></li>
+<li><p><strong>Homogénéité des matrices de variance-covariance</strong>. Le <strong>Test M de Box</strong> permet de vérifier l’égalité de covariance entre les groupes. C’est l’équivalent d’une homogénéité multivariée de la variance. <strong>Ce test est considéré comme très sensible. Par conséquent, la significativité de ce test est déterminée à alpha = 0,001</strong>.</p></li>
+</ol>
+<div id="vérifier-lhypothèse-de-taille-des-échantillons" class="section level3">
+<h3><span class="header-section-number">7.7.1</span> Vérifier l’hypothèse de taille des échantillons</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">N =</span> dplyr<span class="op">::</span><span class="kw">n</span>())</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 2
+##   especes        N
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 setosa        50
+## 2 versicolor    50
+## 3 virginica     50</code></pre>
+<p>Comme le tableau ci-dessus montre 50 observations par groupe, l’hypothèse de tailles d’échantillon adéquates est satisfaite (N &gt; au nombre de variables réponses).</p>
+</div>
+<div id="identifier-les-valeurs-aberrantes-univariées" class="section level3">
+<h3><span class="header-section-number">7.7.2</span> Identifier les valeurs aberrantes univariées</h3>
+<p>Les valeurs aberrantes univariées peuvent être facilement identifiées à l’aide des méthodes de boxplots implémentées dans la fonction R <code>identify_outliers()</code> [package <code>rstatix</code>].</p>
+<p>Grouper les données par espèces et ensuite, identifier les valeurs aberrantes dans la variable <code>long_sepal</code> :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="st">  </span><span class="kw">identify_outliers</span>(long_sepal)</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 6
+##   especes      id long_sepal long_petal is.outlier is.extreme
+##   &lt;fct&gt;     &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     
+## 1 virginica   107        4.9        4.5 TRUE       FALSE</code></pre>
+<p>Regrouper les données par especes à nouveau et ensuite, identifier les valeurs aberrantes dans l’autre variable réponse <code>long_petal</code> :</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="st">  </span><span class="kw">identify_outliers</span>(long_petal)</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 6
+##   especes       id long_sepal long_petal is.outlier is.extreme
+##   &lt;fct&gt;      &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     
+## 1 setosa        14        4.3        1.1 TRUE       FALSE     
+## 2 setosa        23        4.6        1   TRUE       FALSE     
+## 3 setosa        25        4.8        1.9 TRUE       FALSE     
+## 4 setosa        45        5.1        1.9 TRUE       FALSE     
+## 5 versicolor    99        5.1        3   TRUE       FALSE</code></pre>
+<p>Il n’y a pas de <strong>valeurs extrêmes univariées</strong> dans les variables <code>long_sepal</code> et <code>long_petal</code>, telles qu’évaluées par les méthodes des boxplots.</p>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>Dans le cas où vous avez des valeurs extrêmes aberrantes, cela peut être dû à des erreurs de saisie de données, ou des erreurs de mesure ou encore des valeurs inhabituelles.</p>
+<p>Vous pouvez de toute façon inclure la valeur aberrante dans l’analyse si vous ne croyez pas que le résultat sera affecté de façon substantielle. Ceci peut être évalué en comparant le résultat du MANOVA avec et du MANOVA sans la valeur aberrante.</p>
+<p>N’oubliez pas de rapporter dans votre section des résultats écrits toutes les décisions que vous prenez concernant les valeurs aberrantes que vous trouvez.</p>
+</blockquote>
+</div>
+<div id="détecter-les-valeurs-aberrantes-multivariées" class="section level3">
+<h3><span class="header-section-number">7.7.3</span> Détecter les valeurs aberrantes multivariées</h3>
+<p>Les valeurs aberrantes multivariées sont des points de données qui ont une combinaison inhabituelle de valeurs des variables-réponse (ou variables-dépendantes).</p>
+<p>Dans le contexte MANOVA, <strong>la distance de Mahalanobis</strong> est généralement utilisée pour détecter les valeurs aberrantes multivariées. Cette distance nous indique la distance entre une observation et le centre du nuage, en tenant compte également de la forme (covariance) du nuage.</p>
+<p>La fonction <code>mahalanobis_distance()</code> [package <code>rstatix</code>] peut être facilement utilisée pour calculer la distance de Mahalanobis et pour repérer les outliers multivariés. Vous trouverez plus d’informations dans la documentation de la fonction.</p>
+<p>Cette mesure doit être calculée par groupes (ici les groupes d’espèces) : calculer la distance par groupes et filtrer les valeurs aberrantes. Utilisez <code>-id</code> pour omettre la colonne <code>id</code> dans le calcul. Retourner toujours un dataframe.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="st"> </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="st"> </span><span class="kw">mahalanobis_distance</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="st"> </span><span class="kw">filter</span>(is.outlier <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="st"> </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
+<pre><code>## [1] id         long_sepal long_petal mahal.dist is.outlier
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>Il n’y a pas de valeurs aberrantes multivariées dans les données, selon la distance de Mahalanobis (p &gt; 0,001).</p>
+<blockquote>
+<p>Si vous avez des valeurs aberrantes multivariées, vous pouvez envisager d’exécuter MANOVA avant et après avoir supprimé les valeurs aberrantes pour vérifier si leur présence modifie ou non les résultats. Vous devez dans tous les cas faire part de votre décision finale dans votre rapport.</p>
+</blockquote>
+</div>
+<div id="vérifier-lhypothèse-de-normalité-univariée" class="section level3">
+<h3><span class="header-section-number">7.7.4</span> Vérifier l’hypothèse de normalité univariée</h3>
+<p>L’hypothèse de normalité peut être vérifiée en calculant le <strong>test de Shapiro-Wilk</strong> pour chaque variable-réponse à chaque niveau de la variable de groupement. Si les données sont normalement distribuées, la p-value doit être supérieure à 0,05.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="st">  </span><span class="kw">shapiro_test</span>(long_sepal, long_petal) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="st">  </span><span class="kw">arrange</span>(variable)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   especes    variable   statistic      p
+##   &lt;fct&gt;      &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt;
+## 1 setosa     long_petal     0.955 0.0548
+## 2 versicolor long_petal     0.966 0.158 
+## 3 virginica  long_petal     0.962 0.110 
+## 4 setosa     long_sepal     0.978 0.460 
+## 5 versicolor long_sepal     0.978 0.465 
+## 6 virginica  long_sepal     0.971 0.258</code></pre>
+<p>Les longueurs des sépales et des pétales sont normalement distribuées pour chaque groupe d’espèces, tel qu’évalué par le test de Shapiro-Wilk (p &gt; 0,05).</p>
+<p>Vous pouvez également créer un QQplot pour chaque groupe. Le graphique QQplot dessine la corrélation entre une donnée définie et la distribution normale.</p>
+<p>QQplot de la longueur des sépales</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">ggqqplot</span>(df, <span class="st">&quot;long_sepal&quot;</span>, <span class="dt">facet.by =</span> <span class="st">&quot;especes&quot;</span>,</a>
+<a class="sourceLine" id="cb17-2" title="2">         <span class="dt">ylab =</span> <span class="st">&quot;Longueur des sépales&quot;</span>, <span class="dt">ggtheme =</span> <span class="kw">theme_bw</span>())</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>QQplot de la longueur des pétales</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">ggqqplot</span>(df, <span class="st">&quot;long_sepal&quot;</span>, <span class="dt">facet.by =</span> <span class="st">&quot;especes&quot;</span>,</a>
+<a class="sourceLine" id="cb18-2" title="2">         <span class="dt">ylab =</span> <span class="st">&quot;Longueur des pétales&quot;</span>, <span class="dt">ggtheme =</span> <span class="kw">theme_bw</span>())</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Tous les points se situent approximativement le long de la ligne de référence, pour chaque groupe. Nous pouvons donc supposer la normalité des données.</p>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>Si la taille de votre échantillon est supérieure à 50, le graphique de normalité QQplot est préféré parce qu’avec des échantillons de plus grande taille, le test de Shapiro-Wilk devient très sensible même à un écart mineur par rapport à la normale.</p>
+</blockquote>
+<blockquote>
+<p><strong>Dans le cas où les hypothèses ne sont pas satisfaites :</strong></p>
+<p>Vous pouvez envisager d’exécuter MANOVA sur les données <strong>après avoir transformé les variables-réponses</strong>.</p>
+<p>Vous pouvez également effectuer le test quand même car MANOVA est assez robuste aux écarts de normalité.</p>
+</blockquote>
+</div>
+<div id="normalité-à-plusieurs-variables" class="section level3">
+<h3><span class="header-section-number">7.7.5</span> Normalité à plusieurs variables</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw">select</span>(long_sepal, long_petal) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="st">  </span><span class="kw">mshapiro_test</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##   statistic p.value
+##       &lt;dbl&gt;   &lt;dbl&gt;
+## 1     0.995   0.855</code></pre>
+<p>Le test n’est pas significatif (p &gt; 0,05), on peut donc supposer une normalité multivariée.</p>
+</div>
+<div id="identifier-la-multicollinéarité" class="section level3">
+<h3><span class="header-section-number">7.7.6</span> Identifier la multicollinéarité</h3>
+<p>Idéalement, la corrélation entre les variables-réponses devrait être modérée, pas trop élevée. Une corrélation supérieure à 0,9 est une indication de la multicollinéarité, ce qui est problématique pour MANOVA.</p>
+<blockquote>
+<p>**Par contre :</p>
+<p>Si la corrélation est trop faible, vous devriez envisager d’exécuter une ANOVA à 1 facteur pour chaque variable-réponse.**</p>
+</blockquote>
+<p>Calculer des coefficients de corrélation de Pearson par paire entre les variables-réponses. Dans le code R suivant, nous utiliserons la fonction <code>cor_test()</code> [package <code>rstatix</code>].</p>
+<blockquote>
+<p>Si vous avez plus de deux variables de résultats, envisagez d’utiliser la fonction <code>cor_mat()</code> :</p>
+</blockquote>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">cor_test</span>(long_sepal, long_petal)</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 8
+##   var1       var2         cor statistic        p conf.low conf.high method 
+##   &lt;chr&gt;      &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;  
+## 1 long_sepal long_petal  0.87      21.6 1.04e-47    0.827     0.906 Pearson</code></pre>
+<p>Il n’y a pas de multicollinéarité, selon la corrélation de Pearson (r = 0,87, p &lt; 0,0001).</p>
+<blockquote>
+<p>**Dans le cas d’une multicollinéarité :</p>
+<p>Vous pourriez envisager de supprimer l’une des variables-réponses qui est fortement corrélée.**</p>
+</blockquote>
+</div>
+<div id="vérifier-lhypothèse-de-linéarité" class="section level3">
+<h3><span class="header-section-number">7.7.7</span> Vérifier l’hypothèse de linéarité</h3>
+<p>La relation, par paire, entre les variables-réponse doit être linéaire pour chaque groupe. Ceci peut être vérifié visuellement en créant une matrice de nuage de points à l’aide de la fonction R <code>ggpairs()</code> [package <code>GGally</code>]. Dans notre exemple, nous n’avons qu’une seule paire :</p>
+<p>Créer une matrice de nuage de points par groupe</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">results &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">select</span>(long_sepal, long_petal, especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="st">  </span><span class="kw">doo</span>(<span class="op">~</span><span class="kw">ggpairs</span>(.) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>(), <span class="dt">result =</span> <span class="st">&quot;plots&quot;</span>)</a>
+<a class="sourceLine" id="cb23-5" title="5">results</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 2
+##   especes    plots 
+##   &lt;fct&gt;      &lt;list&gt;
+## 1 setosa     &lt;gg&gt;  
+## 2 versicolor &lt;gg&gt;  
+## 3 virginica  &lt;gg&gt;</code></pre>
+<p>Afficher les graphiques. Les plots sont affichés dans l’ordre tel que présenté dans results ([[1]] setosa - [[2]] versicolor - [[3]] virginica).</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">results<span class="op">$</span>plots</a></code></pre></div>
+<pre><code>## [[1]]</code></pre>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre><code>## 
+## [[2]]</code></pre>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
+<pre><code>## 
+## [[3]]</code></pre>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-16-3.png" width="672" /></p>
+<p>Il y a une relation linéaire entre la longueur des sépales et la longueur des pétales dans chaque groupe d’espèces, telle qu’évaluée par le nuage de points.</p>
+<blockquote>
+<p>** Dans le cas où vous détectez des relations non linéaires, vous pouvez :</p>
+<ul>
+<li>transformer ou supprimer les variables-réponses concernées ;</li>
+<li>ou exécuter l’analyse de toute façon. Vous perdrez un peu de puissance.</li>
+</ul>
+</blockquote>
+</div>
+<div id="vérifier-lhypothèse-dhomogénéité-des-covariances" class="section level3">
+<h3><span class="header-section-number">7.7.8</span> Vérifier l’hypothèse d’homogénéité des covariances</h3>
+<p>Ceci peut être évalué à l’aide du <strong>test M de Box</strong> implémenté dans le package <code>rstatix</code>.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw">box_m</span>(df[, <span class="kw">c</span>(<span class="st">&quot;long_sepal&quot;</span>, <span class="st">&quot;long_petal&quot;</span>)], df<span class="op">$</span>especes)</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 4
+##   statistic  p.value parameter method                                           
+##       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                                            
+## 1      58.4 9.62e-11         6 Box&#39;s M-test for Homogeneity of Covariance Matri~</code></pre>
+<p>Le test est statistiquement significatif (p &lt; 0,001), <strong>donc les données ont violé l’hypothèse de l’homogénéité des matrices de variance-covariance</strong>.</p>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>Si vous avez un plan d’échantillonnage équilibré (c.-à-d. des groupes de taille similaire), vous n’avez pas à vous soucier trop de la violation de l’homogénéité des matrices de variances-covariances et vous pouvez continuer votre analyse.</p>
+<p>Cependant, un plan déséquilibré est problématique. Les solutions possibles sont les suivantes :</p>
+<ol style="list-style-type: decimal">
+<li>transformer les variables dépendantes ;</li>
+<li>exécuter le test quand même, mais en utilisant la <strong>statistique multivariée de Pillai</strong> au lieu de la statistique de <strong>Wilks</strong>.</li>
+</ol>
+</blockquote>
+</div>
+<div id="vérifier-lhypothèse-dhomogénéité-de-la-variance" class="section level3">
+<h3><span class="header-section-number">7.7.9</span> Vérifier l’hypothèse d’homogénéité de la variance</h3>
+<p>Pour chacune des variables-réponses, le test MANOVA suppose qu’il y a des variances égales entre les groupes. Ceci peut être vérifié à l’aide du test de Levene d’égalité des variances. Fonction R clé : <code>levene_test()</code> [paquet <code>rstatix</code>].</p>
+<p>Procédure :</p>
+<ol style="list-style-type: decimal">
+<li>Rassembler les variables-réponses en paires clé-valeur (=&gt; transformer le tableau en format long)</li>
+<li>Grouper par variable</li>
+<li>Calculer le test de Levene</li>
+</ol>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-2" title="2"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;vd&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;valeur&quot;</span>, long_sepal, long_petal) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># vd = variables dépendantes</span></a>
+<a class="sourceLine" id="cb31-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(vd) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="st">  </span><span class="kw">levene_test</span>(valeur <span class="op">~</span><span class="st"> </span>especes)</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 5
+##   vd           df1   df2 statistic            p
+##   &lt;chr&gt;      &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+## 1 long_petal     2   147     19.5  0.0000000313
+## 2 long_sepal     2   147      6.35 0.00226</code></pre>
+<p>Le test de Levene est significatif (p &lt; 0,05), les variances ne sont donc pas homogènes.</p>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>Si vous n’avez pas d’homogénéité des variances, vous pouvez essayer de transformer la variable-réponse (dépendante) pour corriger l’inégalité des variances.</p>
+<p>Alternativement, vous pouvez continuer, mais accepter un niveau de significativité statistique inférieur (niveau alpha) pour votre résultat MANOVA.</p>
+<p>De plus, toute ANOVA univariée (de suivi ?) devra être corrigée pour cette violation (c.-à-d. que vous devrez utiliser différents tests post-hoc).</p>
+</blockquote>
+</div>
+</div>
+<div id="manova-le-test" class="section level2">
+<h2><span class="header-section-number">7.8</span> MANOVA, le test</h2>
+<hr />
+<p>Il existe quatre types différents de statistiques multivariées qui peuvent être utilisées pour calculer MANOVA. Ce sont :</p>
+<ol style="list-style-type: decimal">
+<li>Pillai,</li>
+<li>Wilks,</li>
+<li>Hotelling-Lawley,</li>
+<li>ou Roy.</li>
+</ol>
+<p>La statistique multivariée la plus couramment recommandée est le <strong>Lambda de Wilks</strong>.</p>
+<p>Cependant, le <strong>trace de Pillai</strong> est plus robuste et est recommandé lorsque vous avez un <strong>plan déséquilibré</strong> et un résultat du <strong>test M de Box</strong> qui est statistiquement significatif (comme dans notre exemple, voir section précédente).</p>
+<p>Notez que <code>Pillai</code> est la valeur par défaut de la fonction R <code>Manova()</code> [package <code>car</code>].</p>
+<hr />
+<p>Calculer MANOVA :</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">model &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">cbind</span>(long_sepal, long_petal) <span class="op">~</span><span class="st"> </span>especes, df)</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="kw">Manova</span>(model, <span class="dt">test.statistic =</span> <span class="st">&quot;Pillai&quot;</span>)</a></code></pre></div>
+<pre><code>## 
+## Type II MANOVA Tests: Pillai test statistic
+##         Df test stat approx F num Df den Df    Pr(&gt;F)    
+## especes  2    0.9885   71.829      4    294 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Il y a une différence statistiquement significative entre les espèces sur les variables dépendantes combinées (<code>long_sepal</code> et <code>long_petal</code>), F(4, 294) = 71.829, p &lt; 0.0001.</p>
+</div>
+<div id="tests-post-hoc" class="section level2">
+<h2><span class="header-section-number">7.9</span> Tests post-hoc</h2>
+<p>Une MANOVA à 1 facteur, <strong>statistiquement significative</strong> peut être suivie d’une ANOVA à 1 facteur en examinant, séparément, chaque variable dépendante. L’objectif est d’identifier les variables dépendantes spécifiques qui ont contribué à l’effet global significatif.</p>
+<div id="calculer-lanova-à-un-facteur" class="section level3">
+<h3><span class="header-section-number">7.9.1</span> Calculer l’ANOVA à un facteur</h3>
+<p>Procédure :</p>
+<ul>
+<li>Rassembler les variables-réponses en paires clé-valeur (=&gt; transformer le tableau en format long)</li>
+<li>Grouper par variable</li>
+<li>Calculer le test ANOVA à 1 facteur</li>
+</ul>
+<p>Notez qu’il existe différentes fonctions R pour calculer l’ANOVA à 1 facteur selon que les hypothèses sont remplies ou non :</p>
+<ul>
+<li><p><code>anova_test()</code> [rstatix] : peut être utilisé lorsque les hypothèses de normalité et d’homogénéité de la variance sont respectées.</p></li>
+<li><p><code>welch_anova_test()</code> [rstatix] : peut être utilisé lorsque l’hypothèse d’homogénéité de variance est violée (<em>alors que normalité est respectée ? - vérifier</em>), comme dans notre exemple.</p></li>
+<li><p><code>kruskal_test()</code> [rstatix] : Test de Kruskal-Wallis, une alternative non paramétrique au test ANOVA à 1 facteur</p></li>
+</ul>
+<p>Les codes R suivants montrent comment utiliser chacune de ces fonctions :</p>
+<p>Regrouper les données par variable</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">grouped.data &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;vd&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;valeur&quot;</span>, long_sepal, long_petal) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(vd)</a></code></pre></div>
+<p>Test ANOVA de Welch à un facteur</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">grouped.data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="st">  </span><span class="kw">welch_anova_test</span>(valeur <span class="op">~</span><span class="st"> </span>especes)</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 8
+##   vd         .y.        n statistic   DFn   DFd        p method     
+## * &lt;chr&gt;      &lt;chr&gt;  &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      
+## 1 long_petal valeur   150     1828.     2  78.1 2.69e-66 Welch ANOVA
+## 2 long_sepal valeur   150      139.     2  92.2 1.51e-28 Welch ANOVA</code></pre>
+<p>ou test ANOVA de Kruskal-Wallis</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">grouped.data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="st">  </span><span class="kw">kruskal_test</span>(valeur <span class="op">~</span><span class="st"> </span>especes)</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 7
+##   vd         .y.        n statistic    df        p method        
+## * &lt;chr&gt;      &lt;chr&gt;  &lt;int&gt;     &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;         
+## 1 long_petal valeur   150     130.      2 4.8 e-29 Kruskal-Wallis
+## 2 long_sepal valeur   150      96.9     2 8.92e-22 Kruskal-Wallis</code></pre>
+<p>ou utiliser <code>aov()</code></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">grouped.data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-2" title="2"><span class="st">  </span><span class="kw">anova_test</span>(valeur <span class="op">~</span><span class="st"> </span>especes)</a></code></pre></div>
+<pre><code>## Coefficient covariances computed by hccm()
+## Coefficient covariances computed by hccm()</code></pre>
+<pre><code>## # A tibble: 2 x 8
+##   vd         Effect    DFn   DFd     F        p `p&lt;.05`   ges
+## * &lt;chr&gt;      &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+## 1 long_petal especes     2   147 1180. 2.86e-91 *       0.941
+## 2 long_sepal especes     2   147  119. 1.67e-31 *       0.619</code></pre>
+<p>Ici, nous montrons les résultats de <code>anova_test()</code> c.-à-d. le dernier calcul :</p>
+<blockquote>
+<p>Il y a une différence statistiquement significative dans la longueur des sépales (F(2, 147) = 119, p &lt; 0,0001)</p>
+<p>et dans la longueur des pétales (F(2, 147) = 1180, p &lt; 0,0001)</p>
+<p>entre les espèces d’iris.</p>
+</blockquote>
+<blockquote>
+<p><strong>Notez que</strong></p>
+<p>Comme nous avons 2 variables dépendantes, nous devons appliquer la correction des tests multiples de Bonferroni en diminuant le niveau de la significativité statistique.</p>
+<p>Pour ce faire, on divise le niveau alpha classique (0,05) par le nombre de tests (ou de variables dépendantes, ici 2). Il en résulte un critère d’acceptation de la significativité de p &lt; 0,025 plutôt que de p &lt; 0,05 car il existe deux variables dépendantes.</p>
+</blockquote>
+</div>
+<div id="les-comparaisons-par-paires" class="section level3">
+<h3><span class="header-section-number">7.9.2</span> Les comparaisons par paires</h3>
+<p>Une ANOVA univariée statistiquement significative peut être suivie de multiples comparaisons par paires pour déterminer quels groupes sont différents.</p>
+<ul>
+<li><p>La fonction R <code>tukey_hsd()</code> [package rstatix] peut être utilisée pour calculer les tests post-hoc de Tukey <strong>si l’hypothèse d’homogénéité de variance est satisfaite</strong>.</p></li>
+<li><p>Si vous avez violé l’hypothèse d’homogénéité des variances, comme dans notre exemple, vous préféreriez peut-être effectuer un <strong>test post-hoc Games-Howell</strong>. Il est également possible d’utiliser la fonction <code>pairwise_t_test()</code> [<code>rstatix</code>] avec l’option <code>pool.sd = FALSE et var.equal = FALSE</code>.</p></li>
+</ul>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">pwc &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-2" title="2"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;vd&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;valeur&quot;</span>, long_sepal, long_petal) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(vd) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-4" title="4"><span class="st">  </span><span class="kw">games_howell_test</span>(valeur <span class="op">~</span><span class="st"> </span>especes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-5" title="5"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>estimate, <span class="op">-</span>conf.low, <span class="op">-</span>conf.high) <span class="co"># Supprimer les détails</span></a>
+<a class="sourceLine" id="cb43-6" title="6">pwc</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 6
+##   vd         .y.    group1     group2        p.adj p.adj.signif
+##   &lt;chr&gt;      &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;       
+## 1 long_petal valeur setosa     versicolor 1.85e-11 ****        
+## 2 long_petal valeur setosa     virginica  1.68e-11 ****        
+## 3 long_petal valeur versicolor virginica  4.45e-10 ****        
+## 4 long_sepal valeur setosa     versicolor 2.86e-10 ****        
+## 5 long_sepal valeur setosa     virginica  0        ****        
+## 6 long_sepal valeur versicolor virginica  5.58e- 7 ****</code></pre>
+<p>Toutes les comparaisons par paires sont significatives pour chacune des variables résultats (long_sepal et long_petal).</p>
+</div>
+</div>
+<div id="interprétation-des-résultats" class="section level2">
+<h2><span class="header-section-number">7.10</span> Interprétation des résultats</h2>
+<p>Une MANOVA à un facteur a été effectuée pour déterminer l’effet des espèces d’iris sur la longueur des sépales et des pétales. Il existe trois espèces différentes : setosa, versicolor et virginica.</p>
+<p>Il y a une différence statistiquement significative entre les espèces sur les variables dépendantes combinées (long_sepal et long_petal), F(4, 294) = 71.829, p &lt; 0.0001.</p>
+<p>Les ANOVA univariées qui ont suivi, utilisant un niveau alpha ajusté de Bonferroni de 0,025, ont montré qu’il y a une différence statistiquement significative dans la longueur des sépales (F(2, 147) = 119, p &lt; 0,0001 ) et la longueur des pétales (F(2, 147) = 1180, p &lt; 0,0001) entre les espèces d’iris.</p>
+<p>Toutes les comparaisons par paires entre les groupes sont significatives pour chacune des variables-réponses (long_sepal et long_petal).</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="visualisation-boxplots-avec-p-values-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Tutozco.pdf", "Tutozco.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapitre 2 ANOVA à mesures répétées avec R | Mes apprentissages avec R</title>
+  <title>Chapitre 8 Visualisation : Boxplots avec p-values | Mes apprentissages avec R</title>
   <meta name="description" content="The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapitre 2 ANOVA à mesures répétées avec R | Mes apprentissages avec R" />
+  <meta property="og:title" content="Chapitre 8 Visualisation : Boxplots avec p-values | Mes apprentissages avec R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapitre 2 ANOVA à mesures répétées avec R | Mes apprentissages avec R" />
+  <meta name="twitter:title" content="Chapitre 8 Visualisation : Boxplots avec p-values | Mes apprentissages avec R" />
   
   <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="test-de-friedman-avec-r.html"/>
+<link rel="prev" href="manova-à-1-facteur-dans-r.html"/>
+<link rel="next" href="references-2.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -243,8 +243,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#les-comparaisons-par-paires"><i class="fa fa-check"></i><b>7.9.2</b> Les comparaisons par paires</a></li>
 </ul></li>
 <li class="chapter" data-level="7.10" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#interprétation-des-résultats"><i class="fa fa-check"></i><b>7.10</b> Interprétation des résultats</a></li>
-<li class="chapter" data-level="7.11" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#résumé"><i class="fa fa-check"></i><b>7.11</b> Résumé</a></li>
-<li class="chapter" data-level="7.12" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#references-1"><i class="fa fa-check"></i><b>7.12</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html"><i class="fa fa-check"></i><b>8</b> Visualisation : Boxplots avec p-values</a><ul>
+<li class="chapter" data-level="8.1" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html#résumé"><i class="fa fa-check"></i><b>8.1</b> Résumé</a></li>
+<li class="chapter" data-level="8.2" data-path="visualisation-boxplots-avec-p-values-1.html"><a href="visualisation-boxplots-avec-p-values-1.html#references-1"><i class="fa fa-check"></i><b>8.2</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -267,176 +269,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="anova-à-mesures-répétées-avec-r" class="section level1">
-<h1><span class="header-section-number">Chapitre 2</span> ANOVA à mesures répétées avec R</h1>
-<div id="librairies" class="section level2">
-<h2><span class="header-section-number">2.1</span> Librairies</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;tidyverse&quot;</span>) <span class="co"># tidy et ggplot2</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>)    <span class="co"># ggboxplot()</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(<span class="st">&quot;agricolae&quot;</span>) <span class="co"># SNK.test() Student Newman-Keuls</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(<span class="st">&quot;car&quot;</span>)       <span class="co"># leveneTest() or levene_test()</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw">library</span>(<span class="st">&quot;rstatix&quot;</span>)   <span class="co"># convert_as_factor()</span></a></code></pre></div>
+<div id="visualisation-boxplots-avec-p-values-1" class="section level1">
+<h1><span class="header-section-number">Chapitre 8</span> Visualisation : Boxplots avec p-values</h1>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">pwc &lt;-<span class="st"> </span>pwc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_xy_position</span>(<span class="dt">x =</span> <span class="st">&quot;especes&quot;</span>)</a>
+<a class="sourceLine" id="cb45-2" title="2"></a>
+<a class="sourceLine" id="cb45-3" title="3">test.label &lt;-<span class="st"> </span><span class="kw">create_test_label</span>(</a>
+<a class="sourceLine" id="cb45-4" title="4">  <span class="dt">description =</span> <span class="st">&quot;MANOVA&quot;</span>, <span class="dt">statistic.text =</span> <span class="kw">quote</span>(<span class="kw">italic</span>(<span class="st">&quot;F&quot;</span>)),</a>
+<a class="sourceLine" id="cb45-5" title="5">  <span class="dt">statistic =</span> <span class="fl">71.83</span>, <span class="dt">p=</span> <span class="st">&quot;&lt;0.0001&quot;</span>, <span class="dt">parameter =</span> <span class="st">&quot;4,294&quot;</span>,</a>
+<a class="sourceLine" id="cb45-6" title="6">  <span class="dt">type =</span> <span class="st">&quot;expression&quot;</span>, <span class="dt">detailed =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb45-7" title="7">  )</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw">ggboxplot</span>(</a>
+<a class="sourceLine" id="cb46-2" title="2">  df, <span class="dt">x =</span> <span class="st">&quot;especes&quot;</span>, <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;long_sepal&quot;</span>, <span class="st">&quot;long_petal&quot;</span>), </a>
+<a class="sourceLine" id="cb46-3" title="3">  <span class="dt">merge =</span> <span class="ot">TRUE</span>, <span class="dt">palette =</span> <span class="st">&quot;jco&quot;</span></a>
+<a class="sourceLine" id="cb46-4" title="4">  ) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb46-5" title="5"><span class="st">  </span><span class="kw">stat_pvalue_manual</span>(</a>
+<a class="sourceLine" id="cb46-6" title="6">    pwc, <span class="dt">hide.ns =</span> <span class="ot">TRUE</span>, <span class="dt">tip.length =</span> <span class="dv">0</span>, </a>
+<a class="sourceLine" id="cb46-7" title="7">    <span class="dt">step.increase =</span> <span class="fl">0.1</span>, <span class="dt">step.group.by =</span> <span class="st">&quot;vd&quot;</span>,</a>
+<a class="sourceLine" id="cb46-8" title="8">    <span class="dt">color =</span> <span class="st">&quot;vd&quot;</span></a>
+<a class="sourceLine" id="cb46-9" title="9">    ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb46-10" title="10"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb46-11" title="11">    <span class="dt">subtitle =</span> test.label,</a>
+<a class="sourceLine" id="cb46-12" title="12">    <span class="dt">caption =</span> <span class="kw">get_pwc_label</span>(pwc, <span class="dt">type =</span> <span class="st">&quot;expression&quot;</span>)</a>
+<a class="sourceLine" id="cb46-13" title="13">  )</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div id="résumé" class="section level2">
+<h2><span class="header-section-number">8.1</span> Résumé</h2>
+<p>Cet article décrit comment calculer et interpréter le test MANOVA à un facteur dans R. Nous montrons comment vérifier les hypothèses du test et effectuer des analyses post-hoc.</p>
 </div>
-<div id="données" class="section level2">
-<h2><span class="header-section-number">2.2</span> Données</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">mg &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/mg.csv&quot;</span>)</a></code></pre></div>
-<pre><code>## 
-## -- Column specification --------------------------------------------------------
-## cols(
-##   regime = col_character(),
-##   reference = col_double(),
-##   mg1 = col_double(),
-##   mg2 = col_double(),
-##   mg3 = col_double(),
-##   mg4 = col_double()
-## )</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">mg &lt;-<span class="st"> </span>mg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">convert_as_factor</span>(regime)</a></code></pre></div>
-<p>Rassembler les colonnes mg1 à mg4 en format long et convertir l’identifiant et le temps en facteurs</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">mgl &lt;-<span class="st"> </span>mg <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(mg)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;seance&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;tmg&quot;</span>, <span class="op">-</span><span class="kw">c</span>(regime, reference, id)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="st">  </span><span class="kw">convert_as_factor</span>(id, seance)</a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="kw">head</span>(mgl)</a></code></pre></div>
-<pre><code>## # A tibble: 6 x 5
-##   regime  reference id    seance   tmg
-##   &lt;fct&gt;       &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  &lt;dbl&gt;
-## 1 Ba 0,25         1 1     mg1     56.4
-## 2 Ba 0,25         2 2     mg1     52.4
-## 3 Ba 0,25         3 3     mg1     68.4
-## 4 Ba 0,5          1 4     mg1     70.2
-## 5 Ba 0,5          2 5     mg1     70.2
-## 6 Ba 0,5          3 6     mg1     57.2</code></pre>
-</div>
-<div id="sommaire-des-données" class="section level2">
-<h2><span class="header-section-number">2.3</span> Sommaire des données</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(seance) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="st">  </span><span class="kw">get_summary_stats</span>(tmg, <span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
-##   seance variable     n  mean    sd
-##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 mg1    tmg         27  64.8  8.33
-## 2 mg2    tmg         30  23.0  5.60
-## 3 mg3    tmg         30  27.5  7.94
-## 4 mg4    tmg         30  33.3  9.19</code></pre>
-</div>
-<div id="visualisation-boxplots" class="section level2">
-<h2><span class="header-section-number">2.4</span> Visualisation boxplots</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">ggboxplot</span>(mgl, <span class="dt">x =</span> <span class="st">&quot;seance&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;tmg&quot;</span>)<span class="co">#, add = &quot;point&quot;)</span></a></code></pre></div>
-<pre><code>## Warning: Removed 3 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="Tutozco_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-</div>
-<div id="détection-valeurs-aberrantes" class="section level2">
-<h2><span class="header-section-number">2.5</span> Détection valeurs aberrantes</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">out_mgl &lt;-<span class="st"> </span>mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(seance) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="st">  </span><span class="kw">identify_outliers</span>(tmg)</a>
-<a class="sourceLine" id="cb11-4" title="4">out_mgl</a></code></pre></div>
-<pre><code>## # A tibble: 2 x 7
-##   seance regime reference id      tmg is.outlier is.extreme
-##   &lt;fct&gt;  &lt;fct&gt;      &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     
-## 1 mg4    Ba 5           2 17     11.7 TRUE       FALSE     
-## 2 mg4    WC             2 29     61   TRUE       FALSE</code></pre>
-</div>
-<div id="normalité" class="section level2">
-<h2><span class="header-section-number">2.6</span> Normalité</h2>
-<p>Si les données sont normalement distribuées, la p-value de Shapiro-Wilk doit être supérieure à 0,05.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(seance) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">shapiro_test</span>(tmg)</a></code></pre></div>
-<pre><code>## # A tibble: 4 x 4
-##   seance variable statistic      p
-##   &lt;fct&gt;  &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 mg1    tmg          0.978 0.816 
-## 2 mg2    tmg          0.974 0.643 
-## 3 mg3    tmg          0.936 0.0695
-## 4 mg4    tmg          0.939 0.0873</code></pre>
-<blockquote>
-<p>Toutes les distributions sont normales.</p>
-</blockquote>
-<p>NB. Si la taille de l’échantillon est supérieure à 50, le graphique de normalité QQ-plot est préféré parce qu’avec des échantillons de plus grande taille, le test de Shapiro-Wilk devient très sensible même à un écart mineur par rapport à la distribution normale.</p>
-<p>Le graphique QQ-plot dessine la corrélation entre une donnée définie et la distribution normale. Ce n’est pas le cas ici mais je le fais quand même.</p>
-<p>Créer des QQ-plots pour chaque point par séance</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">ggqqplot</span>(mgl, <span class="st">&quot;tmg&quot;</span>, <span class="dt">facet.by =</span> <span class="st">&quot;seance&quot;</span>)</a></code></pre></div>
-<pre><code>## Warning: Removed 3 rows containing non-finite values (stat_qq).</code></pre>
-<pre><code>## Warning: Removed 3 rows containing non-finite values (stat_qq_line).
+<div id="references-1" class="section level2">
+<h2><span class="header-section-number">8.2</span> References</h2>
+<p>Tabachnick, Barbara, and Linda. S. Fidell. 2012. Using Multivarite Statistics. 6th ed. Pearson.</p>
 
-## Warning: Removed 3 rows containing non-finite values (stat_qq_line).</code></pre>
-<p><img src="Tutozco_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>Tous les points se situent approximativement le long de la ligne de référence, nous pouvons supposer une normalité.</p>
-</div>
-<div id="sphéricité" class="section level2">
-<h2><span class="header-section-number">2.7</span> Sphéricité</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">select</span>(seance, regime, tmg) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(seance) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-4" title="4"><span class="st">  </span><span class="kw">levene_test</span>(tmg <span class="op">~</span><span class="st"> </span>regime)</a></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
-##   seance   df1   df2 statistic     p
-##   &lt;fct&gt;  &lt;int&gt; &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 mg1        9    17     0.735 0.673
-## 2 mg2        9    20     0.124 0.999
-## 3 mg3        9    20     0.773 0.642
-## 4 mg4        9    20     0.782 0.635</code></pre>
-<blockquote>
-<p>Les variances sont homogènes</p>
-</blockquote>
-</div>
-<div id="sphéricité-et-anova-mesures-repétées" class="section level2">
-<h2><span class="header-section-number">2.8</span> Sphéricité et ANOVA, mesures repétées</h2>
-<p>La fonction <code>anova_test()</code> réalise également le test de sphéricité de Mauchly.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">res_anova &lt;-<span class="st"> </span><span class="kw">anova_test</span>(<span class="dt">data =</span> mgl,      <span class="co">#</span></a>
-<a class="sourceLine" id="cb20-2" title="2">                        <span class="dt">dv =</span> tmg,        <span class="co"># dependant variable, num</span></a>
-<a class="sourceLine" id="cb20-3" title="3">                        <span class="dt">wid =</span> id,        <span class="co"># identificateur de cas/échantillon (facteur)</span></a>
-<a class="sourceLine" id="cb20-4" title="4">                        <span class="dt">within =</span> seance) <span class="co"># facteur de groupement intra-sujets</span></a></code></pre></div>
-<pre><code>## Warning: NA detected in rows: 9,23,24.
-## Removing this rows before the analysis.</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">get_anova_table</span>(res_anova)</a></code></pre></div>
-<pre><code>## ANOVA Table (type III tests)
-## 
-##   Effect  DFn DFd       F        p p&lt;.05   ges
-## 1 seance 2.23  58 150.342 1.19e-24     * 0.821</code></pre>
-<p>“ges” est la taille de l’effet généralisé (taille de la variabilité due au facteur intra-sujets)</p>
-<blockquote>
-<p>Différence entre au moins 2 séances</p>
-</blockquote>
-</div>
-<div id="test-post-hoc-mesures-repétées" class="section level2">
-<h2><span class="header-section-number">2.9</span> Test post-hoc, mesures repétées</h2>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">tph &lt;-<span class="st"> </span>mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw">pairwise_t_test</span>(tmg <span class="op">~</span><span class="st"> </span>seance, </a>
-<a class="sourceLine" id="cb24-3" title="3">                  <span class="dt">paired =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb24-4" title="4">                  <span class="dt">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>)</a>
-<a class="sourceLine" id="cb24-5" title="5"></a>
-<a class="sourceLine" id="cb24-6" title="6">tph <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb24-7" title="7"><span class="st">  </span><span class="kw">select</span>(group1, group2, p, p.adj, p.adj.signif)</a></code></pre></div>
-<pre><code>## # A tibble: 6 x 5
-##   group1 group2        p    p.adj p.adj.signif
-##   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
-## 1 mg1    mg2    8.4 e-19 5.04e-18 ****        
-## 2 mg1    mg3    1.98e-15 1.19e-14 ****        
-## 3 mg1    mg4    4.65e-11 2.79e-10 ****        
-## 4 mg2    mg3    2.4 e- 2 1.47e- 1 ns          
-## 5 mg2    mg4    6.91e- 6 4.15e- 5 ****        
-## 6 mg3    mg4    1.1 e- 2 6.8 e- 2 ns</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">mgl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(seance) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-3" title="3"><span class="st">  </span><span class="kw">get_summary_stats</span>(tmg, <span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
-##   seance variable     n  mean    sd
-##   &lt;fct&gt;  &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 mg1    tmg         27  64.8  8.33
-## 2 mg2    tmg         30  23.0  5.60
-## 3 mg3    tmg         30  27.5  7.94
-## 4 mg4    tmg         30  33.3  9.19</code></pre>
-<blockquote>
-<p>séeance 1 ≠ séance 2</p>
-<p>séance 1 ≠ séance 3</p>
-<p>séance 1 ≠ séance 4</p>
-<p>séance 2 ≠ séance 4</p>
-<p>séance 2 ≈ séance 3</p>
-<p>séance 3 ≈ séance 4.</p>
-</blockquote>
 
 </div>
 </div>
@@ -445,8 +308,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="test-de-friedman-avec-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="manova-à-1-facteur-dans-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references-2.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
