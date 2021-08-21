@@ -128,3 +128,5 @@ visualisation-de-linteraction-probable-2
 manova-le-test
 les-comparaisons-par-paires
 references-1
+anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites
+interprétation-des-résultats

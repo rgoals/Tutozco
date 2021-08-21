@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapitre 5 ANOVA à 2 facteurs avec R : Quand les hypothèses sont satisfaites | Mes apprentissages avec R</title>
+  <meta name="description" content="The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapitre 5 ANOVA à 2 facteurs avec R : Quand les hypothèses sont satisfaites | Mes apprentissages avec R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapitre 5 ANOVA à 2 facteurs avec R : Quand les hypothèses sont satisfaites | Mes apprentissages avec R" />
+  
+  <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="zco" />
+
+
+<meta name="date" content="2021-08-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="test-de-chi-deux-avec-r.html"/>
+<link rel="next" href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#abc"><i class="fa fa-check"></i><b>1.1</b> Abc</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#def"><i class="fa fa-check"></i><b>1.2</b> Def</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#ghi"><i class="fa fa-check"></i><b>1.3</b> Ghi</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#jkl"><i class="fa fa-check"></i><b>1.4</b> Jkl</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html"><i class="fa fa-check"></i><b>2</b> ANOVA à mesures répétées avec R</a><ul>
+<li class="chapter" data-level="2.1" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#librairies"><i class="fa fa-check"></i><b>2.1</b> Librairies</a></li>
+<li class="chapter" data-level="2.2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#données"><i class="fa fa-check"></i><b>2.2</b> Données</a></li>
+<li class="chapter" data-level="2.3" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sommaire-des-données"><i class="fa fa-check"></i><b>2.3</b> Sommaire des données</a></li>
+<li class="chapter" data-level="2.4" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#visualisation-boxplots"><i class="fa fa-check"></i><b>2.4</b> Visualisation boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#détection-valeurs-aberrantes"><i class="fa fa-check"></i><b>2.5</b> Détection valeurs aberrantes</a></li>
+<li class="chapter" data-level="2.6" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#normalité"><i class="fa fa-check"></i><b>2.6</b> Normalité</a></li>
+<li class="chapter" data-level="2.7" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité"><i class="fa fa-check"></i><b>2.7</b> Sphéricité</a></li>
+<li class="chapter" data-level="2.8" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité-et-anova-mesures-repétées"><i class="fa fa-check"></i><b>2.8</b> Sphéricité et ANOVA, mesures repétées</a></li>
+<li class="chapter" data-level="2.9" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#test-post-hoc-mesures-repétées"><i class="fa fa-check"></i><b>2.9</b> Test post-hoc, mesures repétées</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html"><i class="fa fa-check"></i><b>3</b> Test de friedman avec R</a><ul>
+<li class="chapter" data-level="3.1" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#les-librairies"><i class="fa fa-check"></i><b>3.1</b> Les librairies</a></li>
+<li class="chapter" data-level="3.2" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#jeu-de-données"><i class="fa fa-check"></i><b>3.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="3.3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#statistiques-sommaires"><i class="fa fa-check"></i><b>3.3</b> Statistiques sommaires</a></li>
+<li class="chapter" data-level="3.4" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation"><i class="fa fa-check"></i><b>3.4</b> Visualisation</a></li>
+<li class="chapter" data-level="3.5" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#le-test"><i class="fa fa-check"></i><b>3.5</b> Le test</a></li>
+<li class="chapter" data-level="3.6" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#taille-de-leffet"><i class="fa fa-check"></i><b>3.6</b> Taille de l’effet</a></li>
+<li class="chapter" data-level="3.7" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#comparaisons-multiples-par-paires"><i class="fa fa-check"></i><b>3.7</b> Comparaisons multiples par paires</a></li>
+<li class="chapter" data-level="3.8" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#interprétation"><i class="fa fa-check"></i><b>3.8</b> Interprétation</a></li>
+<li class="chapter" data-level="3.9" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation-boxplots-avec-p-values"><i class="fa fa-check"></i><b>3.9</b> Visualisation : boxplots avec p-values</a></li>
+<li class="chapter" data-level="3.10" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#references"><i class="fa fa-check"></i><b>3.10</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html"><i class="fa fa-check"></i><b>4</b> Test de Chi-deux avec R</a><ul>
+<li class="chapter" data-level="4.1" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#jeu-de-données-simulées"><i class="fa fa-check"></i><b>4.1</b> Jeu de données simulées</a></li>
+<li class="chapter" data-level="4.2" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#le-test-1"><i class="fa fa-check"></i><b>4.2</b> Le test</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><i class="fa fa-check"></i><b>5</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses sont satisfaites</span></a><ul>
+<li class="chapter" data-level="5.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#liste-des-packages"><i class="fa fa-check"></i><b>5.1</b> Liste des packages</a></li>
+<li class="chapter" data-level="5.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-1"><i class="fa fa-check"></i><b>5.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#exploration-visuelle"><i class="fa fa-check"></i><b>5.3</b> Exploration visuelle</a></li>
+<li class="chapter" data-level="5.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance"><i class="fa fa-check"></i><b>5.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="5.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-de-linteraction-probable"><i class="fa fa-check"></i><b>5.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="5.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#réalisation-de-lanova-à-deux-facteurs"><i class="fa fa-check"></i><b>5.6</b> Réalisation de l’ANOVA à deux facteurs</a></li>
+<li class="chapter" data-level="5.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-des-résultats"><i class="fa fa-check"></i><b>5.7</b> Visualisation des résultats</a></li>
+<li class="chapter" data-level="5.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#vérification-des-hypothèses-de-validité"><i class="fa fa-check"></i><b>5.8</b> Vérification des hypothèses de validité</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#indépendance-des-résidus"><i class="fa fa-check"></i><b>5.8.1</b> Indépendance des résidus</a></li>
+<li class="chapter" data-level="5.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#normalité-des-résidus"><i class="fa fa-check"></i><b>5.8.2</b> Normalité des résidus</a></li>
+<li class="chapter" data-level="5.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#homogénéité-des-variances"><i class="fa fa-check"></i><b>5.8.3</b> Homogénéité des variances</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-significative"><i class="fa fa-check"></i><b>5.9</b> Démarche en cas d’interaction significative</a><ul>
+<li class="chapter" data-level="5.9.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#anova-à-un-facteur-group-et-comparaisons-2-à-2"><i class="fa fa-check"></i><b>5.9.1</b> ANOVA à un facteur (<code>group</code>) et comparaisons 2 à 2</a></li>
+<li class="chapter" data-level="5.9.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-à-lintérieur-dune-modalité"><i class="fa fa-check"></i><b>5.9.2</b> Comparaisons à l’intérieur d’une modalité</a></li>
+</ul></li>
+<li class="chapter" data-level="5.10" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-quantitative-significative"><i class="fa fa-check"></i><b>5.10</b> Démarche en cas d’interaction quantitative significative</a></li>
+<li class="chapter" data-level="5.11" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-non-significative"><i class="fa fa-check"></i><b>5.11</b> Démarche en cas d’interaction non significative</a><ul>
+<li class="chapter" data-level="5.11.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-2"><i class="fa fa-check"></i><b>5.11.1</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.11.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-1"><i class="fa fa-check"></i><b>5.11.2</b> Visualisation</a></li>
+<li class="chapter" data-level="5.11.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#lanova"><i class="fa fa-check"></i><b>5.11.3</b> L’ANOVA</a></li>
+<li class="chapter" data-level="5.11.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#ajustement-du-modèle-sans-le-terme-dinteraction"><i class="fa fa-check"></i><b>5.11.4</b> Ajustement du modèle sans le terme d’interaction</a></li>
+<li class="chapter" data-level="5.11.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-multiples"><i class="fa fa-check"></i><b>5.11.5</b> Comparaisons multiples</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#conclusion"><i class="fa fa-check"></i><b>5.12</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>6</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses ne sont pas satisfaites</span></a><ul>
+<li class="chapter" data-level="6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.1</b> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#libraires"><i class="fa fa-check"></i><b>6.2</b> Libraires</a></li>
+<li class="chapter" data-level="6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-des-données"><i class="fa fa-check"></i><b>6.3</b> Visualisation des données</a></li>
+<li class="chapter" data-level="6.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance-1"><i class="fa fa-check"></i><b>6.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="6.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-de-linteraction-probable-1"><i class="fa fa-check"></i><b>6.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="6.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité"><i class="fa fa-check"></i><b>6.6</b> Mise en évidence des défauts de normalité et d’homogénéité</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.6.1</b> Réalisation de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus"><i class="fa fa-check"></i><b>6.6.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus"><i class="fa fa-check"></i><b>6.6.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7</b> Utilisation d’une transformation log de la réponse</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7.1</b> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</a></li>
+<li class="chapter" data-level="6.7.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité"><i class="fa fa-check"></i><b>6.7.2</b> Evaluation de l’hypothèse de normalité</a></li>
+<li class="chapter" data-level="6.7.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité"><i class="fa fa-check"></i><b>6.7.3</b> Evaluation de l’hypothèse d’homogénéité</a></li>
+<li class="chapter" data-level="6.7.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#résultats"><i class="fa fa-check"></i><b>6.7.4</b> Résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-boxcox-de-la-réponse"><i class="fa fa-check"></i><b>6.8</b> Utilisation d’une transformation BoxCox de la réponse</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#définition-et-réalisation"><i class="fa fa-check"></i><b>6.8.1</b> Définition et réalisation</a></li>
+<li class="chapter" data-level="6.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+<li class="chapter" data-level="6.8.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#exploitation-des-résultats"><i class="fa fa-check"></i><b>6.8.4</b> Exploitation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#conclusion-1"><i class="fa fa-check"></i><b>6.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html"><i class="fa fa-check"></i><b>7</b> <span>MANOVA à 1 facteur dans R</span></a><ul>
+<li class="chapter" data-level="7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#introduction-1"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#prérequis"><i class="fa fa-check"></i><b>7.2</b> Prérequis</a></li>
+<li class="chapter" data-level="7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#jeu-de-données-3"><i class="fa fa-check"></i><b>7.3</b> Jeu de données</a></li>
+<li class="chapter" data-level="7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-2"><i class="fa fa-check"></i><b>7.4</b> Visualisation</a></li>
+<li class="chapter" data-level="7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#statistiques-descriptives"><i class="fa fa-check"></i><b>7.5</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-de-linteraction-probable-2"><i class="fa fa-check"></i><b>7.6</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#hypothèses-et-tests-préliminaires"><i class="fa fa-check"></i><b>7.7</b> Hypothèses et tests préliminaires</a><ul>
+<li class="chapter" data-level="7.7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-taille-des-échantillons"><i class="fa fa-check"></i><b>7.7.1</b> Vérifier l’hypothèse de taille des échantillons</a></li>
+<li class="chapter" data-level="7.7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-les-valeurs-aberrantes-univariées"><i class="fa fa-check"></i><b>7.7.2</b> Identifier les valeurs aberrantes univariées</a></li>
+<li class="chapter" data-level="7.7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#détecter-les-valeurs-aberrantes-multivariées"><i class="fa fa-check"></i><b>7.7.3</b> Détecter les valeurs aberrantes multivariées</a></li>
+<li class="chapter" data-level="7.7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-normalité-univariée"><i class="fa fa-check"></i><b>7.7.4</b> Vérifier l’hypothèse de normalité univariée</a></li>
+<li class="chapter" data-level="7.7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#normalité-à-plusieurs-variables"><i class="fa fa-check"></i><b>7.7.5</b> Normalité à plusieurs variables</a></li>
+<li class="chapter" data-level="7.7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-la-multicollinéarité"><i class="fa fa-check"></i><b>7.7.6</b> Identifier la multicollinéarité</a></li>
+<li class="chapter" data-level="7.7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-linéarité"><i class="fa fa-check"></i><b>7.7.7</b> Vérifier l’hypothèse de linéarité</a></li>
+<li class="chapter" data-level="7.7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-des-covariances"><i class="fa fa-check"></i><b>7.7.8</b> Vérifier l’hypothèse d’homogénéité des covariances</a></li>
+<li class="chapter" data-level="7.7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-de-la-variance"><i class="fa fa-check"></i><b>7.7.9</b> Vérifier l’hypothèse d’homogénéité de la variance</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#manova-le-test"><i class="fa fa-check"></i><b>7.8</b> MANOVA, le test</a></li>
+<li class="chapter" data-level="7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#tests-post-hoc"><i class="fa fa-check"></i><b>7.9</b> Tests post-hoc</a><ul>
+<li class="chapter" data-level="7.9.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#calculer-lanova-à-un-facteur"><i class="fa fa-check"></i><b>7.9.1</b> Calculer l’ANOVA à un facteur</a></li>
+<li class="chapter" data-level="7.9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#les-comparaisons-par-paires"><i class="fa fa-check"></i><b>7.9.2</b> Les comparaisons par paires</a></li>
+</ul></li>
+<li class="chapter" data-level="7.10" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#interprétation-des-résultats"><i class="fa fa-check"></i><b>7.10</b> Interprétation des résultats</a></li>
+<li class="chapter" data-level="7.11" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#résumé"><i class="fa fa-check"></i><b>7.11</b> Résumé</a></li>
+<li class="chapter" data-level="7.12" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#references-1"><i class="fa fa-check"></i><b>7.12</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mes apprentissages avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites" class="section level1">
+<h1><span class="header-section-number">Chapitre 5</span> ANOVA à 2 facteurs avec R : <a href="https://delladata.fr/anova-a-2-facteurs-avec-r-tutoriel/">Quand les hypothèses sont satisfaites</a></h1>
+<p>Ce tutoriel dédié à la réalisation d’ANOVA à deux facteurs avec le logiciel R, fait suite à deux premiers articles du même auteur consacrés à cette approche statistique, l’un d’<a href="https://delladata.fr/introduction-a-lanova-a-2-facteurs/">introduction</a>, l’autre détaillant son <a href="https://delladata.fr/anova-a-2-facteurs-principe/">fonctionnement</a>.</p>
+<p>À l’issue de ce tutoriel, vous saurez :</p>
+<ul>
+<li>explorer vos données,</li>
+<li>réaliser une ANOVA à 2 facteurs,</li>
+<li>vérifier les hypothèses de validité d’une ANOVA à 2 facteurs,</li>
+<li>interpréter les résultats d’une ANOVA à 2 facteurs,</li>
+<li>que faire lorsque l’interaction est significative, et lorsqu’elle ne l’est pas.</li>
+</ul>
+<div id="liste-des-packages" class="section level2">
+<h2><span class="header-section-number">5.1</span> Liste des packages</h2>
+<p>Les packages utilisés dans ce tutoriel sont les suivants :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(tidyverse) <span class="co"># dplyr, ggplot2, ...</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(ggpubr)    <span class="co"># ggboxplot(), ...</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(car)       <span class="co"># Anova() avec carrés de type III, ...</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(Rmisc)     <span class="co"># summarySE(), moy et IC essais factoriels, ...</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">library</span>(rstatix)   <span class="co"># shapiro_test(), levene_test(), ...</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw">library</span>(multcomp)  <span class="co"># comparaisons par paires Tukey, ...</span></a></code></pre></div>
+</div>
+<div id="jeu-de-données-1" class="section level2">
+<h2><span class="header-section-number">5.2</span> Jeu de données</h2>
+<p>Pour illustrer ce tutoriel consacré à l’ANOVA à 2 facteurs, je vais utiliser des données simulées supposées issues d’un plan d’expérience visant à observer :</p>
+<ul>
+<li><p>l’<strong>Usure de la laine</strong> (dans une unité de votre choix) au sein de métiers à tisser,</p></li>
+<li><p>en fonction de la <strong>Tension du fil (T.Faible / T.Moyenne / T.Élevée) et du type de Laine (Laine.A / Laine.B)</strong>.</p></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">N1 &lt;-<span class="st"> </span><span class="dv">9</span> </a>
+<a class="sourceLine" id="cb2-2" title="2">Tension &lt;-<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;T.Faible&quot;</span>, <span class="st">&quot;T.Moyenne&quot;</span>, <span class="st">&quot;T.Élevée&quot;</span>), <span class="dt">each =</span> <span class="dv">2</span><span class="op">*</span>N1) </a>
+<a class="sourceLine" id="cb2-3" title="3">Laine &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Laine.A&quot;</span>, <span class="st">&quot;Laine.B&quot;</span>), <span class="dt">each =</span> N1), <span class="dv">3</span>) </a>
+<a class="sourceLine" id="cb2-4" title="4"></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="kw">set.seed</span>(<span class="dv">42</span>) </a>
+<a class="sourceLine" id="cb2-6" title="6">L_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">12</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-7" title="7">L_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">9</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-8" title="8">M_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">7</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-9" title="9">M_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">10</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-10" title="10">H_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="fl">8.5</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-11" title="11">H_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">7</span>, <span class="dv">1</span>) </a>
+<a class="sourceLine" id="cb2-12" title="12"></a>
+<a class="sourceLine" id="cb2-13" title="13">Usure &lt;-<span class="st"> </span><span class="kw">c</span>(L_A, L_B, M_A, M_B, H_A, H_B) </a>
+<a class="sourceLine" id="cb2-14" title="14">mydata &lt;-<span class="st"> </span><span class="kw">data.frame</span>(Tension, Laine, Usure)</a>
+<a class="sourceLine" id="cb2-15" title="15"></a>
+<a class="sourceLine" id="cb2-16" title="16">mydata &lt;-<span class="st"> </span>mydata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Tension =</span> <span class="kw">factor</span>(Tension, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;T.Faible&quot;</span>, <span class="st">&quot;T.Moyenne&quot;</span>, <span class="st">&quot;T.Élevée&quot;</span>)),</a>
+<a class="sourceLine" id="cb2-18" title="18">         <span class="dt">Laine =</span> <span class="kw">factor</span>(Laine, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Laine.A&quot;</span>, <span class="st">&quot;Laine.B&quot;</span>)))</a>
+<a class="sourceLine" id="cb2-19" title="19"><span class="kw">write_csv</span>(mydata, <span class="st">&quot;data/dU1.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb2-20" title="20"><span class="kw">glimpse</span>(mydata)</a></code></pre></div>
+<pre><code>## Rows: 54
+## Columns: 3
+## $ Tension &lt;fct&gt; T.Faible, T.Faible, T.Faible, T.Faible, T.Faible, T.Faible, T.~
+## $ Laine   &lt;fct&gt; Laine.A, Laine.A, Laine.A, Laine.A, Laine.A, Laine.A, Laine.A,~
+## $ Usure   &lt;dbl&gt; 13.370958, 11.435302, 12.363128, 12.632863, 12.404268, 11.8938~</code></pre>
+</div>
+<div id="exploration-visuelle" class="section level2">
+<h2><span class="header-section-number">5.3</span> Exploration visuelle</h2>
+<p>En premier lieu, il est toujours utile de représenter les données pour se faire une première idée avant de réaliser l’ANOVA.</p>
+<p>Pour cette étape, l’habitude est d’utiliser des boxplots en ajoutant, par-dessus, les données observées. Cela permet de se rendre compte</p>
+<ul>
+<li>du nombre de données par modalité,</li>
+<li>de leur distribution, plutôt normale, plutôt asymétrique !</li>
+<li>et de la présence éventuelle d’outliers (valeurs extrêmes).</li>
+</ul>
+<p>Ces deux derniers points pouvant biaiser les résultats de l’analyse.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">ggplot</span>(mydata, <span class="kw">aes</span>(<span class="dt">x =</span> Tension, <span class="dt">y =</span> Usure, <span class="dt">colour =</span> Laine, <span class="dt">fill =</span> Laine)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> <span class="kw">position_jitterdodge</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">0.7</span>), <span class="dt">fatten =</span> <span class="ot">NULL</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> mean, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">0.7</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Usure&quot;</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="calculer-les-moyennes-et-leurs-intervalles-de-confiance" class="section level2">
+<h2><span class="header-section-number">5.4</span> Calculer les moyennes et leurs intervalles de confiance</h2>
+<p>Il peut également être intéressant, avant de réaliser l’ANOVA, de calculer les moyennes et leurs intervalles de confiance. Une façon rapide de le faire est d’employer la fonction <code>summarySE()</code> du package <code>Rmisc</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">mydata_moy &lt;-<span class="st"> </span><span class="kw">summarySE</span>(mydata, </a>
+<a class="sourceLine" id="cb5-2" title="2">                        <span class="dt">measurevar =</span> <span class="st">&quot;Usure&quot;</span>, </a>
+<a class="sourceLine" id="cb5-3" title="3">                        <span class="dt">groupvars =</span> <span class="kw">c</span>(<span class="st">&quot;Tension&quot;</span>,<span class="st">&quot;Laine&quot;</span>))</a>
+<a class="sourceLine" id="cb5-4" title="4">mydata_moy</a></code></pre></div>
+<pre><code>##     Tension   Laine N     Usure        sd        se        ci
+## 1  T.Faible Laine.A 9 12.615076 0.8564690 0.2854897 0.6583404
+## 2  T.Faible Laine.B 9  8.935897 1.4346080 0.4782027 1.1027374
+## 3 T.Moyenne Laine.A 9  6.893546 1.4235480 0.4745160 1.0942359
+## 4 T.Moyenne Laine.B 9  9.825706 1.0491770 0.3497257 0.8064689
+## 5  T.Élevée Laine.A 9  7.888296 0.9320269 0.3106756 0.7164193
+## 6  T.Élevée Laine.B 9  7.338493 0.8753724 0.2917908 0.6728708</code></pre>
+<p>Une autre façon rapide de le faire est d’employer la fonction <code>ci.mean()</code> du package <code>Publish</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">Publish<span class="op">::</span><span class="kw">ci.mean</span>(Usure <span class="op">~</span><span class="st"> </span>Tension<span class="op">*</span>Laine, <span class="dt">data =</span> mydata)</a></code></pre></div>
+<pre><code>##  Laine   Tension   mean  CI-95%       
+##  Laine.A T.Faible  12.62 [11.96;13.27]
+##  Laine.A T.Moyenne 6.89  [5.80;7.99]  
+##  Laine.A T.Élevée  7.89  [7.17;8.60]  
+##  Laine.B T.Faible  8.94  [7.83;10.04] 
+##  Laine.B T.Moyenne 9.83  [9.02;10.63] 
+##  Laine.B T.Élevée  7.34  [6.67;8.01]</code></pre>
+<p>Les estimations des intervalles de confiances sont basées sur une distribution <code>t</code>. Elles sont donc biaisées si les données ne suivent pas une loi Normale. Il est recommandé ici de les considérer uniquement de façon approximative, elles ne servent qu’à se faire une première idée.</p>
+<p>L’intérêt d’utiliser la fonction <code>summarySE()</code> c’est qu’on peut ensuite utiliser la sortie pour représenter les moyennes et leurs intervalles de confiance sur un graph.</p>
+</div>
+<div id="visualisation-de-linteraction-probable" class="section level2">
+<h2><span class="header-section-number">5.5</span> Visualisation de l’interaction probable</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">p &lt;-<span class="st"> </span><span class="kw">position_dodge</span>(<span class="fl">0.1</span>) <span class="co"># pour éviter le chevauchement sur le graph</span></a>
+<a class="sourceLine" id="cb9-2" title="2"></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="kw">ggplot</span>(mydata_moy, <span class="kw">aes</span>(<span class="dt">x =</span> Tension, <span class="dt">y =</span> Usure, <span class="dt">colour =</span> Laine, <span class="dt">group =</span> Laine)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> Usure <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> Usure <span class="op">+</span><span class="st"> </span>ci), <span class="dt">width =</span>.<span class="dv">1</span>, <span class="dt">position =</span> p) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Les profils se croisent, on s’attend donc à ce que l’interaction soit de <strong>type qualitative et significative</strong>. Pour plus d’informations sur les interactions, consultez l’<a href="https://wp.me/p93iR1-wu">introduction à l’ANOVA à 2 facteurs</a>.</p>
+<blockquote>
+<p><strong>Remarque :</strong></p>
+<p>Pour calculer des intervalles de confiance robustes, par bootstrap, on peut aussi utiliser les commandes décrites dans l’article <a href="https://wp.me/p93iR1-aw">Analyses statistiques descriptives de données numériques – Partie 2</a>. Il faut le faire pour chaque groupe de croisement des modalités Tension*Laine.</p>
+</blockquote>
+<p>Dans un premier temps, on créé une variable <code>grp</code> correspondant au croisement des modalités des 2 facteurs, grâce à la fonction <code>interaction()</code> du package <code>base</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">mydata &lt;-<span class="st"> </span>mydata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">grp =</span> <span class="kw">interaction</span>(Tension, Laine, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>))</a></code></pre></div>
+<p>Ce calcul d’intervalles robustes n’est pas présenté ici.</p>
+</div>
+<div id="réalisation-de-lanova-à-deux-facteurs" class="section level2">
+<h2><span class="header-section-number">5.6</span> Réalisation de l’ANOVA à deux facteurs</h2>
+<p><strong>En première approche, on ajuste toujours un modèle ANOVA à 2 facteurs avec un terme d’interaction</strong>.</p>
+<blockquote>
+<p>Il existe à ce niveau là, une petite difficulté liée au fait que lorsque les effectifs ne sont pas égaux dans chaque groupe (croisement des modalités), la part de variance de l’interaction peut se calculer de plusieurs façons. On parle de <strong>carrés de type II ou de type III</strong>.</p>
+</blockquote>
+<p>Lorsqu’on ajuste le <strong>modèle complet</strong>, c’est à dire <strong>avec l’interaction</strong>, on utilise généralement des carrés de type III.</p>
+<blockquote>
+<p>Pour cela, il est nécessaire de changer les contrastes des deux facteurs dans le modèle <code>lm()</code> du format par défaut de type <code>contr.treatment</code>, vers le format <code>contr.sum</code>. C’est ce qui permet au logiciel de calculer correctement ces carrés de type III.</p>
+</blockquote>
+<p>Cette modifications des contrastes peut se faire pendant l’ajustement du modèle, ou en amont de celui-ci. Je préfère le faire au moment de l’ajustement.</p>
+<blockquote>
+<p><strong>Remarque :</strong></p>
+<p>Lorsque les effectifs sont équilibrés, les résultats des carrés de type III et de type II sont strictement identiques. ici, il ne serait donc pas nécessaire de changer les contrastes. Mais faites le systématiquement pour en prendre l’habitude.</p>
+</blockquote>
+<p>Comme expliqué dans l’<a href="https://wp.me/p93iR1-p4">article sur l’ANOVA à un facteur</a>, l’ajustement d’une ANOVA peut se faire avec les fonctions <code>lm()</code> ou <code>aov()</code>, mais j’utilise sytématiquement <code>lm()</code>, par habitude.</p>
+<p>L’interaction est incluse dans le modèle en employant le signe <code>*</code> entre les deux facteurs :</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mod1 &lt;-<span class="st"> </span><span class="kw">lm</span>(Usure <span class="op">~</span><span class="st"> </span>Tension <span class="op">*</span><span class="st"> </span>Laine, </a>
+<a class="sourceLine" id="cb11-2" title="2">           <span class="dt">contrasts =</span> <span class="kw">list</span>(<span class="dt">Tension =</span> contr.sum, <span class="dt">Laine =</span> contr.sum), </a>
+<a class="sourceLine" id="cb11-3" title="3">           <span class="dt">data =</span> mydata)</a></code></pre></div>
+</div>
+<div id="visualisation-des-résultats" class="section level2">
+<h2><span class="header-section-number">5.7</span> Visualisation des résultats</h2>
+<p>Le package <code>car</code> dispose d’une fonction <code>Anova()</code> (avec un A majuscule) qui permet d’obtenir les résultats avec les carrés de type III.</p>
+<blockquote>
+<p><strong>Attention :</strong></p>
+<p>Il faut utiliser la fonction <code>Anova()</code> et pas <code>anova()</code>, c’est très important, car les deux fonctions ne fournissent pas les mêmes résultats !</p>
+</blockquote>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">Anova</span>(mod1, <span class="dt">type =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: Usure
+##               Sum Sq Df   F value    Pr(&gt;F)    
+## (Intercept)   4292.9  1 3409.8331 &lt; 2.2e-16 ***
+## Tension         98.4  2   39.0605 8.529e-11 ***
+## Laine            2.5  1    2.0037    0.1634    
+## Tension:Laine   98.4  2   39.0954 8.416e-11 ***
+## Residuals       60.4 48                        
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Avant de passer à l’interprétation des résultats, il est nécessaire de vérifier que les hypothèses de validité de l’ANOVA à 2 facteurs sont satisfaites, car si cela n’est pas le cas, les résultats ne sont pas valides.</p>
+</div>
+<div id="vérification-des-hypothèses-de-validité" class="section level2">
+<h2><span class="header-section-number">5.8</span> Vérification des hypothèses de validité</h2>
+<p>Comme évoqué dans le premier article décortiquant le <a href="https://wp.me/p93iR1-wQ">principe de l’ANOVA à 2 facteurs</a>, les résultats de cette méthode sont valides (on peut avoir confiance dans les résultats), si ces trois hypothèses sont vérifiées :</p>
+<ol style="list-style-type: decimal">
+<li>Les résidus sont indépendants,</li>
+<li>Les résidus suivent une loi normale de moyenne 0,</li>
+<li>Les résidus relatifs aux différentes modalités sont homogènes (ils ont globalement la même dispersion), autrement dit leur variance est constante.</li>
+</ol>
+<blockquote>
+<p><strong>Ces hypothèses se vérifient </strong>sur les résidus** de l’ANOVA.**</p>
+</blockquote>
+<div id="indépendance-des-résidus" class="section level3">
+<h3><span class="header-section-number">5.8.1</span> Indépendance des résidus</h3>
+<p><strong>L’indépendance des résidus signifie que les résidus ne doivent pas être corrélés entre eux</strong>. Par exemple, il ne doit pas avoir de lien entre un résidu et celui de la donnée suivante, ou précédente. On voit cela, lorsque des données sont répétées sur des sujets identiques. On parle alors d’autocorrélation des résidus. De la même façon, les résidus ne doivent pas être corrélés au facteur étudié.</p>
+<p><strong>L’absence d’autocorrélation se valide par l’étude du plan expérimental :</strong> pour réaliser une ANOVA à 2 facteurs, il ne doit pas avoir de données répétées. Si c’est le cas, il faut utiliser un autre type de modèle, comme un modèle linéaire à effet mixte.</p>
+<p>L’absence de corrélation entre les résidus et le facteur étudié peut également se vérifier de façon visuelle lors du diagnostic de régression, par :</p>
+<ul>
+<li>un plot des résidus vs fitted values, ou</li>
+<li>un plot des résidus vs les modalités du facteur.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">plot</span>(mod1, <span class="dv">1</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><strong>Plot des résidus vs fitted values :</strong> la valeur des résidus ne semble pas dépendre du groupe (croisement des modalités) puisqu’ils sont tous globalement centrés sur 0.</p>
+</div>
+<div id="normalité-des-résidus" class="section level3">
+<h3><span class="header-section-number">5.8.2</span> Normalité des résidus</h3>
+<p>Pour vérifier cette hypothèse, on utilise généralement un QQplot et/ou un test de normalité comme le test de Shapiro-Wilk.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">plot</span>(mod1, <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><strong>Plot des résidus standardisés vs quantiles théoriques :</strong> les points sont bien répartis le long de la ligne, cela signifie que les résidus sont distribués selon une loi normale. Le fait que les points soient centrés sur 0 (sur l’axe des y), montre que leur moyenne est égale à 0.</p>
+<p>L’hypothèse nulle du test de normalité de Shapiro-Wilk spécifie que</p>
+<ul>
+<li>Ho : les résidus suivent une loi normale,</li>
+</ul>
+<p>alors que son hypothèse alternative spécifie que</p>
+<ul>
+<li>H1 : ils suivent une autre distribution quelconque.</li>
+</ul>
+<p>Pour accepter la normalité des résidus, il est donc nécessaire d’obtenir une <strong>p-value &gt; 0.05</strong>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">shapiro_test</span>(<span class="kw">residuals</span>(mod1))</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   variable        statistic p.value
+##   &lt;chr&gt;               &lt;dbl&gt;   &lt;dbl&gt;
+## 1 residuals(mod1)     0.985   0.708</code></pre>
+</div>
+<div id="homogénéité-des-variances" class="section level3">
+<h3><span class="header-section-number">5.8.3</span> Homogénéité des variances</h3>
+<p>L’hypothèse d’homogénéité des variances, c’est-à-dire l’hypothèse que les résidus ont une variance constante, peut s’évaluer graphiquement et/ou à l’aide d’un test statistique.</p>
+<p>La méthode graphique consiste à représenter les résidus standardisés en fonction des valeurs prédites (les moyennes des différents groupes).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">plot</span>(mod1, <span class="dv">3</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><strong>Plot des résidus standardisés vs valeurs prédites :</strong> les dispersions des résidus (leurs écartements verticaux) relatives à chaque groupe (croisement des modalités des 2 facteurs) sont globalement identiques, l’hypothèse d’homogénéité des résidus est acceptée.</p>
+<p>On peut également utiliser le <strong>test de Bartlett</strong>, le <strong>test de Levene</strong>, ou encore le <strong>test de Fligner-Killeen</strong>.</p>
+<ul>
+<li>Leurs hypothèses nulles spécifient que les variances des différents groupes sont globalement identiques.</li>
+<li>A l’inverse, leurs hypothèses alternatives spécifient qu’au moins 2 variances (les variances de 2 modalités) sont différentes.</li>
+</ul>
+<p>Le groupe ici est la combinaison <code>type de tension - type de laine</code> créée avec la variable <code>grp</code> plus haut.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">mydata &lt;-<span class="st"> </span>mydata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">grp =</span> <span class="kw">interaction</span>(Tension, Laine, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>))</a></code></pre></div>
+<p>Pour accepter l’hypothèse d’homogénéité des résidus, il est donc nécessaire d’obtenir une p-value &gt; 0.05.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">bartlett.test</span>(<span class="kw">residuals</span>(mod1) <span class="op">~</span><span class="st"> </span>mydata<span class="op">$</span>grp)</a></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  residuals(mod1) by mydata$grp
+## Bartlett&#39;s K-squared = 4.3834, df = 5, p-value = 0.4956</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">leveneTest</span>(<span class="kw">residuals</span>(mod1) <span class="op">~</span><span class="st"> </span>mydata<span class="op">$</span>grp)</a></code></pre></div>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  5  0.4043 0.8434
+##       48</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">fligner.test</span>(<span class="kw">residuals</span>(mod1) <span class="op">~</span><span class="st"> </span>mydata<span class="op">$</span>grp)</a></code></pre></div>
+<pre><code>## 
+##  Fligner-Killeen test of homogeneity of variances
+## 
+## data:  residuals(mod1) by mydata$grp
+## Fligner-Killeen:med chi-squared = 2.3529, df = 5, p-value = 0.7985</code></pre>
+<blockquote>
+<p>La p-value est largement supérieure à 0.05 avec tous ces tests, l’hypothèse d’homogénéité des résidus est donc acceptée. Un seul test suffit !</p>
+</blockquote>
+<blockquote>
+<p><strong>NB :</strong></p>
+<p>Pour visualiser tous les plots du diagnostic de régression en une fois, il est possible d’utiliser les commandes suivantes :</p>
+</blockquote>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="kw">plot</span>(mod1)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+</div>
+<div id="démarche-en-cas-dinteraction-significative" class="section level2">
+<h2><span class="header-section-number">5.9</span> Démarche en cas d’interaction significative</h2>
+<p>Les hypothèses étant validées, les résultats peuvent être interprétés. Affichons les résultats :</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">Anova</span>(mod1, <span class="dt">type =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: Usure
+##               Sum Sq Df   F value    Pr(&gt;F)    
+## (Intercept)   4292.9  1 3409.8331 &lt; 2.2e-16 ***
+## Tension         98.4  2   39.0605 8.529e-11 ***
+## Laine            2.5  1    2.0037    0.1634    
+## Tension:Laine   98.4  2   39.0954 8.416e-11 ***
+## Residuals       60.4 48                        
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Compte tenu du croisement des profils de l’usure en fonction de la tension, pour les laines de type A et B, <strong>l’interaction est qualitative et significative</strong>.</p>
+<p>Dans ce cas, comme expliqué dans l’article <a href="https://wp.me/p93iR1-p4">ANOVA à un facteur : Partie 2 – La pratique</a>, il n’est pas possible d’interpréter les effets propres des facteurs <code>Tension</code> et <code>Laine</code>.</p>
+<p>Dans ce cas de figure, deux solutions sont envisageables :</p>
+<ul>
+<li><p>La première consiste à faire une ANOVA à un facteur sur la variable <code>grp</code> créée précédemment (croisement des modalités des 2 facteurs). Puis, si l’effet est significatif, des comparaisons multiples peuvent être réalisées pour mettre en évidence les moyennes significativement différentes deux à deux.</p></li>
+<li><p>La seconde solution consiste à réaliser les comparaisons des moyennes relatives aux modalités d’un facteur, séparément pour chacune des modalités de l’autre facteur. Par exemple, comparer les moyennes des usures des tensions Faible, Moyenne et Élevée pour les laines de type A d’une part, et de type B d’autre part.</p></li>
+</ul>
+<blockquote>
+<p>Dans l’esprit, c’est un peu comme si on faisait une ANOVA à un facteur (qui serait la Tension) et ses comparaisons multiples subséquentes (pour chaque modalité de laine (A ou B)).</p>
+<p>En pratique, cette 2nde approche nécessite de construire une matrice de contrastes afin de définir les comparaisons souhaitées.</p>
+</blockquote>
+<div id="anova-à-un-facteur-group-et-comparaisons-2-à-2" class="section level3">
+<h3><span class="header-section-number">5.9.1</span> ANOVA à un facteur (<code>group</code>) et comparaisons 2 à 2</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">mod_grp &lt;-<span class="st"> </span><span class="kw">lm</span>(Usure <span class="op">~</span><span class="st"> </span>grp, <span class="dt">data =</span> mydata)</a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="kw">Anova</span>(mod_grp)</a></code></pre></div>
+<pre><code>## Anova Table (Type II tests)
+## 
+## Response: Usure
+##            Sum Sq Df F value    Pr(&gt;F)    
+## grp       199.315  5  31.663 4.131e-14 ***
+## Residuals  60.431 48                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>L’ANOVA à un facteur montre un effet significatif de la variable <code>grp</code> (croisement des modalités des facteurs <code>Tension</code> et <code>Laine</code>). Les moyennes sont ensuite comparées 2 à 2 selon l’approche de <strong>Tukey</strong>, en employant la fonction <code>glht()</code> du package <code>multcomp</code>.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">mc_tukey &lt;-<span class="st"> </span><span class="kw">glht</span>(mod_grp, <span class="dt">linfct =</span> <span class="kw">mcp</span>(<span class="dt">grp =</span> <span class="st">&quot;Tukey&quot;</span>))</a>
+<a class="sourceLine" id="cb31-2" title="2"><span class="kw">summary</span>(mc_tukey)</a></code></pre></div>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: lm(formula = Usure ~ grp, data = mydata)
+## 
+## Linear Hypotheses:
+##                                            Estimate Std. Error t value Pr(&gt;|t|)
+## T.Moyenne_Laine.A - T.Faible_Laine.A == 0   -5.7215     0.5289 -10.817  &lt; 0.001
+## T.Élevée_Laine.A - T.Faible_Laine.A == 0    -4.7268     0.5289  -8.936  &lt; 0.001
+## T.Faible_Laine.B - T.Faible_Laine.A == 0    -3.6792     0.5289  -6.956  &lt; 0.001
+## T.Moyenne_Laine.B - T.Faible_Laine.A == 0   -2.7894     0.5289  -5.274  &lt; 0.001
+## T.Élevée_Laine.B - T.Faible_Laine.A == 0    -5.2766     0.5289  -9.976  &lt; 0.001
+## T.Élevée_Laine.A - T.Moyenne_Laine.A == 0    0.9948     0.5289   1.881  0.42614
+## T.Faible_Laine.B - T.Moyenne_Laine.A == 0    2.0424     0.5289   3.861  0.00431
+## T.Moyenne_Laine.B - T.Moyenne_Laine.A == 0   2.9322     0.5289   5.544  &lt; 0.001
+## T.Élevée_Laine.B - T.Moyenne_Laine.A == 0    0.4449     0.5289   0.841  0.95813
+## T.Faible_Laine.B - T.Élevée_Laine.A == 0     1.0476     0.5289   1.981  0.36820
+## T.Moyenne_Laine.B - T.Élevée_Laine.A == 0    1.9374     0.5289   3.663  0.00773
+## T.Élevée_Laine.B - T.Élevée_Laine.A == 0    -0.5498     0.5289  -1.039  0.90211
+## T.Moyenne_Laine.B - T.Faible_Laine.B == 0    0.8898     0.5289   1.682  0.54982
+## T.Élevée_Laine.B - T.Faible_Laine.B == 0    -1.5974     0.5289  -3.020  0.04397
+## T.Élevée_Laine.B - T.Moyenne_Laine.B == 0   -2.4872     0.5289  -4.702  &lt; 0.001
+##                                               
+## T.Moyenne_Laine.A - T.Faible_Laine.A == 0  ***
+## T.Élevée_Laine.A - T.Faible_Laine.A == 0   ***
+## T.Faible_Laine.B - T.Faible_Laine.A == 0   ***
+## T.Moyenne_Laine.B - T.Faible_Laine.A == 0  ***
+## T.Élevée_Laine.B - T.Faible_Laine.A == 0   ***
+## T.Élevée_Laine.A - T.Moyenne_Laine.A == 0     
+## T.Faible_Laine.B - T.Moyenne_Laine.A == 0  ** 
+## T.Moyenne_Laine.B - T.Moyenne_Laine.A == 0 ***
+## T.Élevée_Laine.B - T.Moyenne_Laine.A == 0     
+## T.Faible_Laine.B - T.Élevée_Laine.A == 0      
+## T.Moyenne_Laine.B - T.Élevée_Laine.A == 0  ** 
+## T.Élevée_Laine.B - T.Élevée_Laine.A == 0      
+## T.Moyenne_Laine.B - T.Faible_Laine.B == 0     
+## T.Élevée_Laine.B - T.Faible_Laine.B == 0   *  
+## T.Élevée_Laine.B - T.Moyenne_Laine.B == 0  ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+<p>Il est également possible de visualiser ces comparaions multiples sur un graph.</p>
+<blockquote>
+<p>Vu la longueur des noms de lignes, mérite de modifier les marges par défaut : par(mar = c(). A numerical vector of the form <code>c(bottom, left, top, right)</code> which gives the number of lines of margin to be specified on the four sides of the plot. The default is <code>c(5, 4, 4, 2) + 0.1</code>.</p>
+</blockquote>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">17</span>, <span class="dv">3</span>, <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="kw">plot</span>(mc_tukey)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Le package <code>multcomp</code>, contient également une fonction <code>cld()</code> qui permet, dans le cadre du test de Tukey, d’indiquer par des lettres la significativité des comparaisons.</p>
+<blockquote>
+<p>Lorsque deux modalités partagent une même lettre, cela signifie que leurs différences ne sont pas significativement différentes.</p>
+<p>A l’inverse, lorsque deux modalités ne partagent pas de lettres en commun, alors cela signifie que leurs moyennes sont significativement différentes.</p>
+</blockquote>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">tuk.cld &lt;-<span class="st"> </span><span class="kw">cld</span>(mc_tukey) </a>
+<a class="sourceLine" id="cb34-2" title="2">tuk.cld</a></code></pre></div>
+<pre><code>##  T.Faible_Laine.A T.Moyenne_Laine.A  T.Élevée_Laine.A  T.Faible_Laine.B 
+##               &quot;d&quot;               &quot;a&quot;              &quot;ab&quot;              &quot;bc&quot; 
+## T.Moyenne_Laine.B  T.Élevée_Laine.B 
+##               &quot;c&quot;               &quot;a&quot;</code></pre>
+<p><a href="https://delladata.fr/comparaison-de-moyennes-indiquer-les-differences-significatives-sur-le-graph">On peut alors utiliser ces lettres pour les ajouter sur un graph réalisé avec ggplot2</a>.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">letters &lt;-<span class="st"> </span>tuk.cld<span class="op">$</span>mcletters<span class="op">$</span>Letters</a>
+<a class="sourceLine" id="cb36-2" title="2">myletters_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">grp =</span> <span class="kw">levels</span>(mydata<span class="op">$</span>grp),</a>
+<a class="sourceLine" id="cb36-3" title="3">                           <span class="dt">letters =</span> letters)</a>
+<a class="sourceLine" id="cb36-4" title="4">myletters_df</a></code></pre></div>
+<pre><code>##                                 grp letters
+## T.Faible_Laine.A   T.Faible_Laine.A       d
+## T.Moyenne_Laine.A T.Moyenne_Laine.A       a
+## T.Élevée_Laine.A   T.Élevée_Laine.A      ab
+## T.Faible_Laine.B   T.Faible_Laine.B      bc
+## T.Moyenne_Laine.B T.Moyenne_Laine.B       c
+## T.Élevée_Laine.B   T.Élevée_Laine.B       a</code></pre>
+<p>Vérifier la correspondance des groupes et des lettres :</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">mydata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Usure, grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">list</span>(<span class="dt">usure_moyen =</span> mean, <span class="dt">sd =</span> sd))</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   grp               usure_moyen    sd
+##   &lt;fct&gt;                   &lt;dbl&gt; &lt;dbl&gt;
+## 1 T.Faible_Laine.A        12.6  0.856
+## 2 T.Moyenne_Laine.A        6.89 1.42 
+## 3 T.Élevée_Laine.A         7.89 0.932
+## 4 T.Faible_Laine.B         8.94 1.43 
+## 5 T.Moyenne_Laine.B        9.83 1.05 
+## 6 T.Élevée_Laine.B         7.34 0.875</code></pre>
+<p>Il n’y a donc pas lieu de faire un ajustement de correspondance entre letters et grp. Visualisons maintenant avec des histogrammes :</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">mydata <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Usure, grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(grp) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-4" title="4"><span class="st">  </span><span class="kw">summarise_all</span>(<span class="kw">list</span>(<span class="dt">usure_moyen =</span> mean, <span class="dt">sd =</span> sd)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> grp, <span class="dt">y =</span> usure_moyen)) <span class="op">+</span><span class="co">#, colour = grp)) + </span></a>
+<a class="sourceLine" id="cb40-6" title="6"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">width =</span> <span class="fl">0.6</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-7" title="7"><span class="st">    </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">15</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-8" title="8"><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Groupe&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;Usure moyenne&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-9" title="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">45</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">vjust =</span> <span class="dv">1</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb40-10" title="10"><span class="st">    </span><span class="kw">geom_text</span>(<span class="dt">data =</span> myletters_df, <span class="kw">aes</span>(<span class="dt">label =</span> letters, <span class="dt">y =</span> <span class="dv">13</span>), <span class="dt">vjust =</span> <span class="fl">-0.5</span>, <span class="dt">size =</span> <span class="dv">4</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Cette méthode peut aboutir à réaliser un grand nombre de comparaisons, dont certaines ne sont pas intéressantes. Comme les p-values sont ajustées pour garder un risque alpha global de 5%, cela peut empêcher la mise en évidence de différences significatives.</p>
+</div>
+<div id="comparaisons-à-lintérieur-dune-modalité" class="section level3">
+<h3><span class="header-section-number">5.9.2</span> Comparaisons à l’intérieur d’une modalité</h3>
+<p>Cette approche est plus technique. Elle consiste</p>
+<ul>
+<li><p>dans un premier temps à <strong>ajuster un modèle ANOVA à un facteur sur la variable <code>grp</code></strong> (croisement des modalités), <strong>en omettant l’intercept</strong>, afin que les paramètres du modèle correspondent aux moyennes des différentes conditions.</p></li>
+<li><p>Dans un second temps, il s’agit de <strong>construire une matrice de contrastes, correspondant aux comparaisons de moyennes souhaitées</strong>.</p></li>
+<li><p>Enfin, <strong>le modèle et la matrice sont fournis en argument de la fonction <code>glht()</code></strong> du package <code>multcomp</code>, pour obtenir ces comparaisons.</p></li>
+</ul>
+<p>Dans cette approche, <strong>on limite donc les comparaisons à celles qui nous intéressent</strong>.</p>
+<p>Dans l’exemple ci-dessous, on va comparer 2 à 2 les moyennes de l’usure pour les tensions faible, moyenne et élevée, pour la laine de type A d’un coté, puis la laine B de l’autre.</p>
+<div id="ajustement-du-modèle-anova-à-un-facteur-sans-intercept" class="section level4">
+<h4><span class="header-section-number">5.9.2.1</span> Ajustement du modèle ANOVA à un facteur, sans intercept</h4>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">mod_grp2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Usure <span class="op">~</span><span class="st"> </span>grp <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> mydata)</a>
+<a class="sourceLine" id="cb41-2" title="2"><span class="kw">summary</span>(mod_grp2)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Usure ~ grp - 1, data = mydata)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.59235 -0.64873 -0.06734  0.74193  2.35075 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## grpT.Faible_Laine.A    12.615      0.374   33.73   &lt;2e-16 ***
+## grpT.Moyenne_Laine.A    6.894      0.374   18.43   &lt;2e-16 ***
+## grpT.Élevée_Laine.A     7.888      0.374   21.09   &lt;2e-16 ***
+## grpT.Faible_Laine.B     8.936      0.374   23.89   &lt;2e-16 ***
+## grpT.Moyenne_Laine.B    9.826      0.374   26.27   &lt;2e-16 ***
+## grpT.Élevée_Laine.B     7.338      0.374   19.62   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1.122 on 48 degrees of freedom
+## Multiple R-squared:  0.9867, Adjusted R-squared:  0.9851 
+## F-statistic: 594.7 on 6 and 48 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="construction-de-la-matrice-de-contratses" class="section level4">
+<h4><span class="header-section-number">5.9.2.2</span> Construction de la matrice de contratses</h4>
+<p>On commence par construire la matrice des contrastes permettant les comparaisons 2 à 2 pour la laine de type A avec la fonction <code>contrMat()</code> du package <code>multcomp</code> :</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">Tukey &lt;-<span class="st"> </span><span class="kw">contrMat</span>(<span class="kw">table</span>(mydata<span class="op">$</span>Tension), <span class="st">&quot;Tukey&quot;</span>)</a>
+<a class="sourceLine" id="cb43-2" title="2"></a>
+<a class="sourceLine" id="cb43-3" title="3">K1 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Tukey, <span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)))</a>
+<a class="sourceLine" id="cb43-4" title="4"></a>
+<a class="sourceLine" id="cb43-5" title="5"><span class="kw">rownames</span>(K1) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">levels</span>(mydata<span class="op">$</span>Laine)[<span class="dv">1</span>], <span class="kw">rownames</span>(K1), <span class="dt">sep =</span> <span class="st">&quot;:&quot;</span>)</a>
+<a class="sourceLine" id="cb43-6" title="6">K1</a></code></pre></div>
+<pre><code>##                              T.Faible T.Moyenne T.Élevée      
+## Laine.A:T.Moyenne - T.Faible       -1         1        0 0 0 0
+## Laine.A:T.Élevée - T.Faible        -1         0        1 0 0 0
+## Laine.A:T.Élevée - T.Moyenne        0        -1        1 0 0 0</code></pre>
+<p>Puis, de la même façon, on construit la matrice des contrastes pour la laine de type B :</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">K2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)), Tukey)</a>
+<a class="sourceLine" id="cb45-2" title="2"></a>
+<a class="sourceLine" id="cb45-3" title="3"><span class="kw">rownames</span>(K2) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">levels</span>(mydata<span class="op">$</span>Laine)[<span class="dv">2</span>], <span class="kw">rownames</span>(K2), <span class="dt">sep =</span> <span class="st">&quot;:&quot;</span>)</a>
+<a class="sourceLine" id="cb45-4" title="4">K2</a></code></pre></div>
+<pre><code>##                                    T.Faible T.Moyenne T.Élevée
+## Laine.B:T.Moyenne - T.Faible 0 0 0       -1         1        0
+## Laine.B:T.Élevée - T.Faible  0 0 0       -1         0        1
+## Laine.B:T.Élevée - T.Moyenne 0 0 0        0        -1        1</code></pre>
+<p>Enfin, on assemble les deux matrices :</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">K &lt;-<span class="st"> </span><span class="kw">rbind</span>(K1, K2)</a>
+<a class="sourceLine" id="cb47-2" title="2"><span class="kw">colnames</span>(K) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">colnames</span>(Tukey), <span class="kw">colnames</span>(Tukey))</a>
+<a class="sourceLine" id="cb47-3" title="3">K</a></code></pre></div>
+<pre><code>##                              T.Faible T.Moyenne T.Élevée T.Faible T.Moyenne
+## Laine.A:T.Moyenne - T.Faible       -1         1        0        0         0
+## Laine.A:T.Élevée - T.Faible        -1         0        1        0         0
+## Laine.A:T.Élevée - T.Moyenne        0        -1        1        0         0
+## Laine.B:T.Moyenne - T.Faible        0         0        0       -1         1
+## Laine.B:T.Élevée - T.Faible         0         0        0       -1         0
+## Laine.B:T.Élevée - T.Moyenne        0         0        0        0        -1
+##                              T.Élevée
+## Laine.A:T.Moyenne - T.Faible        0
+## Laine.A:T.Élevée - T.Faible         0
+## Laine.A:T.Élevée - T.Moyenne        0
+## Laine.B:T.Moyenne - T.Faible        0
+## Laine.B:T.Élevée - T.Faible         1
+## Laine.B:T.Élevée - T.Moyenne        1</code></pre>
+</div>
+<div id="réalisation-des-comparaisons-souhaitées" class="section level4">
+<h4><span class="header-section-number">5.9.2.3</span> Réalisation des comparaisons souhaitées</h4>
+<p>Enfin, on obtient les comparaisons souhaitées :</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="kw">summary</span>(<span class="kw">glht</span>(mod_grp2, <span class="dt">linfct =</span> K))</a></code></pre></div>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Fit: lm(formula = Usure ~ grp - 1, data = mydata)
+## 
+## Linear Hypotheses:
+##                                   Estimate Std. Error t value Pr(&gt;|t|)    
+## Laine.A:T.Moyenne - T.Faible == 0  -5.7215     0.5289 -10.817  &lt; 1e-04 ***
+## Laine.A:T.Élevée - T.Faible == 0   -4.7268     0.5289  -8.936  &lt; 1e-04 ***
+## Laine.A:T.Élevée - T.Moyenne == 0   0.9948     0.5289   1.881 0.283053    
+## Laine.B:T.Moyenne - T.Faible == 0   0.8898     0.5289   1.682 0.390735    
+## Laine.B:T.Élevée - T.Faible == 0   -1.5974     0.5289  -3.020 0.021909 *  
+## Laine.B:T.Élevée - T.Moyenne == 0  -2.4872     0.5289  -4.702 0.000122 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+<p>Ci-dessous les commandes pour comparer les moyennes d’usure de laines A et B pour chaque niveau de tension :</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">Tukey &lt;-<span class="st"> </span><span class="kw">contrMat</span>(<span class="kw">table</span>(mydata<span class="op">$</span>Laine), <span class="st">&quot;Tukey&quot;</span>)</a>
+<a class="sourceLine" id="cb51-2" title="2"></a>
+<a class="sourceLine" id="cb51-3" title="3">K3 &lt;-<span class="st"> </span><span class="kw">cbind</span>(Tukey, <span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)),</a>
+<a class="sourceLine" id="cb51-4" title="4">            <span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)))</a>
+<a class="sourceLine" id="cb51-5" title="5"></a>
+<a class="sourceLine" id="cb51-6" title="6"><span class="kw">rownames</span>(K3) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">levels</span>(mydata<span class="op">$</span>Tension)[<span class="dv">1</span>], <span class="kw">rownames</span>(K3), <span class="dt">sep =</span> <span class="st">&quot;:&quot;</span>)</a>
+<a class="sourceLine" id="cb51-7" title="7">K3</a></code></pre></div>
+<pre><code>##                            Laine.A Laine.B        
+## T.Faible:Laine.B - Laine.A      -1       1 0 0 0 0</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">K4 &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)), Tukey,</a>
+<a class="sourceLine" id="cb53-2" title="2">            <span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)))</a>
+<a class="sourceLine" id="cb53-3" title="3"></a>
+<a class="sourceLine" id="cb53-4" title="4"><span class="kw">rownames</span>(K4) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">levels</span>(mydata<span class="op">$</span>Tension)[<span class="dv">2</span>], <span class="kw">rownames</span>(K4), <span class="dt">sep =</span> <span class="st">&quot;:&quot;</span>)</a>
+<a class="sourceLine" id="cb53-5" title="5">K4</a></code></pre></div>
+<pre><code>##                                 Laine.A Laine.B    
+## T.Moyenne:Laine.B - Laine.A 0 0      -1       1 0 0</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">K5 &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)),</a>
+<a class="sourceLine" id="cb55-2" title="2">            <span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> <span class="kw">nrow</span>(Tukey), <span class="dt">ncol =</span> <span class="kw">ncol</span>(Tukey)), Tukey)</a>
+<a class="sourceLine" id="cb55-3" title="3"></a>
+<a class="sourceLine" id="cb55-4" title="4"><span class="kw">rownames</span>(K5) &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">levels</span>(mydata<span class="op">$</span>Tension)[<span class="dv">3</span>], <span class="kw">rownames</span>(K5), <span class="dt">sep =</span> <span class="st">&quot;:&quot;</span>)</a>
+<a class="sourceLine" id="cb55-5" title="5">K5</a></code></pre></div>
+<pre><code>##                                    Laine.A Laine.B
+## T.Élevée:Laine.B - Laine.A 0 0 0 0      -1       1</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">K6 &lt;-<span class="st"> </span><span class="kw">rbind</span>(K3, K4, K5)</a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="kw">colnames</span>(K6) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">colnames</span>(Tukey), <span class="kw">colnames</span>(Tukey), <span class="kw">colnames</span>(Tukey)) </a>
+<a class="sourceLine" id="cb57-3" title="3">K6</a></code></pre></div>
+<pre><code>##                             Laine.A Laine.B Laine.A Laine.B Laine.A Laine.B
+## T.Faible:Laine.B - Laine.A       -1       1       0       0       0       0
+## T.Moyenne:Laine.B - Laine.A       0       0      -1       1       0       0
+## T.Élevée:Laine.B - Laine.A        0       0       0       0      -1       1</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1"><span class="kw">summary</span>(<span class="kw">glht</span>(mod_grp2, <span class="dt">linfct =</span> K6))</a></code></pre></div>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Fit: lm(formula = Usure ~ grp - 1, data = mydata)
+## 
+## Linear Hypotheses:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## T.Faible:Laine.B - Laine.A == 0   -5.7215     0.5289 -10.817   &lt;1e-04 ***
+## T.Moyenne:Laine.B - Laine.A == 0   1.0476     0.5289   1.981     0.15    
+## T.Élevée:Laine.B - Laine.A == 0   -2.4872     0.5289  -4.702   &lt;1e-04 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+</div>
+<div id="démarche-en-cas-dinteraction-quantitative-significative" class="section level2">
+<h2><span class="header-section-number">5.10</span> Démarche en cas d’interaction quantitative significative</h2>
+<p>Dans cette situation, <strong>les effets propres des facteurs sont généralement interprétés</strong> ( à partir du modèle contenant l’interaction). En fonction de la p-value (inférieure ou supérieure au seuil de significativité choisi) on conclura à la présence d’un effet significatif, ou à l’absence de mise en évidence d’un effet significatif.</p>
+<p>Si au moins un des effets est significatif, on réalisera les comparaisons multiples correspondantes, comme décrit dans le paragraphe 6.</p>
+</div>
+<div id="démarche-en-cas-dinteraction-non-significative" class="section level2">
+<h2><span class="header-section-number">5.11</span> Démarche en cas d’interaction non significative</h2>
+<div id="jeu-de-données-2" class="section level3">
+<h3><span class="header-section-number">5.11.1</span> Jeu de données</h3>
+<p>Pour illustrer cette démarche, je vais utiliser une autre simulation de données :</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">N1 &lt;-<span class="st"> </span><span class="dv">9</span></a>
+<a class="sourceLine" id="cb61-2" title="2"></a>
+<a class="sourceLine" id="cb61-3" title="3">Tension &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;É&quot;</span>), <span class="dt">each =</span> <span class="dv">2</span><span class="op">*</span>N1)</a>
+<a class="sourceLine" id="cb61-4" title="4">Laine &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>), <span class="dt">each =</span> N1), <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb61-5" title="5"></a>
+<a class="sourceLine" id="cb61-6" title="6"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb61-7" title="7">L_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">12</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-8" title="8">L_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">10</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-9" title="9">M_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">8</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-10" title="10">M_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">6</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-11" title="11">H_A &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">10</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-12" title="12">H_B &lt;-<span class="st"> </span><span class="kw">rnorm</span>(N1, <span class="dv">7</span>, <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb61-13" title="13"></a>
+<a class="sourceLine" id="cb61-14" title="14">Usure &lt;-<span class="st"> </span><span class="kw">c</span>(L_A, L_B, M_A, M_B, H_A, H_B)</a>
+<a class="sourceLine" id="cb61-15" title="15">df2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(Tension, Laine, Usure)</a>
+<a class="sourceLine" id="cb61-16" title="16"></a>
+<a class="sourceLine" id="cb61-17" title="17">df2 &lt;-<span class="st"> </span>df2 <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb61-18" title="18"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Tension =</span> <span class="kw">factor</span>(Tension, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>, <span class="st">&quot;É&quot;</span>)),</a>
+<a class="sourceLine" id="cb61-19" title="19">         <span class="dt">Laine =</span> <span class="kw">factor</span>(Laine, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)))</a>
+<a class="sourceLine" id="cb61-20" title="20"><span class="kw">write_csv</span>(df2, <span class="st">&quot;data/dU2.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb61-21" title="21"></a>
+<a class="sourceLine" id="cb61-22" title="22">df2_avg &lt;-<span class="st"> </span><span class="kw">summarySE</span>(df2,</a>
+<a class="sourceLine" id="cb61-23" title="23">                     <span class="dt">measurevar =</span> <span class="st">&quot;Usure&quot;</span>, </a>
+<a class="sourceLine" id="cb61-24" title="24">                     <span class="dt">groupvars =</span> <span class="kw">c</span>(<span class="st">&quot;Tension&quot;</span>,<span class="st">&quot;Laine&quot;</span>))</a>
+<a class="sourceLine" id="cb61-25" title="25">df2_avg</a></code></pre></div>
+<pre><code>##   Tension Laine N     Usure        sd        se        ci
+## 1       F     A 9 12.615076 0.8564690 0.2854897 0.6583404
+## 2       F     B 9  9.935897 1.4346080 0.4782027 1.1027374
+## 3       M     A 9  7.893546 1.4235480 0.4745160 1.0942359
+## 4       M     B 9  5.825706 1.0491770 0.3497257 0.8064689
+## 5       É     A 9  9.388296 0.9320269 0.3106756 0.7164193
+## 6       É     B 9  7.338493 0.8753724 0.2917908 0.6728708</code></pre>
+</div>
+<div id="visualisation-1" class="section level3">
+<h3><span class="header-section-number">5.11.2</span> Visualisation</h3>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">p &lt;-<span class="st"> </span><span class="kw">position_dodge</span>(<span class="fl">0.1</span>) </a>
+<a class="sourceLine" id="cb63-2" title="2"></a>
+<a class="sourceLine" id="cb63-3" title="3"><span class="kw">ggplot</span>(df2_avg, <span class="kw">aes</span>(<span class="dt">x =</span> Tension, <span class="dt">y =</span> Usure, <span class="dt">colour =</span> Laine, <span class="dt">group =</span> Laine)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb63-4" title="4"><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> Usure <span class="op">-</span><span class="st"> </span>ci, <span class="dt">ymax =</span> Usure <span class="op">+</span><span class="st"> </span>ci), <span class="dt">width =</span>.<span class="dv">1</span>, <span class="dt">position =</span> p) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-5" title="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">position =</span> p, <span class="dt">size =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>Ici, les profils ne se croisent pas, on s’attend donc à une interaction non significative.</p>
+</div>
+<div id="lanova" class="section level3">
+<h3><span class="header-section-number">5.11.3</span> L’ANOVA</h3>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">mod2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Usure <span class="op">~</span><span class="st"> </span>Tension <span class="op">*</span><span class="st"> </span>Laine, </a>
+<a class="sourceLine" id="cb64-2" title="2">           <span class="dt">contrasts =</span> <span class="kw">list</span>(<span class="dt">Tension =</span> contr.sum, <span class="dt">Laine =</span> contr.sum), </a>
+<a class="sourceLine" id="cb64-3" title="3">           <span class="dt">data =</span> df2) </a>
+<a class="sourceLine" id="cb64-4" title="4"></a>
+<a class="sourceLine" id="cb64-5" title="5"><span class="kw">Anova</span>(mod2, <span class="dt">type =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: Usure
+##               Sum Sq Df   F value    Pr(&gt;F)    
+## (Intercept)   4213.0  1 3346.3922 &lt; 2.2e-16 ***
+## Tension        181.4  2   72.0620 3.498e-15 ***
+## Laine           69.3  1   55.0409 1.681e-09 ***
+## Tension:Laine    1.2  2    0.4588    0.6348    
+## Residuals       60.4 48                        
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>L’interaction n’est pas significative. <strong>Avant d’interpréter les résultats, on va ajuster à nouveau le modèle de l’ANOVA à deux facteurs, mais sans le terme d’interaction</strong>, puisque celle-ci n’est pas significative.</p>
+</div>
+<div id="ajustement-du-modèle-sans-le-terme-dinteraction" class="section level3">
+<h3><span class="header-section-number">5.11.4</span> Ajustement du modèle sans le terme d’interaction</h3>
+<p>Pour réaliser une ANOVA à 2 facteurs, <strong>sans terme d’interaction</strong>, il suffit de remplacer, dans la formule du modèle, le signe <code>*</code> par le signe <code>+</code>. Par ailleurs, <strong>lorsque le modèle ne contient pas de terme d’interaction, on utilise les carrés de type II</strong>. Pour cela, il suffit simplement d’utiliser les contrastes par défaut qui sont de type <code>contr.treatment</code>.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1">mod3 &lt;-<span class="st"> </span><span class="kw">lm</span>(Usure <span class="op">~</span><span class="st"> </span>Tension <span class="op">+</span><span class="st"> </span>Laine, <span class="dt">data =</span> df2) </a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="kw">Anova</span>(mod3)</a></code></pre></div>
+<pre><code>## Anova Table (Type II tests)
+## 
+## Response: Usure
+##            Sum Sq Df F value    Pr(&gt;F)    
+## Tension   181.449  2  73.656 1.246e-15 ***
+## Laine      69.295  1  56.259 9.916e-10 ***
+## Residuals  61.586 50                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Les effets des deux facteurs sont significatifs.</p>
+<ul>
+<li><p>Concernant le facteur <code>Tension</code>, cela signifie qu’au moins deux moyennes d’usure sont différentes entre les tensions L, M et H.</p></li>
+<li><p>Concernant le facteur <code>laine</code>, la même conclusion serait tirée s’il existait plus de 2 modalités. Dans notre cas de figure, cela signifie alors que la moyenne d’usure de la laine A est significativement supérieure à celle de la laine B.</p></li>
+</ul>
+</div>
+<div id="comparaisons-multiples" class="section level3">
+<h3><span class="header-section-number">5.11.5</span> Comparaisons multiples</h3>
+<p>Là encore, le package <code>multcomp</code> permet de réaliser toutes les comparaisons en une seule fois, et donc d’ajuster les p-values de façon parfaitement adéquate. Pour cela, on réalise deux matrices de contrastes (K1 et K2), une pour chaque facteur, afin de définir les comparaisons souhaitées. Puis on les réunit dans une seule matrice, qui est donnée en argument à la fonction <code>glht()</code>.</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">K7 &lt;-<span class="st"> </span><span class="kw">glht</span>(mod3, <span class="kw">mcp</span>(<span class="dt">Laine =</span> <span class="st">&quot;Tukey&quot;</span>))<span class="op">$</span>linfct</a>
+<a class="sourceLine" id="cb68-2" title="2">K7</a></code></pre></div>
+<pre><code>##       (Intercept) TensionM TensionÉ LaineB
+## B - A           0        0        0      1
+## attr(,&quot;type&quot;)
+## [1] &quot;Tukey&quot;</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" title="1">K8 &lt;-<span class="st"> </span><span class="kw">glht</span>(mod3, <span class="kw">mcp</span>(<span class="dt">Tension =</span> <span class="st">&quot;Tukey&quot;</span>))<span class="op">$</span>linfct</a>
+<a class="sourceLine" id="cb70-2" title="2">K8</a></code></pre></div>
+<pre><code>##       (Intercept) TensionM TensionÉ LaineB
+## M - F           0        1        0      0
+## É - F           0        0        1      0
+## É - M           0       -1        1      0
+## attr(,&quot;type&quot;)
+## [1] &quot;Tukey&quot;</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" title="1">K9 &lt;-<span class="st"> </span><span class="kw">rbind</span>(K7, K8) </a>
+<a class="sourceLine" id="cb72-2" title="2">K9</a></code></pre></div>
+<pre><code>##       (Intercept) TensionM TensionÉ LaineB
+## B - A           0        0        0      1
+## M - F           0        1        0      0
+## É - F           0        0        1      0
+## É - M           0       -1        1      0</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" title="1"><span class="kw">summary</span>(<span class="kw">glht</span>(mod3, <span class="dt">linfct =</span> K9))</a></code></pre></div>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Fit: lm(formula = Usure ~ Tension + Laine, data = df2)
+## 
+## Linear Hypotheses:
+##            Estimate Std. Error t value Pr(&gt;|t|)    
+## B - A == 0  -2.2656     0.3021  -7.501  &lt; 1e-04 ***
+## M - F == 0  -4.4159     0.3699 -11.937  &lt; 1e-04 ***
+## É - F == 0  -2.9121     0.3699  -7.872  &lt; 1e-04 ***
+## É - M == 0   1.5038     0.3699   4.065 0.000646 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" title="1"><span class="kw">plot</span>(<span class="kw">summary</span>(<span class="kw">glht</span>(mod3, <span class="dt">linfct =</span> K9)))</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<p>Comme attendu, les résultats nous montrent que la moyenne d’usure de la laine A est supérieure à celle de la laine B. Et que les moyennes d’usure des tensions sont toutes significativement différentes deux à deux.</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2><span class="header-section-number">5.12</span> Conclusion</h2>
+<p>Penses-tu avoir bien compris ?</p>
+<p>Si non, re-exploite le tutoriel.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="test-de-chi-deux-avec-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Tutozco.pdf", "Tutozco.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
