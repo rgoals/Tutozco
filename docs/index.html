@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Mes apprentissages avec R</title>
+  <meta name="description" content="The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Mes apprentissages avec R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Mes apprentissages avec R" />
+  
+  <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="zco" />
+
+
+<meta name="date" content="2021-08-15" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="anova-à-mesures-répétées-avec-r.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#abc"><i class="fa fa-check"></i><b>1.1</b> Abc</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#def"><i class="fa fa-check"></i><b>1.2</b> Def</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#ghi"><i class="fa fa-check"></i><b>1.3</b> Ghi</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#jkl"><i class="fa fa-check"></i><b>1.4</b> Jkl</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html"><i class="fa fa-check"></i><b>2</b> ANOVA à mesures répétées avec R</a><ul>
+<li class="chapter" data-level="2.1" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#librairies"><i class="fa fa-check"></i><b>2.1</b> Librairies</a></li>
+<li class="chapter" data-level="2.2" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#données"><i class="fa fa-check"></i><b>2.2</b> Données</a></li>
+<li class="chapter" data-level="2.3" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sommaire-des-données"><i class="fa fa-check"></i><b>2.3</b> Sommaire des données</a></li>
+<li class="chapter" data-level="2.4" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#visualisation-boxplots"><i class="fa fa-check"></i><b>2.4</b> Visualisation boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#détection-valeurs-aberrantes"><i class="fa fa-check"></i><b>2.5</b> Détection valeurs aberrantes</a></li>
+<li class="chapter" data-level="2.6" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#normalité"><i class="fa fa-check"></i><b>2.6</b> Normalité</a></li>
+<li class="chapter" data-level="2.7" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité"><i class="fa fa-check"></i><b>2.7</b> Sphéricité</a></li>
+<li class="chapter" data-level="2.8" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#sphéricité-et-anova-mesures-repétées"><i class="fa fa-check"></i><b>2.8</b> Sphéricité et ANOVA, mesures repétées</a></li>
+<li class="chapter" data-level="2.9" data-path="anova-à-mesures-répétées-avec-r.html"><a href="anova-à-mesures-répétées-avec-r.html#test-post-hoc-mesures-repétées"><i class="fa fa-check"></i><b>2.9</b> Test post-hoc, mesures repétées</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html"><i class="fa fa-check"></i><b>3</b> Test de friedman avec R</a><ul>
+<li class="chapter" data-level="3.1" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#les-librairies"><i class="fa fa-check"></i><b>3.1</b> Les librairies</a></li>
+<li class="chapter" data-level="3.2" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#jeu-de-données"><i class="fa fa-check"></i><b>3.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="3.3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#statistiques-sommaires"><i class="fa fa-check"></i><b>3.3</b> Statistiques sommaires</a></li>
+<li class="chapter" data-level="3.4" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation"><i class="fa fa-check"></i><b>3.4</b> Visualisation</a></li>
+<li class="chapter" data-level="3.5" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#le-test"><i class="fa fa-check"></i><b>3.5</b> Le test</a></li>
+<li class="chapter" data-level="3.6" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#taille-de-leffet"><i class="fa fa-check"></i><b>3.6</b> Taille de l’effet</a></li>
+<li class="chapter" data-level="3.7" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#comparaisons-multiples-par-paires"><i class="fa fa-check"></i><b>3.7</b> Comparaisons multiples par paires</a></li>
+<li class="chapter" data-level="3.8" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#interprétation"><i class="fa fa-check"></i><b>3.8</b> Interprétation</a></li>
+<li class="chapter" data-level="3.9" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation-boxplots-avec-p-values"><i class="fa fa-check"></i><b>3.9</b> Visualisation : boxplots avec p-values</a></li>
+<li class="chapter" data-level="3.10" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#references"><i class="fa fa-check"></i><b>3.10</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html"><i class="fa fa-check"></i><b>4</b> Test de Chi-deux avec R</a><ul>
+<li class="chapter" data-level="4.1" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#jeu-de-données-simulées"><i class="fa fa-check"></i><b>4.1</b> Jeu de données simulées</a></li>
+<li class="chapter" data-level="4.2" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#le-test-1"><i class="fa fa-check"></i><b>4.2</b> Le test</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>5</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses sont pas satisfaites</span></a><ul>
+<li class="chapter" data-level="5.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#liste-des-packages"><i class="fa fa-check"></i><b>5.1</b> Liste des packages</a></li>
+<li class="chapter" data-level="5.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#jeu-de-données-1"><i class="fa fa-check"></i><b>5.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#exploration-visuelle"><i class="fa fa-check"></i><b>5.3</b> Exploration visuelle</a></li>
+<li class="chapter" data-level="5.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance"><i class="fa fa-check"></i><b>5.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="5.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#visualisation-de-linteraction-probable"><i class="fa fa-check"></i><b>5.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="5.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#réalisation-de-lanova-à-deux-facteurs"><i class="fa fa-check"></i><b>5.6</b> Réalisation de l’ANOVA à deux facteurs</a></li>
+<li class="chapter" data-level="5.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#visualisation-des-résultats"><i class="fa fa-check"></i><b>5.7</b> Visualisation des résultats</a></li>
+<li class="chapter" data-level="5.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#vérification-des-hypothèses-de-validité"><i class="fa fa-check"></i><b>5.8</b> Vérification des hypothèses de validité</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#indépendance-des-résidus"><i class="fa fa-check"></i><b>5.8.1</b> Indépendance des résidus</a></li>
+<li class="chapter" data-level="5.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#normalité-des-résidus"><i class="fa fa-check"></i><b>5.8.2</b> Normalité des résidus</a></li>
+<li class="chapter" data-level="5.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#homogénéité-des-variances"><i class="fa fa-check"></i><b>5.8.3</b> Homogénéité des variances</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#démarche-en-cas-dinteraction-significative"><i class="fa fa-check"></i><b>5.9</b> Démarche en cas d’interaction significative</a><ul>
+<li class="chapter" data-level="5.9.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#anova-à-un-facteur-group-et-comparaisons-2-à-2"><i class="fa fa-check"></i><b>5.9.1</b> ANOVA à un facteur (<code>group</code>) et comparaisons 2 à 2</a></li>
+<li class="chapter" data-level="5.9.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#comparaisons-à-lintérieur-dune-modalité"><i class="fa fa-check"></i><b>5.9.2</b> Comparaisons à l’intérieur d’une modalité</a></li>
+</ul></li>
+<li class="chapter" data-level="5.10" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#démarche-en-cas-dinteraction-quantitative-significative"><i class="fa fa-check"></i><b>5.10</b> Démarche en cas d’interaction quantitative significative</a></li>
+<li class="chapter" data-level="5.11" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#démarche-en-cas-dinteraction-non-significative"><i class="fa fa-check"></i><b>5.11</b> Démarche en cas d’interaction non significative</a><ul>
+<li class="chapter" data-level="5.11.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#jeu-de-données-2"><i class="fa fa-check"></i><b>5.11.1</b> Jeu de données</a></li>
+<li class="chapter" data-level="5.11.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#visualisation-1"><i class="fa fa-check"></i><b>5.11.2</b> Visualisation</a></li>
+<li class="chapter" data-level="5.11.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#lanova"><i class="fa fa-check"></i><b>5.11.3</b> L’ANOVA</a></li>
+<li class="chapter" data-level="5.11.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#ajustement-du-modèle-sans-le-terme-dinteraction"><i class="fa fa-check"></i><b>5.11.4</b> Ajustement du modèle sans le terme d’interaction</a></li>
+<li class="chapter" data-level="5.11.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#comparaisons-multiples"><i class="fa fa-check"></i><b>5.11.5</b> Comparaisons multiples</a></li>
+</ul></li>
+<li class="chapter" data-level="5.12" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-pas-satisfaites.html#conclusion"><i class="fa fa-check"></i><b>5.12</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>6</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses ne sont pas satisfaites</span></a><ul>
+<li class="chapter" data-level="6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.1</b> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#libraires"><i class="fa fa-check"></i><b>6.2</b> Libraires</a></li>
+<li class="chapter" data-level="6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-des-données"><i class="fa fa-check"></i><b>6.3</b> Visualisation des données</a></li>
+<li class="chapter" data-level="6.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance-1"><i class="fa fa-check"></i><b>6.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="6.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-de-linteraction-probable-1"><i class="fa fa-check"></i><b>6.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="6.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité"><i class="fa fa-check"></i><b>6.6</b> Mise en évidence des défauts de normalité et d’homogénéité</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>6.6.1</b> Réalisation de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="6.6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus"><i class="fa fa-check"></i><b>6.6.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus"><i class="fa fa-check"></i><b>6.6.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7</b> Utilisation d’une transformation log de la réponse</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse"><i class="fa fa-check"></i><b>6.7.1</b> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</a></li>
+<li class="chapter" data-level="6.7.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité"><i class="fa fa-check"></i><b>6.7.2</b> Evaluation de l’hypothèse de normalité</a></li>
+<li class="chapter" data-level="6.7.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité"><i class="fa fa-check"></i><b>6.7.3</b> Evaluation de l’hypothèse d’homogénéité</a></li>
+<li class="chapter" data-level="6.7.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#résultats"><i class="fa fa-check"></i><b>6.7.4</b> Résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-boxcox-de-la-réponse"><i class="fa fa-check"></i><b>6.8</b> Utilisation d’une transformation BoxCox de la réponse</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#définition-et-réalisation"><i class="fa fa-check"></i><b>6.8.1</b> Définition et réalisation</a></li>
+<li class="chapter" data-level="6.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="6.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus-1"><i class="fa fa-check"></i><b>6.8.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+<li class="chapter" data-level="6.8.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#exploitation-des-résultats"><i class="fa fa-check"></i><b>6.8.4</b> Exploitation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#conclusion-1"><i class="fa fa-check"></i><b>6.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html"><i class="fa fa-check"></i><b>7</b> <span>MANOVA à 1 facteur dans R</span></a><ul>
+<li class="chapter" data-level="7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#introduction-1"><i class="fa fa-check"></i><b>7.1</b> Introduction</a></li>
+<li class="chapter" data-level="7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#prérequis"><i class="fa fa-check"></i><b>7.2</b> Prérequis</a></li>
+<li class="chapter" data-level="7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#jeu-de-données-3"><i class="fa fa-check"></i><b>7.3</b> Jeu de données</a></li>
+<li class="chapter" data-level="7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-2"><i class="fa fa-check"></i><b>7.4</b> Visualisation</a></li>
+<li class="chapter" data-level="7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#statistiques-descriptives"><i class="fa fa-check"></i><b>7.5</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-de-linteraction-probable-2"><i class="fa fa-check"></i><b>7.6</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#hypothèses-et-tests-préliminaires"><i class="fa fa-check"></i><b>7.7</b> Hypothèses et tests préliminaires</a><ul>
+<li class="chapter" data-level="7.7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-taille-des-échantillons"><i class="fa fa-check"></i><b>7.7.1</b> Vérifier l’hypothèse de taille des échantillons</a></li>
+<li class="chapter" data-level="7.7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-les-valeurs-aberrantes-univariées"><i class="fa fa-check"></i><b>7.7.2</b> Identifier les valeurs aberrantes univariées</a></li>
+<li class="chapter" data-level="7.7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#détecter-les-valeurs-aberrantes-multivariées"><i class="fa fa-check"></i><b>7.7.3</b> Détecter les valeurs aberrantes multivariées</a></li>
+<li class="chapter" data-level="7.7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-normalité-univariée"><i class="fa fa-check"></i><b>7.7.4</b> Vérifier l’hypothèse de normalité univariée</a></li>
+<li class="chapter" data-level="7.7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#normalité-à-plusieurs-variables"><i class="fa fa-check"></i><b>7.7.5</b> Normalité à plusieurs variables</a></li>
+<li class="chapter" data-level="7.7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-la-multicollinéarité"><i class="fa fa-check"></i><b>7.7.6</b> Identifier la multicollinéarité</a></li>
+<li class="chapter" data-level="7.7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-linéarité"><i class="fa fa-check"></i><b>7.7.7</b> Vérifier l’hypothèse de linéarité</a></li>
+<li class="chapter" data-level="7.7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-des-covariances"><i class="fa fa-check"></i><b>7.7.8</b> Vérifier l’hypothèse d’homogénéité des covariances</a></li>
+<li class="chapter" data-level="7.7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-de-la-variance"><i class="fa fa-check"></i><b>7.7.9</b> Vérifier l’hypothèse d’homogénéité de la variance</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#manova-le-test"><i class="fa fa-check"></i><b>7.8</b> MANOVA, le test</a></li>
+<li class="chapter" data-level="7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#tests-post-hoc"><i class="fa fa-check"></i><b>7.9</b> Tests post-hoc</a><ul>
+<li class="chapter" data-level="7.9.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#calculer-lanova-à-un-facteur"><i class="fa fa-check"></i><b>7.9.1</b> Calculer l’ANOVA à un facteur</a></li>
+<li class="chapter" data-level="7.9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#les-comparaisons-par-paires"><i class="fa fa-check"></i><b>7.9.2</b> Les comparaisons par paires</a></li>
+</ul></li>
+<li class="chapter" data-level="7.10" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#rapporter"><i class="fa fa-check"></i><b>7.10</b> Rapporter</a></li>
+<li class="chapter" data-level="7.11" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#résumé"><i class="fa fa-check"></i><b>7.11</b> Résumé</a></li>
+<li class="chapter" data-level="7.12" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#references-1"><i class="fa fa-check"></i><b>7.12</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mes apprentissages avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Mes apprentissages avec R</h1>
+<p class="author"><em>zco</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>2021-08-15</em></p>
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">Chapitre 1</span> Introduction</h1>
+<div id="abc" class="section level2">
+<h2><span class="header-section-number">1.1</span> Abc</h2>
+</div>
+<div id="def" class="section level2">
+<h2><span class="header-section-number">1.2</span> Def</h2>
+</div>
+<div id="ghi" class="section level2">
+<h2><span class="header-section-number">1.3</span> Ghi</h2>
+</div>
+<div id="jkl" class="section level2">
+<h2><span class="header-section-number">1.4</span> Jkl</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="anova-à-mesures-répétées-avec-r.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Tutozco.pdf", "Tutozco.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

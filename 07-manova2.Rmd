@@ -1,0 +1,17 @@
+---
+title: "MANOVA 1"
+author: "zco"
+date: "14/08/2021"
+output: html_document
+---
+
+
+
+
+
+
+
+
+
+
+

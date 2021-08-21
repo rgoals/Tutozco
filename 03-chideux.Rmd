@@ -1,0 +1,43 @@
+---
+title: "chi.deux"
+author: "zco"
+date: "06/08/2021"
+output: html_document
+---
+
+# Test de Chi-deux avec R
+
+
+## Jeu de données simulées
+
+Table 2 lignes/3 colonnes
+ 
+```{r}
+M <- as.table(rbind(c(762, 327, 468), c(484, 239, 477)))
+M
+```
+
+Entête colonne et ligne
+
+```{r}
+dimnames(M) <- list(gender = c("M", "F"), party = c("Democrat", "Independent", "Republican"))
+M
+```
+
+## Le test
+
+Résultats du test
+
+```{r}
+(test <- chisq.test(M))
+```
+
+
+```{r}
+test$statistic #: la statistique du Chi2.
+test$parameter #: le nombre de degrés de libertés.
+test$p.value #: la p-value.
+test$observed #: la matrice observée de départ.
+test$expected #: la matrice attendue sous l'hypothèse nulle d'absence de biais.
+```
+

@@ -1,0 +1,159 @@
+---
+title: "friedman"
+author: "zco"
+date: "20/07/2021"
+output: html_document
+---
+
+
+# Test de friedman avec R
+
+
+## Les librairies
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+```
+
+
+## Jeu de données
+
+```{r}
+data("selfesteem", package = "datarium")
+selfesteem
+```
+
+Rassemblez les colonnes t1, t2 et t3 en format long. Convertir les variables id et time en factor (ou variables de regroupement)
+
+```{r}
+selfesteem <- selfesteem %>%
+  gather(key = "time", value = "score", t1, t2, t3) %>%
+  convert_as_factor(id, time)
+head(selfesteem)
+```
+
+
+## Statistiques sommaires
+
+Calculer quelques statistiques sommaires du score de l’estime de soi par groupe (time)
+
+```{r}
+selfesteem %>%
+  group_by(time) %>%
+  get_summary_stats(score, type = "common")
+```
+
+
+## Visualisation
+
+Créer un box plot et ajouter des points correspondant à des valeurs individuelles
+
+```{r}
+ggboxplot(selfesteem, x = "time", y = "score", add = "jitter")
+```
+
+
+## Le test
+
+Nous utiliserons la fonction `friedman_test()` [paquet `rstatix`], un wrapper autour de la fonction de base R `friedman.test()`.
+
+```{r}
+res.fried <- selfesteem %>% friedman_test(score ~ time |id)
+res.fried
+```
+
+> Le score de l’estime de soi est statistiquement significativement différent aux différents temps durant le régime, X2(2) = 18,2, p = 0,0001.
+
+## Taille de l’effet
+
+Le W de Kendall peut être utilisé comme mesure de la taille de l’effet du test de Friedman. Il se calcule comme suit : W = X2/N(K-1) ; où W est la valeur W de Kendall ; X2 est la valeur statistique du test de Friedman ; N est la taille de l’échantillon. k est le nombre de mesures par sujet (M. T. Tomczak and Tomczak 2014).
+
+Le coefficient W de Kendall prend la valeur de 0 (indiquant l’absence de relation) à 1 (indiquant une relation parfaite).
+
+Le W de Kendall utilise les recommandations d’interprétation de Cohen: 0,1 - < 0,3 (petit effet), 0,3 - < 0,5 (effet modéré) et >= 0,5 (effet important). Les intervalles de confiance sont calculés par bootstap.
+
+```{r}
+selfesteem %>% 
+  friedman_effsize(score ~ time |id)
+```
+
+> Une grande taille d’effet est détectée, W = 0,91.
+
+
+## Comparaisons multiples par paires
+
+D’après les résultats du test de Friedman, nous savons qu’il y a une différence significative entre les groupes, mais nous ne savons pas quelles paires de groupes sont différentes.
+
+Un test de Friedman significatif peut être suivi de tests des rangs de Wilcoxon pour identifier quels groupes sont différents.
+
+Notez que les données doivent être correctement ordonnées par la variable de bloc (id) pour que la première observation du temps t1 soit appariée avec la première observation du temps t2, et ainsi de suite.
+
+Comparaisons par paires à l’aide du test apparié des rangs signés de Wilcoxon. Les p-values sont ajustées à l’aide de la méthode de correction des tests multiples de Bonferroni.
+
+```{r}
+pwc <- selfesteem %>%
+  wilcox_test(score ~ time, paired = TRUE, p.adjust.method = "bonferroni")
+pwc
+```
+
+> Toutes les différences par paires sont statistiquement significatives.
+
+Notez qu’il est également possible d’effectuer des comparaisons par paires à l’aide du test de signe, qui peut manquer de puissance pour détecter les différences dans les jeux de données appariés. Cependant, il est utile parce qu’il ne comporte que peu d’hypothèses sur les distributions des données à comparer.
+
+```{r}
+pwc2 <- selfesteem %>%
+  sign_test(score ~ time, p.adjust.method = "bonferroni")
+pwc2
+```
+
+
+## Interprétation
+
+Le score de l’estime de soi était statistiquement significativement différent aux différents points de temps en utilisant le test de Friedman, X2(2) = 18,2, p = 0,00011.
+
+Le test des rangs signés de Wilcoxon entre les groupes a révélé des différences statistiquement significatives dans le score d’estime de soi entre t1 et t2 (p = 0,006) ; t1 et t3 (0,006) ; t2 et t3 (0,012).
+
+
+## Visualisation : boxplots avec p-values
+
+```{r}
+pwc <- pwc %>% 
+  add_xy_position(x = "time")
+
+ggboxplot(selfesteem, x = "time", y = "score", add = "point") +
+  stat_pvalue_manual(pwc, hide.ns = TRUE) +
+  labs(
+    subtitle = get_test_label(res.fried, detailed = TRUE),
+    caption = get_pwc_label(pwc)
+  )
+```
+
+
+## References
+
+Tomczak, Maciej T., and Ewa Tomczak. 2014. “[The Need to Report Effect Size Estimates Revisited. an Overview of Some Recommended Measures of Effect Size](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwidn8mUz_HxAhVcBGMBHYzvARYQFjABegQIBBAD&url=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F303919832_The_need_to_report_effect_size_estimates_revisited_An_overview_of_some_recommended_measures_of_effect_size&usg=AOvVaw2HVuicGemuyFkJp_TGfHU2).” Trends in SportSciences.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

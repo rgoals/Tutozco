@@ -1,0 +1,323 @@
+---
+title: "ANOVA à 2 facteurs dans R"
+author: "zco"
+date: "13/08/2021"
+output: html_document
+---
+
+
+# ANOVA à 2 facteurs avec R : [Quand les hypothèses ne sont pas satisfaites](https://delladata.fr/anova-a-2-facteurs-quand-les-hypotheses-ne-sont-pas-satisfaites/)
+
+Nous allons voir ici, les solutions qui peuvent être envisagées lorsque l’hypothèse de normalité et/ou l’hypothèse d’homogénéité des résidus ne sont pas satisfaites pour une ANOVA à 2 facteurs (two ways anova).	
+
+## Rappels concernant les hypothèses de validité de l'ANOVA à 2 facteurs
+
+Comme décrit dans le tutoriel il est nécessaire que l’ANOVA à 2 facteurs (comme tous les modèles linéaires d’ailleurs) satisfasse trois conditions, pour que ses résultats soient valides (c’est à dire pour qu’on puisse avoir confiance dans ces résultats). On parle alors d’hypothèses de validité. 
+
+> **Celles-ci se vérifient **sur les résidus** de l’ANOVA.**
+
+Ces hypothèses de validité sont :
+
+1. L‘indépendance des résidus,
+1. La normalité des résidus, autrement dit les résidus sont distribués selon une loi normale de moyenne 0,
+1. L’homogénéité des résidus, autrement dit la dispersion des résidus (pour chaque condition correspondant aux croisements des modalités des 2 facteurs) est similaire.
+
+> Si l’hypothèse d’indépendance des résidus n’est pas satisfaite, c’est généralement parce que des observations sont réalisées plusieurs fois sur la même unité expérimentale. 
+>
+> Par exemple, 
+>
+> si un des facteurs est un traitement (A ou B) et le second facteur du temps (Jour1, jour2, jour 3) et que les observations sont réalisées pour chaque temps sur le même sujet. Dans ce cas, les données d’un même sujet sont corrélées, et il s’agit alors d’utiliser un modèle mixte pour prendre en compte que les données d’un même sujet se ressemblent plus que les données de deux sujets différents. 
+>
+> Cette situation de non-indépendance des données nécessite de changer d’approche statistique.
+
+__En revanche, lorsque les résidus ne satisfont pas l’hypothèse de normalité et/ou l’hypothèse d’homogénéité cela est plus problématique car il n’existe pas, du moins à ma connaissance, d’approche non paramétrique de l’ANOVA à 2 facteurs (comme cela est le cas pour l’ANOVA à un facteur avec le test de Kruskal-Wallis).__
+
+Il existe néanmoins une solution qui peut facilement être mise en place. Il s’agit d’appliquer une transformation sur la variable réponse. C’est ce que nous allons explorer dans cet article.
+
+> Une solution simple pour l'ANOVA à 2 facteurs : **la transformation**. Plus exactement la transformation `log()` et la transformation de type `Box-Cox`.
+
+Lorsque, dans une ANOVA à 2 facteurs, l’hypothèse de normalité des résidus, et/ou l’hypothèse d’homogénéité des résidus ne sont pas satisfaites, une solution simple à envisager est celle de l’utilisation d’une transformation `log()`, ou d’une transformation de type `Box-Cox` (qui est une généralisation de la transformation log) de la variable réponse. 
+
+L’application de ces transformations a pour conséquence d’améliorer conjointement la normalité et l’homogénéité des résidus. C’est pour cela qu’on peut avoir recours à la transformation de la variable réponse en cas de défaut de normalité et/ou en cas de défaut d’homogénéité **des résidus**.
+
+
+## Libraires
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(car)       # test de levene, ...
+library(Rmisc)     # summarySE(), moy et IC essais factoriels, ...
+```
+
+Prenons pour exemple le dataframe `dnN`, simulé pour l’occasion. On pourrait imaginer qu’il s’agit de mesures de la `Fatigue` musculaire des quadriceps en fonction de trois types d’`Exercices`, course à (pied / vélo simple / vélo elliptique) et en fonction de deux types d’`Hydratation` (eau, boisson glucidique).
+
+```{r}
+dnN <- read_csv("data/dnN.csv")
+```
+
+## Visualisation des données
+
+Commençons par visualiser les données :
+
+```{r warning=FALSE}
+ggplot(dnN, aes(y = Fatigue, x = Exercice, colour = Hydratation, fill = Hydratation)) + 
+    geom_point(position = position_jitterdodge(dodge.width = 0.7), size = 2) +
+    geom_boxplot(alpha = 0.5, position = position_dodge(width = 0.8), fatten = NULL)
+```
+
+On peut voir que :
+
+- les niveaux de fatigue lors des exercices de courses et de vélo elliptique sont relativement proches, mais qu’en revanche la fatigue musculaire est plus forte pour l’exercice du vélo simple.
+
+- le niveau de fatigue est globalement moins élevé en cas d’hydratation avec une boisson glucidique, et que le profil des fatigues est plutôt parallèle.
+
+- les profils de fatigue en fonction du type d’hydratation semblent un peu différents (forte augmentation de la fatigue pour le couple Vélo simple et hydratation avec de l’eau). Ceci laisse à penser qu’une interaction entre les facteurs `Hydration` et `Exercice` pourrait être présente.
+
+## Calculer les moyennes et leurs intervalles de confiance
+
+```{r}
+dnN_moy <- summarySE(dnN, 
+                     measurevar = "Fatigue", 
+                     groupvars = c("Exercice", "Hydratation"))
+dnN_moy
+```
+
+## Visualisation de l'interaction probable
+
+```{r}
+p <- position_dodge(0.1) # pour éviter le chevauchement sur le graph
+
+ggplot(dnN_moy, aes(x = Exercice, y = Fatigue, colour = Hydratation, group = Hydratation)) + 
+  geom_errorbar(aes(ymin = Fatigue - ci, ymax = Fatigue + ci), width =.1, position = p) +
+  geom_line(position = p, size = 1) +
+  geom_point(position = p, size = 2)
+```
+
+=> Une interaction entre les facteurs `Hydration` et `Exercice` pourrait être présente.
+
+
+## Mise en évidence des défauts de normalité et d'homogénéité
+
+### Réalisation de l'ANOVA à 2 facteurs
+
+Pour rappel, les contrastes sont modifiés pour obtenir des carrés de type 3. 
+
+```{r}
+mod <- lm(Fatigue ~  Exercice*Hydratation, 
+          contrasts = list(Exercice = contr.sum, Hydratation = contr.sum),
+          data = dnN) 
+```
+
+### Evaluation de l'hypothèse de normalité des résidus
+
+```{r}
+plot(mod, 2)
+```
+ 
+Le QQplot nous montre qu’il existe un défaut de normalité assez prononcé puisque de nombreux points ne sont pas bien alignés selon la droite.
+
+Le test de Shapiro-Wilk va dans le même sens puisque sa p-value est < 0.05 ; il rejette donc l’hypothèse de normalité.
+
+```{r}
+shapiro.test(residuals(mod))
+```
+ 
+
+### Evaluation de l'hypothèse d'homogénéité des résidus
+
+```{r}
+plot(mod, 3)
+```
+ 
+**Le plot des résidus standardisés en fonction des valeurs prédites** (les moyennes des croisements des exercices et des types d’hydratation) nous montre qu’il existe un défaut d’homogénéité des résidus. En effet, on peut voir que **la variabilité des résidus a tendance à augmenter lorsque la fatigue augmente** (fitted values).
+
+On peut également réaliser un **test de Bartlett**, en créant une variable `condition` qui est le croisement des modalités des facteurs `Exercice` et `Hydratation` :
+
+```{r}
+dnN <- dnN %>% 
+    mutate(condition = interaction(Exercice, Hydratation, sep = "_"))
+tail(dnN)
+```
+
+Le test de Bartlett va dans le même sens puisque sa p-value est < 0.05 ; il rejette donc l’hypothèse d’égalité des variances des résidus.
+
+```{r}
+bartlett.test(residuals(mod) ~ dnN$condition)
+```
+
+```{r}
+leveneTest(residuals(mod) ~ dnN$condition)
+```
+
+```{r}
+fligner.test(residuals(mod) ~ dnN$condition)
+```
+
+
+## Utilisation d'une transformation log de la réponse
+
+### Réalisation de l'ANOVA à 2 facteurs avec le log de la réponse
+
+Pour cela, il suffit seulement d’ajuster à nouveau le modèle ANOVA à 2 facteurs, en utilisant `log(Fatique)` comme variable réponse :
+
+```{r}
+mod_log <- lm(log(Fatigue) ~ Exercice*Hydratation, 
+              contrasts = list(Exercice = contr.sum, Hydratation = contr.sum),
+              data = dnN) 
+```
+
+> **Remarque :**
+>
+> La transformation `log()` peut être utilisée si **les valeurs de la variable réponse sont strictement positives**. Si certaines valeurs sont nulles, on peut ajouter + 1 au log : `log(Fatique + 1)`.
+
+### Evaluation de l'hypothèse de normalité
+
+Quand on réalise à nouveau le QQplot, on peut voir que la normalité des résidus s’est améliorée :
+
+```{r}
+plot(mod_log, 2)
+```
+
+De même, le test de Shapiro-Wilk ne rejette plus l’hypothèse de normalité des résidus puisque sa p-value est > 0.05.
+
+```{r}
+shapiro.test(residuals(mod_log))
+```
+
+### Evaluation de l'hypothèse d'homogénéité
+
+Le plot des résidus standardisés en fonction des valeurs prédites **ne met plus en évidence d’augmentation systématique de la variabilité des résidus avec l’augmentation de la fatigue, et globalement les variabilités des résidus semblent similaires**.
+
+```{r}
+plot(mod_log, 3)
+```
+ 
+Et **le test de Bartlett ne rejette plus l’hypothèse homogénéité des variances** ; sa p-value est > 0.05.
+
+```{r}
+bartlett.test(residuals(mod_log) ~ dnN$condition)
+```
+
+Remarque : le **test de Levene** peut également être utilisé pour évaluer la robustesse du résultat :
+
+```{r}
+leveneTest(residuals(mod_log) ~ dnN$condition)
+```
+
+### Résultats
+
+La table ANOVA est accessible via la fonction `Anova()` du package `car`. L’interaction `Hydratation*Exercice` apparaît significative.
+
+Pour plus d’informations sur l’interprétation et les suites à donner à l’analyse, consulter le tutoriel sur [l’ANOVA à 2 facteurs](https://delladata.fr/anova-a-2-facteurs-avec-r-tutoriel).
+
+
+## Utilisation d'une transformation BoxCox de la réponse
+
+### Définition et réalisation
+
+La transformation BoxCox est définie par :
+
+$$
+B(x, \lambda)=\left\{\begin{array}{ll}
+\frac{x^{\lambda}-1}{\lambda} & \text { si } \lambda \neq 0 \\
+\log (x) & \text { si } \lambda=0
+\end{array}\right.
+$$
+
+Quand `lambda` est différent de zéro, la transformation BoxCox est très proche d’une transformation puissance puisqu’elle retranche 1 et divise par `lambda`, qui est une constante.
+
+Deux éléments importants sont à prendre en considération :
+
+1. Cette transformation BoxCox s’applique elle aussi uniquement lorsque les données sont strictement positives, car en présence de valeurs négatives et positives, l’ordre des données, peut ne pas être préservé. Dans ce cas, on peut ajouter une valeur (appelée `start`) aux réponses pour les rendre toutes positives.
+
+1. La transformation est efficace seulement si les données sont relativement distendues (ratio min max > 1). - vérifier.
+
+Il existe plusieurs fonctions dans R pour appliquer une transformation BoxCox. Ma préférence va à la fonction `powerTransform()` du package `car` pour sa simplicité d’utilisation et les informations fournies en sortie. 
+
+> La fonction `powerTransform()` s’applique directement sur le modèle (celui avec les données initiales) :
+
+```{r}
+p1 <- powerTransform(mod)
+summary(p1)
+```
+
+Les sorties de la fonction sont constituées de trois éléments. 
+
+- Dans la première partie, on retrouve l’estimation du coefficient `lambda` (l’estimation est faite par maximum de vraisemblance).
+
+- Dans la seconde partie, un test statistique est réalisé pour évaluer si `lambda` peut être fixé à 0, c’est à dire pour évaluer si une simple transformation `log` est suffisante.
+
+- Dans la troisième partie un test statistique est réalisé pour évaluer si la transformation BoxCox (avec `lambda = 1` ou lambda différent de 1) est réellement nécessaire.
+
+Ici, on peut voir que :
+
+- lambda est estimé à `-0.2575` avec un intervalle de confiance à 95% = [-0.7824 ; 0.2675].
+- la transformation `log` serait suffisante. On s’en doutait déjà puisque l’intervalle de confiance de lambda contient 0.
+- il est nécessaire d’appliquer une transformation (log ou autre).
+
+A présent, il est nécessaire d’ajouter la réponse transformée au jeu de données, pour ensuite ajuster à nouveau le modèle ANOVA à 2 facteurs avec cette nouvelle réponse :
+
+```{r}
+dnN_bc <- transform(dnN, Fatigue_bc = bcPower(Fatigue, coef(p1)))
+head(dnN_bc)
+```
+
+
+```{r}
+mod_bc <- lm(Fatigue_bc ~ Exercice*Hydratation, 
+             contrasts = list(Exercice = contr.sum, Hydratation = contr.sum),
+             data = dnN_bc)
+```
+ 
+
+### Evaluation de l'hypothèse de normalité des résidus
+
+Lorsqu’on réalise le QQplot, on peut alors voir que la normalité des résidus a été améliorée :
+
+```{r}
+plot(mod_bc, 2)
+```
+
+Ceci est confirmé par le test de Shapiro-Wilk :
+
+```{r}
+shapiro.test(residuals(mod_bc))
+```
+
+### Evaluation de l'hypothèse d'homogénéité des résidus
+
+```{r}
+plot(mod_bc, 3)
+```
+ 
+La variabilité des résidus semble plutôt homogène.
+
+Ceci est confirmé par le test de Bartlett :
+
+```{r}
+bartlett.test(residuals(mod_bc) ~ dnN_bc$condition)
+```
+
+### Exploitation des résultats
+
+```{r}
+Anova(mod_bc, type = 3)
+```
+
+Ici encore l’interaction `Hydratation * Exercice` apparaît significative. Cela était déjà le cas avant l’application des transformations, mais avec une statistique F sans doute largement surestimée (de l’ordre de 6 et 5 avec les transformations contre 34 sans ! - voir ci-dessous) :
+
+```{r}
+Anova(mod, type = 3)
+```
+
+## Conclusion
+
+Les transformations `log` et `BoxCox` ne sont pas réservées à l’ANOVA à deux facteurs, elles peuvent également être utilisées, par exemple, dans le cadre de la régression linéaire multiple, qui n’a pas non plus d’équivalent non paramétrique. Il faut aussi garder en tête que ces transformations ne sont pas toujours efficaces, parfois les améliorations de la normalité et / ou de l’homogénéité des résidus restent insuffisante.
+
+D’autres approches peuvent être employées si seule l’hypothèse d’homogénéité des résidus est rejetée, comme l’utilisation des estimateurs sandwich ou encore en modélisant la variance.
+
+
+
+
+
+

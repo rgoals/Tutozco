@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapitre 4 ANOVA à 2 facteurs : quand les hypothèses ne sont pas satisfaites | Mes apprentissages avec R</title>
+  <meta name="description" content="The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapitre 4 ANOVA à 2 facteurs : quand les hypothèses ne sont pas satisfaites | Mes apprentissages avec R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapitre 4 ANOVA à 2 facteurs : quand les hypothèses ne sont pas satisfaites | Mes apprentissages avec R" />
+  
+  <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="zco" />
+
+
+<meta name="date" content="2021-08-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
+<li class="chapter" data-level="2" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html"><i class="fa fa-check"></i><b>2</b> Comparaisons des effets des régimes par séance</a><ul>
+<li class="chapter" data-level="2.1" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#librairies"><i class="fa fa-check"></i><b>2.1</b> Librairies</a></li>
+<li class="chapter" data-level="2.2" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#données"><i class="fa fa-check"></i><b>2.2</b> Données</a></li>
+<li class="chapter" data-level="2.3" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#sommaire-des-données"><i class="fa fa-check"></i><b>2.3</b> Sommaire des données</a></li>
+<li class="chapter" data-level="2.4" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-boxplots"><i class="fa fa-check"></i><b>2.4</b> Visualisation boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#détection-valeurs-aberrantes"><i class="fa fa-check"></i><b>2.5</b> Détection valeurs aberrantes</a></li>
+<li class="chapter" data-level="2.6" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#normalité"><i class="fa fa-check"></i><b>2.6</b> Normalité</a></li>
+<li class="chapter" data-level="2.7" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#sphéricité"><i class="fa fa-check"></i><b>2.7</b> Sphéricité</a></li>
+<li class="chapter" data-level="2.8" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#séance-1"><i class="fa fa-check"></i><b>2.8</b> Séance 1</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#anova-séance-1"><i class="fa fa-check"></i><b>2.8.1</b> ANOVA, séance 1</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#séance-2"><i class="fa fa-check"></i><b>2.9</b> Séance 2</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#anova-séance-2"><i class="fa fa-check"></i><b>2.9.1</b> ANOVA, séance 2</a></li>
+<li class="chapter" data-level="2.9.2" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-boxplots-séance-2"><i class="fa fa-check"></i><b>2.9.2</b> Visualisation boxplots, séance 2</a></li>
+<li class="chapter" data-level="2.9.3" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#post-hoc-séance-2"><i class="fa fa-check"></i><b>2.9.3</b> Post-hoc, séance 2</a></li>
+<li class="chapter" data-level="2.9.4" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-des-groupes-séance-2"><i class="fa fa-check"></i><b>2.9.4</b> Visualisation des groupes, séance 2</a></li>
+</ul></li>
+<li class="chapter" data-level="2.10" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#séance-3"><i class="fa fa-check"></i><b>2.10</b> Séance 3</a><ul>
+<li class="chapter" data-level="2.10.1" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#anova-séance-3"><i class="fa fa-check"></i><b>2.10.1</b> ANOVA, séance 3</a></li>
+<li class="chapter" data-level="2.10.2" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-boxplots-séance-3"><i class="fa fa-check"></i><b>2.10.2</b> Visualisation boxplots, séance 3</a></li>
+<li class="chapter" data-level="2.10.3" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#post-hoc-séance-3"><i class="fa fa-check"></i><b>2.10.3</b> Post-hoc, séance 3</a></li>
+<li class="chapter" data-level="2.10.4" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-des-groupes-séance-3"><i class="fa fa-check"></i><b>2.10.4</b> Visualisation des groupes, séance 3</a></li>
+</ul></li>
+<li class="chapter" data-level="2.11" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#séance-4"><i class="fa fa-check"></i><b>2.11</b> Séance 4</a><ul>
+<li class="chapter" data-level="2.11.1" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#anova-séance-4"><i class="fa fa-check"></i><b>2.11.1</b> ANOVA, séance 4</a></li>
+<li class="chapter" data-level="2.11.2" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-boxplots-séance-4"><i class="fa fa-check"></i><b>2.11.2</b> Visualisation boxplots, séance 4</a></li>
+<li class="chapter" data-level="2.11.3" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#post-hoc-séance-4"><i class="fa fa-check"></i><b>2.11.3</b> Post-hoc, séance 4</a></li>
+<li class="chapter" data-level="2.11.4" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#visualisation-des-groupes-séance-4"><i class="fa fa-check"></i><b>2.11.4</b> Visualisation des groupes, séance 4</a></li>
+</ul></li>
+<li class="chapter" data-level="2.12" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#sphéricité-et-anova-mesures-repétées"><i class="fa fa-check"></i><b>2.12</b> Sphéricité et ANOVA, mesures repétées</a></li>
+<li class="chapter" data-level="2.13" data-path="comparaisons-des-effets-des-régimes-par-séance.html"><a href="comparaisons-des-effets-des-régimes-par-séance.html#test-post-hoc-mesures-repétées"><i class="fa fa-check"></i><b>2.13</b> Test post-hoc, mesures repétées</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><i class="fa fa-check"></i><b>3</b> ANOVA à 2 facteurs avec R, pratique des apprentissages</a><ul>
+<li class="chapter" data-level="3.1" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#liste-des-packages-et-jeu-de-données"><i class="fa fa-check"></i><b>3.1</b> Liste des packages et jeu de données</a></li>
+<li class="chapter" data-level="3.2" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#exploration-visuelle"><i class="fa fa-check"></i><b>3.2</b> Exploration visuelle</a></li>
+<li class="chapter" data-level="3.3" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance"><i class="fa fa-check"></i><b>3.3</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="3.4" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#visualisation-préliminaire"><i class="fa fa-check"></i><b>3.4</b> Visualisation préliminaire</a></li>
+<li class="chapter" data-level="3.5" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#réalisation-de-lanova-à-deux-facteurs"><i class="fa fa-check"></i><b>3.5</b> Réalisation de l’ANOVA à deux facteurs</a></li>
+<li class="chapter" data-level="3.6" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#visualisation-des-résultats"><i class="fa fa-check"></i><b>3.6</b> Visualisation des résultats</a></li>
+<li class="chapter" data-level="3.7" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#vérification-des-hypothèses-de-validité"><i class="fa fa-check"></i><b>3.7</b> Vérification des hypothèses de validité</a><ul>
+<li class="chapter" data-level="3.7.1" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#indépendance-des-résidus"><i class="fa fa-check"></i><b>3.7.1</b> Indépendance des résidus</a></li>
+<li class="chapter" data-level="3.7.2" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#normalité-des-résidus"><i class="fa fa-check"></i><b>3.7.2</b> Normalité des résidus</a></li>
+<li class="chapter" data-level="3.7.3" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#homogénéité-des-variances"><i class="fa fa-check"></i><b>3.7.3</b> Homogénéité des variances</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#démarche-en-cas-dinteraction-significative"><i class="fa fa-check"></i><b>3.8</b> Démarche en cas d’interaction significative</a><ul>
+<li class="chapter" data-level="3.8.1" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#anova-à-un-facteur-grp-et-comparaisons-2-à-2"><i class="fa fa-check"></i><b>3.8.1</b> ANOVA à un facteur (grp) et comparaisons 2 à 2</a></li>
+<li class="chapter" data-level="3.8.2" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#comparaisons-à-lintérieur-dune-modalité"><i class="fa fa-check"></i><b>3.8.2</b> Comparaisons à l’intérieur d’une modalité</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#démarche-en-cas-dinteraction-quantitative-significative"><i class="fa fa-check"></i><b>3.9</b> Démarche en cas d’interaction quantitative significative</a></li>
+<li class="chapter" data-level="3.10" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#démarche-en-cas-dinteraction-non-significative"><i class="fa fa-check"></i><b>3.10</b> Démarche en cas d’interaction non significative</a><ul>
+<li class="chapter" data-level="3.10.1" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#jeu-de-données"><i class="fa fa-check"></i><b>3.10.1</b> Jeu de données</a></li>
+<li class="chapter" data-level="3.10.2" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#visualisation"><i class="fa fa-check"></i><b>3.10.2</b> Visualisation</a></li>
+<li class="chapter" data-level="3.10.3" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#lanova"><i class="fa fa-check"></i><b>3.10.3</b> L’ANOVA</a></li>
+<li class="chapter" data-level="3.10.4" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#ajustement-du-modèle-sans-le-terme-dinteraction"><i class="fa fa-check"></i><b>3.10.4</b> Ajustement du modèle sans le terme d’interaction</a></li>
+<li class="chapter" data-level="3.10.5" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#comparaisons-multiples"><i class="fa fa-check"></i><b>3.10.5</b> Comparaisons multiples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html"><a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html#conclusion"><i class="fa fa-check"></i><b>3.11</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>4</b> ANOVA à 2 facteurs : quand les hypothèses ne sont pas satisfaites</a><ul>
+<li class="chapter" data-level="4.1" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>4.1</b> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="4.2" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#libraires"><i class="fa fa-check"></i><b>4.2</b> Libraires</a></li>
+<li class="chapter" data-level="4.3" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-des-données"><i class="fa fa-check"></i><b>4.3</b> Visualisation des données</a></li>
+<li class="chapter" data-level="4.4" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité"><i class="fa fa-check"></i><b>4.4</b> Mise en évidence des défauts de normalité et d’homogénéité</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>4.4.1</b> Réalisation de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="4.4.2" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus"><i class="fa fa-check"></i><b>4.4.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="4.4.3" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus"><i class="fa fa-check"></i><b>4.4.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-log-de-la-réponse"><i class="fa fa-check"></i><b>4.5</b> Utilisation d’une transformation log de la réponse</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse"><i class="fa fa-check"></i><b>4.5.1</b> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</a></li>
+<li class="chapter" data-level="4.5.2" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité"><i class="fa fa-check"></i><b>4.5.2</b> Evaluation de l’hypothèse de normalité</a></li>
+<li class="chapter" data-level="4.5.3" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité"><i class="fa fa-check"></i><b>4.5.3</b> Evaluation de l’hypothèse d’homogénéité</a></li>
+<li class="chapter" data-level="4.5.4" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#résultats"><i class="fa fa-check"></i><b>4.5.4</b> Résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-boxcox-de-la-réponse"><i class="fa fa-check"></i><b>4.6</b> Utilisation d’une transformation BoxCox de la réponse</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#définition-et-réalisation"><i class="fa fa-check"></i><b>4.6.1</b> Définition et réalisation</a></li>
+<li class="chapter" data-level="4.6.2" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus-1"><i class="fa fa-check"></i><b>4.6.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="4.6.3" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus-1"><i class="fa fa-check"></i><b>4.6.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+<li class="chapter" data-level="4.6.4" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#exploitation-des-résultats"><i class="fa fa-check"></i><b>4.6.4</b> Exploitation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites.html#conclusion-1"><i class="fa fa-check"></i><b>4.7</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mes apprentissages avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="anova-à-2-facteurs-quand-les-hypothèses-ne-sont-pas-satisfaites" class="section level1">
+<h1><span class="header-section-number">Chapitre 4</span> ANOVA à 2 facteurs : quand les hypothèses ne sont pas satisfaites</h1>
+<p>Nous allons voir ici, les solutions qui peuvent être envisagées lorsque l’hypothèse de normalité et/ou l’hypothèse d’homogénéité des résidus ne sont pas satisfaites pour une ANOVA à 2 facteurs (two ways anova).</p>
+<div id="rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs" class="section level2">
+<h2><span class="header-section-number">4.1</span> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</h2>
+<p>Comme décrit dans le tutoriel il est nécessaire que l’ANOVA à 2 facteurs (comme tous les modèles linéaires d’ailleurs) satisfasse trois conditions, pour que ses résultats soient valides (c’est à dire pour qu’on puisse avoir confiance dans ces résultats). On parle alors d’hypothèses de validité.</p>
+<blockquote>
+<p>Celles-ci se vérifient <strong>sur les résidus</strong> de l’ANOVA.</p>
+</blockquote>
+<p>Ces hypothèses de validité sont :</p>
+<ol style="list-style-type: decimal">
+<li>L‘indépendance des résidus,</li>
+<li>La normalité des résidus, autrement dit les résidus sont distribués selon une loi normale de moyenne 0,</li>
+<li>L’homogénéité des résidus, autrement dit la dispersion des résidus (pour chaque condition correspondant aux croisements des modalités des deux facteurs) est similaire.</li>
+</ol>
+<p>Si l’hypothèse d’indépendance des résidus n’est pas satisfaite, c’est généralement parce que des observations sont réalisées plusieurs fois sur la même unité expérimentale.</p>
+<blockquote>
+<p>Par exemple, si un des facteurs est un traitement (A ou B) et le second facteur du temps (Jour1, jour2, jour 3) et que les observations sont réalisées pour chaque temps sur le même sujet. Dans ce cas, les données d’un même sujet sont corrélées, et il s’agit alors d’utiliser un modèle mixte pour prendre en compte que les données d’un même sujet se ressemblent plus que les données de deux sujets différents.</p>
+<p>Cette situation de non-indépendance des données nécessite de changer d’approche statistique.</p>
+</blockquote>
+<p>En revanche, lorsque les résidus ne satisfont pas l’hypothèse de normalité et/ou l’hypothèse d’homogénéité cela est plus problématique, car il n’existe pas, du moins à ma connaissance, d’approche non paramétrique de l’ANOVA à 2 facteurs (comme cela est le cas pour l’ANOVA à un facteur avec le test de Kruskal-Wallis).</p>
+<p>Il existe néanmoins une solution qui peut facilement être mise en place. Il s’agit d’appliquer une transformation sur la variable réponse. C’est ce que nous allons explorer dans cet article.</p>
+<blockquote>
+<p>Une solution simple pour l’ANOVA à 2 facteurs : <strong>la transformation</strong>.</p>
+</blockquote>
+<p>Lorsque, dans une ANOVA à 2 facteurs, l’hypothèse de normalité des résidus, et/ou l’hypothèse d’homogénéité des résidus ne sont pas satisfaites, une solution simple à envisager est celle de l’utilisation d’une transformation log, ou d’une transformation de type BoxCox (c’est une généralisation de la transformation log) de la variable réponse. L’application de ces transformations a pour conséquence d’améliorer conjointement la normalité et l’homogénéité des résidus. C’est pour cela qu’on peut avoir recours à la transformation de la variable réponse en cas de défaut de normalité des résidus et/ou en cas de défaut d’homogénéité.</p>
+</div>
+<div id="libraires" class="section level2">
+<h2><span class="header-section-number">4.2</span> Libraires</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(car)       <span class="co"># test de levene</span></a></code></pre></div>
+<p>Prenons pour exemple le dataframe <code>df</code>, données simulées pour l’occasion. On pourrait imaginer qu’il s’agit de mesurer la fatigue musculaire des quadriceps en fonction de trois types d’exercices (course à pied / vélo / vélo elliptique) et en fonction de deux types d’hydratation (eau, boisson glucidique).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/df_2fac_nonnorm.csv&quot;</span>)</a></code></pre></div>
+<pre><code>## 
+## -- Column specification --------------------------------------------------------
+## cols(
+##   Fatigue = col_double(),
+##   Exercice = col_character(),
+##   Hydratation = col_character()
+## )</code></pre>
+</div>
+<div id="visualisation-des-données" class="section level2">
+<h2><span class="header-section-number">4.3</span> Visualisation des données</h2>
+<p>Commençons par visualiser les données :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">y =</span> Fatigue, <span class="dt">x =</span> Exercice, <span class="dt">colour =</span> Hydratation)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">position =</span> <span class="kw">position_jitterdodge</span>(<span class="dt">dodge.width =</span> <span class="fl">0.7</span>), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="st">    </span><span class="kw">geom_boxplot</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width =</span> <span class="fl">0.8</span>), <span class="dt">fatten =</span> <span class="ot">NULL</span>) <span class="co">#+</span></a></code></pre></div>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).
+
+## Warning: Removed 1 rows containing missing values (geom_segment).
+
+## Warning: Removed 1 rows containing missing values (geom_segment).
+
+## Warning: Removed 1 rows containing missing values (geom_segment).
+
+## Warning: Removed 1 rows containing missing values (geom_segment).
+
+## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">    <span class="co">#theme_classic()</span></a></code></pre></div>
+<p>On peut voir que :</p>
+<ul>
+<li><p>les niveaux de fatigue lors des exercices de courses et de vélo elliptique sont relativement proches, mais qu’en revanche la fatigue musculaire est plus forte pour l’exercice du vélo simple.</p></li>
+<li><p>le niveau de fatigue est globalement moins élevé en cas d’hydratation avec une boisson glucidique, et que le profil des fatigues est plutôt parallèle.</p></li>
+<li><p>les profils de fatigue en fonction du type d’hydratation semblent un peu différents (forte augmentation de la fatigue pour le couple Vélo simple et hydratation avec de l’eau). Ceci laisse à penser qu’une interaction entre les facteurs “Hydration” et “Exercice” pourrait être présente.</p></li>
+</ul>
+</div>
+<div id="mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité" class="section level2">
+<h2><span class="header-section-number">4.4</span> Mise en évidence des défauts de normalité et d’homogénéité</h2>
+<div id="réalisation-de-lanova-à-2-facteurs" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Réalisation de l’ANOVA à 2 facteurs</h3>
+<p>Pour rappel, les contrastes sont modifiés pour obtenir des carrés de type 3.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">mod &lt;-<span class="st"> </span><span class="kw">lm</span>(Fatigue <span class="op">~</span><span class="st">  </span>Exercice<span class="op">*</span>Hydratation, </a>
+<a class="sourceLine" id="cb7-2" title="2">          <span class="dt">contrasts =</span> <span class="kw">list</span>(<span class="dt">Exercice =</span> contr.sum, <span class="dt">Hydratation =</span> contr.sum),</a>
+<a class="sourceLine" id="cb7-3" title="3">          <span class="dt">data =</span> df) </a></code></pre></div>
+</div>
+<div id="evaluation-de-lhypothèse-de-normalité-des-résidus" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Evaluation de l’hypothèse de normalité des résidus</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">plot</span>(mod, <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Le QQplot nous montre qu’il existe un défaut de normalité assez prononcé puisque de nombreux points ne sont pas bien alignés selon la droite.</p>
+<p>Le test de Shapiro-Wilk va dans le même sens puisque sa p-value est &lt; 0.05 ; il rejette donc l’hypothèse de normalité.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">shapiro.test</span>(<span class="kw">residuals</span>(mod))</a></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(mod)
+## W = 0.95253, p-value = 0.02051</code></pre>
+</div>
+<div id="evaluation-de-lhypothèse-dhomogénéité-des-résidus" class="section level3">
+<h3><span class="header-section-number">4.4.3</span> Evaluation de l’hypothèse d’homogénéité des résidus</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">plot</span>(mod,<span class="dv">3</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><strong>Le plot des résidus standardisés en fonction des valeurs prédites</strong> (les moyennes des croisements des exercices et des types d’hydratation) nous montre qu’il existe un défaut d’homogénéité des résidus. En effet, on peut voir que <strong>la variabilité des résidus a tendance à augmenter lorsque la fatigue augmente</strong> (fitted values).</p>
+<p>On peut également réaliser un <strong>test de Bartlett</strong>, en créant une variable <code>condition</code> qui est le croisement des modalités des facteurs <code>Exercice</code> et <code>Hydratation</code> :</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">interaction</span>(Exercice, Hydratation, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>))</a>
+<a class="sourceLine" id="cb12-3" title="3"></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="kw">tail</span>(df)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   Fatigue Exercice Hydratation        condition                
+##     &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;              &lt;fct&gt;                    
+## 1    32.2 Course   boisson glucidique Course_boisson glucidique
+## 2    34.4 Course   boisson glucidique Course_boisson glucidique
+## 3    34.1 Course   boisson glucidique Course_boisson glucidique
+## 4    38.2 Course   boisson glucidique Course_boisson glucidique
+## 5    31.6 Course   boisson glucidique Course_boisson glucidique
+## 6    36.0 Course   boisson glucidique Course_boisson glucidique</code></pre>
+<p>Le test de Bartlett va dans le même sens puisque sa p-value est &lt; 0.05 ; il rejette donc l’hypothèse d’égalité des variances des résidus.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">bartlett.test</span>(<span class="kw">residuals</span>(mod) <span class="op">~</span><span class="st"> </span>df<span class="op">$</span>condition)</a></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  residuals(mod) by df$condition
+## Bartlett&#39;s K-squared = 26.022, df = 5, p-value = 8.837e-05</code></pre>
+</div>
+</div>
+<div id="utilisation-dune-transformation-log-de-la-réponse" class="section level2">
+<h2><span class="header-section-number">4.5</span> Utilisation d’une transformation log de la réponse</h2>
+<div id="réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</h3>
+<p>Pour cela, il suffit seulement d’ajuster à nouveau le modèle ANOVA à 2 facteurs, en utilisant <code>log(Fatique)</code> comme variable réponse :</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">mod_log &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(Fatigue) <span class="op">~</span><span class="st"> </span>Exercice<span class="op">*</span>Hydratation, </a>
+<a class="sourceLine" id="cb16-2" title="2">              <span class="dt">contrasts =</span> <span class="kw">list</span>(<span class="dt">Exercice =</span> contr.sum, <span class="dt">Hydratation =</span> contr.sum),</a>
+<a class="sourceLine" id="cb16-3" title="3">              <span class="dt">data =</span> df) </a></code></pre></div>
+<blockquote>
+<p><strong>Remarque :</strong></p>
+<p>La transformation <code>log</code> peut être utilisée si <strong>les valeurs de la variable réponse sont strictement positives</strong>. Si certaines valeurs sont nulles, on peut ajouter + 1 au log : <code>log(Fatique+1)</code>.</p>
+</blockquote>
+</div>
+<div id="evaluation-de-lhypothèse-de-normalité" class="section level3">
+<h3><span class="header-section-number">4.5.2</span> Evaluation de l’hypothèse de normalité</h3>
+<p>Quand on réalise à nouveau le QQplot, on peut voir que la normalité des résidus s’est améliorée :</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">plot</span>(mod_log, <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>De même, le test de Shapiro-Wilk ne rejette plus l’hypothèse de normalité des résidus puisque sa pvalue est &gt; 0.05.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">shapiro.test</span>(<span class="kw">residuals</span>(mod_log))</a></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(mod_log)
+## W = 0.98347, p-value = 0.5911</code></pre>
+</div>
+<div id="evaluation-de-lhypothèse-dhomogénéité" class="section level3">
+<h3><span class="header-section-number">4.5.3</span> Evaluation de l’hypothèse d’homogénéité</h3>
+<p>Le plot des résidus standardisés en fonction des valeurs prédites <strong>ne met plus en évidence d’augmentation systématique de la variabilité des résidus avec l’augmentation de la fatigue, et globalement les variabilités des résidus semblent similaires</strong>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">plot</span>(mod_log, <span class="dv">3</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Et <strong>le test de Bartlett ne rejette plus l’hypothèse homogénéité des variances</strong> ; sa p-value est &gt; 0.05.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">bartlett.test</span>(<span class="kw">residuals</span>(mod_log) <span class="op">~</span><span class="st"> </span>df<span class="op">$</span>condition)</a></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  residuals(mod_log) by df$condition
+## Bartlett&#39;s K-squared = 6.7056, df = 5, p-value = 0.2435</code></pre>
+<p>Remarque : le <strong>test de Levene</strong> peut également être utilisé pour évaluer la robustesse du résultat :</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">leveneTest</span>(<span class="kw">residuals</span>(mod_log) <span class="op">~</span><span class="st"> </span>df<span class="op">$</span>condition)</a></code></pre></div>
+<pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
+##       Df F value Pr(&gt;F)
+## group  5  1.0705  0.387
+##       54</code></pre>
+</div>
+<div id="résultats" class="section level3">
+<h3><span class="header-section-number">4.5.4</span> Résultats</h3>
+<p>La table ANOVA est accessible via la fonction <code>Anova()</code> du package <code>car</code>. L’interaction Hydratation * Exercice apparaît significative.</p>
+<p>Pour plus d’informations sur l’interprétation et les suites à donner à l’analyse, consulter le tutoriel sur <a href="https://delladata.fr/anova-a-2-facteurs-avec-r-tutoriel">l’ANOVA à 2 facteurs</a>.</p>
+</div>
+</div>
+<div id="utilisation-dune-transformation-boxcox-de-la-réponse" class="section level2">
+<h2><span class="header-section-number">4.6</span> Utilisation d’une transformation BoxCox de la réponse</h2>
+<div id="définition-et-réalisation" class="section level3">
+<h3><span class="header-section-number">4.6.1</span> Définition et réalisation</h3>
+<p>La transformation BoxCox est définie par :</p>
+<p><span class="math display">\[
+B(x, \lambda)=\left\{\begin{array}{ll}
+\frac{x^{\lambda}-1}{\lambda} &amp; \text { si } \lambda \neq 0 \\
+\log (x) &amp; \text { si } \lambda=0
+\end{array}\right.
+\]</span></p>
+<p>Quand lambda est différent de zéro, la transformation BoxCox est très proche d’une transformation puissance puisqu’elle retranche 1 et divise par lambda, qui est une constante.</p>
+<p>Deux éléments importants sont à prendre en considération :</p>
+<ol style="list-style-type: decimal">
+<li><p>Cette transformation BoxCox s’applique elle aussi uniquement lorsque les données sont strictement positives, car en présence de valeurs négatives et positives, l’ordre des données, peut, ne pas être préservé. Dans ce cas, on peut ajouter une valeur (appelé start) aux réponses pour les rendre toutes positives.</p></li>
+<li><p>La transformation est efficace seulement si les données sont relativement distendues (ratio min max &gt; 1).</p></li>
+</ol>
+<p>Il existe plusieurs fonctions dans R pour appliquer une transformation BoxCox. Ma préférence va à la fonction <code>powerTransform()</code> du package <code>car</code>, pour sa simplicité d’utilisation et les informations fournies en sortie. La fonction <code>powerTransform()</code> s’applique directement sur le modèle (celui avec les données initiales) :</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">summary</span>(p1 &lt;-<span class="st"> </span><span class="kw">powerTransform</span>(mod))</a></code></pre></div>
+<pre><code>## bcPower Transformation to Normality 
+##    Est Power Rounded Pwr Wald Lwr Bnd Wald Upr Bnd
+## Y1   -0.2575           0      -0.7824       0.2675
+## 
+## Likelihood ratio test that transformation parameter is equal to 0
+##  (log transformation)
+##                             LRT df    pval
+## LR test, lambda = (0) 0.9521272  1 0.32918
+## 
+## Likelihood ratio test that no transformation is needed
+##                            LRT df       pval
+## LR test, lambda = (1) 24.81044  1 6.3254e-07</code></pre>
+<p>Les sorties de la fonction sont constituées de trois éléments.</p>
+<ul>
+<li><p>Dans la première partie, on retrouve l’estimation du coefficient lambda (l’estimation est faite par maximum de vraisemblance).</p></li>
+<li><p>Dans la seconde partie, un test statistique est réalisé pour évaluer si lambda peut être fixé à 0, c’est à dire pour évaluer si une simple transformation log est suffisante.</p></li>
+<li><p>Dans la troisième partie un test statistique est réalisé pour évaluer si la transformation BoxCox (avec lambda = 1 ou lambda différent de 1) est réellement nécessaire.</p></li>
+</ul>
+<p>Ici, on peut voir que :</p>
+<ul>
+<li>lambda est estimé à -0.2575 avec un intervalle de confiance à 95% = [-0.7824 ; 0.2675].</li>
+<li>la transformation log serait suffisante. On s’en doutait déjà puisque l’intervalle de confiance de lambda contient 0.</li>
+<li>il est nécessaire d’appliquer une transformation (log ou autre).</li>
+</ul>
+<p>A présent, il est nécessaire d’ajouter la réponse transformée au jeu de données, pour ensuite ajuster à nouveau le modèle ANOVA à 2 facteurs avec cette nouvelle réponse :</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">df_bc &lt;-<span class="st"> </span><span class="kw">transform</span>(df, <span class="dt">Fatigue_bc =</span> <span class="kw">bcPower</span>(Fatigue, <span class="kw">coef</span>(p1)))</a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="kw">head</span>(df_bc)</a></code></pre></div>
+<pre><code>##   Fatigue    Exercice Hydratation       condition Fatigue_bc
+## 1  118.32 Vélo simple         eau Vélo simple_eau   2.747563
+## 2  110.02 Vélo simple         eau Vélo simple_eau   2.726083
+## 3  125.32 Vélo simple         eau Vélo simple_eau   2.764256
+## 4  110.42 Vélo simple         eau Vélo simple_eau   2.727164
+## 5  111.94 Vélo simple         eau Vélo simple_eau   2.731229
+## 6  138.65 Vélo simple         eau Vélo simple_eau   2.793021</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">mod_bc &lt;-<span class="st"> </span><span class="kw">lm</span>(Fatigue_bc <span class="op">~</span><span class="st"> </span>Exercice<span class="op">*</span>Hydratation, </a>
+<a class="sourceLine" id="cb29-2" title="2">             <span class="dt">contrasts =</span> <span class="kw">list</span>(<span class="dt">Exercice =</span> contr.sum, <span class="dt">Hydratation =</span> contr.sum),</a>
+<a class="sourceLine" id="cb29-3" title="3">             <span class="dt">data =</span> df_bc)</a></code></pre></div>
+</div>
+<div id="evaluation-de-lhypothèse-de-normalité-des-résidus-1" class="section level3">
+<h3><span class="header-section-number">4.6.2</span> Evaluation de l’hypothèse de normalité des résidus</h3>
+<p>Lorsqu’on réalise le QQplot, on peut alors voir que la normalité des résidus a été améliorée :</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw">plot</span>(mod_bc, <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Ceci est confirmé par le test de Shapiro-Wilk :</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="kw">shapiro.test</span>(<span class="kw">residuals</span>(mod_bc))</a></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals(mod_bc)
+## W = 0.98638, p-value = 0.7416</code></pre>
+</div>
+<div id="evaluation-de-lhypothèse-dhomogénéité-des-résidus-1" class="section level3">
+<h3><span class="header-section-number">4.6.3</span> Evaluation de l’hypothèse d’homogénéité des résidus</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw">plot</span>(mod_bc, <span class="dv">3</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>La variabilité des résidus semble plutôt homogène.</p>
+<p>Ceci est confirmé par le test de Bartlett :</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">bartlett.test</span>(<span class="kw">residuals</span>(mod_bc) <span class="op">~</span><span class="st"> </span>df_bc<span class="op">$</span>condition)</a></code></pre></div>
+<pre><code>## 
+##  Bartlett test of homogeneity of variances
+## 
+## data:  residuals(mod_bc) by df_bc$condition
+## Bartlett&#39;s K-squared = 6.1115, df = 5, p-value = 0.2955</code></pre>
+</div>
+<div id="exploitation-des-résultats" class="section level3">
+<h3><span class="header-section-number">4.6.4</span> Exploitation des résultats</h3>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">Anova</span>(mod_bc, <span class="dt">type =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: Fatigue_bc
+##                      Sum Sq Df    F value    Pr(&gt;F)    
+## (Intercept)          383.89  1 448427.887 &lt; 2.2e-16 ***
+## Exercice               0.65  2    380.712 &lt; 2.2e-16 ***
+## Hydratation            0.37  1    433.678 &lt; 2.2e-16 ***
+## Exercice:Hydratation   0.01  2      5.336  0.007679 ** 
+## Residuals              0.05 54                         
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Ici encore l’interaction Hydratation * Exercice apparaît significative. Cela était déjà le cas avant l’application des transformations, mais avec une statistique F sans doute largement surestimée (de l’ordre de 6 et 5 avec les transformations contre 34 sans ! - voir ci-dessous) :</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="kw">Anova</span>(mod, <span class="dt">type =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## Anova Table (Type III tests)
+## 
+## Response: Fatigue
+##                      Sum Sq Df  F value    Pr(&gt;F)    
+## (Intercept)          261217  1 6529.414 &lt; 2.2e-16 ***
+## Exercice              26869  2  335.814 &lt; 2.2e-16 ***
+## Hydratation           13589  1  339.671 &lt; 2.2e-16 ***
+## Exercice:Hydratation   2746  2   34.317 2.411e-10 ***
+## Residuals              2160 54                       
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<div id="conclusion-1" class="section level2">
+<h2><span class="header-section-number">4.7</span> Conclusion</h2>
+<p>Il est à noter que ces transformations log et BoxCox ne sont pas réservées à l’ANOVA à deux facteurs, elles peuvent également être utilisées , par exemple, dans le cadre de la régression linéaire multiple, qui n’a pas non plus d’équivalent non paramétrique. Il faut aussi garder en tête que ces transformations ne sont pas toujours efficaces, parfois les améliorations de la normalité et / ou de l’homogénéité des résidus restent insuffisante.</p>
+<p>D’autres approches peuvent être employées si seule l’hypothèse d’homogénéité des résidus est rejetée, comme l’utilisation des estimateurs sandwich ou encore en modélisant la variance.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="anova-à-2-facteurs-avec-r-pratique-des-apprentissages.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Tutozco.pdf", "Tutozco.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
