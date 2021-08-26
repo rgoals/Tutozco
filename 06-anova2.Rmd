@@ -237,6 +237,7 @@ plot(mod1, 3)
 On peut également utiliser le **test de Bartlett**, le **test de Levene**, ou encore le **test de Fligner-Killeen**. 
 
 - Leurs hypothèses nulles spécifient que les variances des différents groupes sont globalement identiques.
+
 - A l’inverse, leurs hypothèses alternatives spécifient qu’au moins 2 variances (les variances de 2 modalités) sont différentes.
 
 Le groupe ici est la combinaison `type de tension - type de laine` créée avec la variable `grp` plus haut.
@@ -531,7 +532,9 @@ L’interaction n’est pas significative. **Avant d’interpréter les résulta
 
 ### Ajustement du modèle sans le terme d'interaction
 
-Pour réaliser une ANOVA à 2 facteurs, **sans terme d’interaction**, il suffit de remplacer, dans la formule du modèle, le signe `*` par le signe `+`. Par ailleurs, **lorsque le modèle ne contient pas de terme d’interaction, on utilise les carrés de type II**. Pour cela, il suffit simplement d’utiliser les contrastes par défaut qui sont de type `contr.treatment`.
+Pour réaliser une ANOVA à 2 facteurs, **sans terme d’interaction**, il suffit de remplacer, dans la formule du modèle, le signe `*` par le signe `+`. 
+
+Par ailleurs, **lorsque le modèle ne contient pas de terme d’interaction, on utilise les carrés de type II**. Pour cela, il suffit simplement d’utiliser les contrastes par défaut qui sont de type `contr.treatment`.
 
 ```{r}
 mod3 <- lm(Usure ~ Tension + Laine, data = df2) 

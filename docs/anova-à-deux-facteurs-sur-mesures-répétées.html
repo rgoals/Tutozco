@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapitre 4 ANOVA à deux facteurs sur mesures répétées | Mes apprentissages avec R</title>
+  <meta name="description" content="The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapitre 4 ANOVA à deux facteurs sur mesures répétées | Mes apprentissages avec R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapitre 4 ANOVA à deux facteurs sur mesures répétées | Mes apprentissages avec R" />
+  
+  <meta name="twitter:description" content="The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="zco" />
+
+
+<meta name="date" content="2021-08-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="test-de-friedman-avec-r.html"/>
+<link rel="next" href="test-de-chi-deux-avec-r.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#abc"><i class="fa fa-check"></i><b>1.1</b> Abc</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#def"><i class="fa fa-check"></i><b>1.2</b> Def</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#ghi"><i class="fa fa-check"></i><b>1.3</b> Ghi</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#jkl"><i class="fa fa-check"></i><b>1.4</b> Jkl</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html"><i class="fa fa-check"></i><b>2</b> <span>ANOVA à un facteurs sur mesures répétées</span></a><ul>
+<li class="chapter" data-level="2.1" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#définitions"><i class="fa fa-check"></i><b>2.1</b> Définitions</a></li>
+<li class="chapter" data-level="2.2" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#objectifs"><i class="fa fa-check"></i><b>2.2</b> Objectifs</a></li>
+<li class="chapter" data-level="2.3" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#hypothèses-de-lanova-sur-mesures-répétées"><i class="fa fa-check"></i><b>2.3</b> Hypothèses de l’ANOVA sur mesures répétées</a></li>
+<li class="chapter" data-level="2.4" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#prérequis"><i class="fa fa-check"></i><b>2.4</b> Prérequis</a></li>
+<li class="chapter" data-level="2.5" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#fonctions-r-clés"><i class="fa fa-check"></i><b>2.5</b> Fonctions R clés</a></li>
+<li class="chapter" data-level="2.6" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#anova-à-un-facteur-sur-mesures-répétées"><i class="fa fa-check"></i><b>2.6</b> ANOVA à un facteur sur mesures répétées</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#préparation-des-données"><i class="fa fa-check"></i><b>2.6.1</b> Préparation des données</a></li>
+<li class="chapter" data-level="2.6.2" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#statistiques-descriptives"><i class="fa fa-check"></i><b>2.6.2</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="2.6.3" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#visualisation"><i class="fa fa-check"></i><b>2.6.3</b> Visualisation</a></li>
+<li class="chapter" data-level="2.6.4" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#vérifier-les-les-valeurs-ectrêmes-aberrantes"><i class="fa fa-check"></i><b>2.6.4</b> Vérifier les les valeurs ectrêmes aberrantes</a></li>
+<li class="chapter" data-level="2.6.5" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#le-modèle"><i class="fa fa-check"></i><b>2.6.5</b> Le modèle</a></li>
+<li class="chapter" data-level="2.6.6" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#vérification-des-hypothèses"><i class="fa fa-check"></i><b>2.6.6</b> Vérification des hypothèses</a></li>
+<li class="chapter" data-level="2.6.7" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#rapporter"><i class="fa fa-check"></i><b>2.6.7</b> Rapporter</a></li>
+<li class="chapter" data-level="2.6.8" data-path="anova-à-un-facteurs-sur-mesures-répétées.html"><a href="anova-à-un-facteurs-sur-mesures-répétées.html#visualisation-boxplots-avec-p-values"><i class="fa fa-check"></i><b>2.6.8</b> Visualisation : Boxplots avec p-values</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html"><i class="fa fa-check"></i><b>3</b> Test de friedman avec R</a><ul>
+<li class="chapter" data-level="3.1" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#les-librairies"><i class="fa fa-check"></i><b>3.1</b> Les librairies</a></li>
+<li class="chapter" data-level="3.2" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#jeu-de-données"><i class="fa fa-check"></i><b>3.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="3.3" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#statistiques-sommaires"><i class="fa fa-check"></i><b>3.3</b> Statistiques sommaires</a></li>
+<li class="chapter" data-level="3.4" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation-1"><i class="fa fa-check"></i><b>3.4</b> Visualisation</a></li>
+<li class="chapter" data-level="3.5" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#le-test"><i class="fa fa-check"></i><b>3.5</b> Le test</a></li>
+<li class="chapter" data-level="3.6" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#taille-de-leffet"><i class="fa fa-check"></i><b>3.6</b> Taille de l’effet</a></li>
+<li class="chapter" data-level="3.7" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#comparaisons-multiples-par-paires"><i class="fa fa-check"></i><b>3.7</b> Comparaisons multiples par paires</a></li>
+<li class="chapter" data-level="3.8" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#interprétation"><i class="fa fa-check"></i><b>3.8</b> Interprétation</a></li>
+<li class="chapter" data-level="3.9" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#visualisation-boxplots-avec-p-values-1"><i class="fa fa-check"></i><b>3.9</b> Visualisation : boxplots avec p-values</a></li>
+<li class="chapter" data-level="3.10" data-path="test-de-friedman-avec-r.html"><a href="test-de-friedman-avec-r.html#references"><i class="fa fa-check"></i><b>3.10</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html"><i class="fa fa-check"></i><b>4</b> <span>ANOVA à deux facteurs sur mesures répétées</span></a><ul>
+<li class="chapter" data-level="4.1" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#les-librairies-1"><i class="fa fa-check"></i><b>4.1</b> Les librairies</a></li>
+<li class="chapter" data-level="4.2" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#préparation-des-données-1"><i class="fa fa-check"></i><b>4.2</b> Préparation des données</a></li>
+<li class="chapter" data-level="4.3" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#statistiques-descriptives-1"><i class="fa fa-check"></i><b>4.3</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="4.4" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#visualisation-2"><i class="fa fa-check"></i><b>4.4</b> Visualisation</a></li>
+<li class="chapter" data-level="4.5" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#vérifier-les-valeurs-extrêmes-aberrantes"><i class="fa fa-check"></i><b>4.5</b> Vérifier les valeurs extrêmes aberrantes</a></li>
+<li class="chapter" data-level="4.6" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#le-modèle-1"><i class="fa fa-check"></i><b>4.6</b> Le modèle</a></li>
+<li class="chapter" data-level="4.7" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#vérification-des-hypothèses-1"><i class="fa fa-check"></i><b>4.7</b> Vérification des hypothèses</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#hypothèse-de-normalité-1"><i class="fa fa-check"></i><b>4.7.1</b> Hypothèse de normalité</a></li>
+<li class="chapter" data-level="4.7.2" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#qq-plot-pour-chaque-cellule-du-plan"><i class="fa fa-check"></i><b>4.7.2</b> QQ-plot pour chaque cellule du plan</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#tests-post-hoc-1"><i class="fa fa-check"></i><b>4.8</b> Tests post-hoc</a><ul>
+<li class="chapter" data-level="4.8.1" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#procédure-pour-une-interaction-significative-à-deux-facteurs"><i class="fa fa-check"></i><b>4.8.1</b> Procédure pour une interaction significative à deux facteurs</a></li>
+<li class="chapter" data-level="4.8.2" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#procédure-pour-une-interaction-non-significative-à-deux-facteurs"><i class="fa fa-check"></i><b>4.8.2</b> Procédure pour une interaction non significative à deux facteurs</a></li>
+<li class="chapter" data-level="4.8.3" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#rapporter-1"><i class="fa fa-check"></i><b>4.8.3</b> Rapporter</a></li>
+<li class="chapter" data-level="4.8.4" data-path="anova-à-deux-facteurs-sur-mesures-répétées.html"><a href="anova-à-deux-facteurs-sur-mesures-répétées.html#visualisation-boxplots-avec-p-values-2"><i class="fa fa-check"></i><b>4.8.4</b> Visualisation : Boxplots avec p-values</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html"><i class="fa fa-check"></i><b>5</b> Test de Chi-deux avec R</a><ul>
+<li class="chapter" data-level="5.1" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#jeu-de-données-simulées"><i class="fa fa-check"></i><b>5.1</b> Jeu de données simulées</a></li>
+<li class="chapter" data-level="5.2" data-path="test-de-chi-deux-avec-r.html"><a href="test-de-chi-deux-avec-r.html#le-test-1"><i class="fa fa-check"></i><b>5.2</b> Le test</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html"><i class="fa fa-check"></i><b>6</b> <span>ANOVA à trois facteurs sur mesures répétées</span></a><ul>
+<li class="chapter" data-level="6.1" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#les-librairies-2"><i class="fa fa-check"></i><b>6.1</b> Les librairies</a></li>
+<li class="chapter" data-level="6.2" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#préparation-des-données-2"><i class="fa fa-check"></i><b>6.2</b> Préparation des données</a></li>
+<li class="chapter" data-level="6.3" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-4-x-6"><i class="fa fa-check"></i><b>6.3</b> # A tibble: 4 x 6</a></li>
+<li class="chapter" data-level="6.4" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#id-diet-exercises-t1-t2-t3"><i class="fa fa-check"></i><b>6.4</b> id diet exercises t1 t2 t3</a></li>
+<li class="chapter" data-level="6.5" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section"><i class="fa fa-check"></i><b>6.5</b> <fct> <fct> <fct> <dbl> <dbl> <dbl></a></li>
+<li class="chapter" data-level="6.6" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-11.1-9.5-11.1"><i class="fa fa-check"></i><b>6.6</b> 1 4 no no 11.1 9.5 11.1</a></li>
+<li class="chapter" data-level="6.7" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-10.2-11.8-17.4"><i class="fa fa-check"></i><b>6.7</b> 2 10 no yes 10.2 11.8 17.4</a></li>
+<li class="chapter" data-level="6.8" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no-11.6-13.4-13.9"><i class="fa fa-check"></i><b>6.8</b> 3 5 yes no 11.6 13.4 13.9</a></li>
+<li class="chapter" data-level="6.9" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-yes-12.7-12.7-15.1"><i class="fa fa-check"></i><b>6.9</b> 4 11 yes yes 12.7 12.7 15.1</a></li>
+<li class="chapter" data-level="6.10" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-12-x-5"><i class="fa fa-check"></i><b>6.10</b> # A tibble: 12 x 5</a></li>
+<li class="chapter" data-level="6.11" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#id-diet-exercises-time-score"><i class="fa fa-check"></i><b>6.11</b> id diet exercises time score</a></li>
+<li class="chapter" data-level="6.12" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-1"><i class="fa fa-check"></i><b>6.12</b> <fct> <fct> <fct> <fct> <dbl></a></li>
+<li class="chapter" data-level="6.13" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t1-11.1"><i class="fa fa-check"></i><b>6.13</b> 1 4 no no t1 11.1</a></li>
+<li class="chapter" data-level="6.14" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t2-10.7"><i class="fa fa-check"></i><b>6.14</b> 2 10 no no t2 10.7</a></li>
+<li class="chapter" data-level="6.15" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t3-12.3"><i class="fa fa-check"></i><b>6.15</b> 3 5 no no t3 12.3</a></li>
+<li class="chapter" data-level="6.16" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t1-10.2"><i class="fa fa-check"></i><b>6.16</b> 4 11 no yes t1 10.2</a></li>
+<li class="chapter" data-level="6.17" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t2-13.2"><i class="fa fa-check"></i><b>6.17</b> 5 12 no yes t2 13.2</a></li>
+<li class="chapter" data-level="6.18" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t3-15.8"><i class="fa fa-check"></i><b>6.18</b> 6 1 no yes t3 15.8</a></li>
+<li class="chapter" data-level="6.19" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#with-6-more-rows"><i class="fa fa-check"></i><b>6.19</b> # … with 6 more rows</a></li>
+<li class="chapter" data-level="6.20" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-12-x-7"><i class="fa fa-check"></i><b>6.20</b> # A tibble: 12 x 7</a></li>
+<li class="chapter" data-level="6.21" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-time-variable-n-mean-sd"><i class="fa fa-check"></i><b>6.21</b> diet exercises time variable n mean sd</a></li>
+<li class="chapter" data-level="6.22" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-2"><i class="fa fa-check"></i><b>6.22</b> <fct> <fct> <fct> <chr> <dbl> <dbl> <dbl></a></li>
+<li class="chapter" data-level="6.23" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t1-score-12-10.9-0.868"><i class="fa fa-check"></i><b>6.23</b> 1 no no t1 score 12 10.9 0.868</a></li>
+<li class="chapter" data-level="6.24" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t2-score-12-11.6-1.30"><i class="fa fa-check"></i><b>6.24</b> 2 no no t2 score 12 11.6 1.30</a></li>
+<li class="chapter" data-level="6.25" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t3-score-12-11.4-0.935"><i class="fa fa-check"></i><b>6.25</b> 3 no no t3 score 12 11.4 0.935</a></li>
+<li class="chapter" data-level="6.26" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t1-score-12-10.8-1.27"><i class="fa fa-check"></i><b>6.26</b> 4 no yes t1 score 12 10.8 1.27</a></li>
+<li class="chapter" data-level="6.27" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t2-score-12-13.4-1.01"><i class="fa fa-check"></i><b>6.27</b> 5 no yes t2 score 12 13.4 1.01</a></li>
+<li class="chapter" data-level="6.28" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t3-score-12-16.8-1.53"><i class="fa fa-check"></i><b>6.28</b> 6 no yes t3 score 12 16.8 1.53</a></li>
+<li class="chapter" data-level="6.29" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#with-6-more-rows-1"><i class="fa fa-check"></i><b>6.29</b> # … with 6 more rows</a></li>
+<li class="chapter" data-level="6.30" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-5-x-7"><i class="fa fa-check"></i><b>6.30</b> # A tibble: 5 x 7</a></li>
+<li class="chapter" data-level="6.31" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-time-id-score-is.outlier-is.extreme"><i class="fa fa-check"></i><b>6.31</b> diet exercises time id score is.outlier is.extreme</a></li>
+<li class="chapter" data-level="6.32" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-3"><i class="fa fa-check"></i><b>6.32</b> <fct> <fct> <fct> <fct> <dbl> <lgl> <lgl></a></li>
+<li class="chapter" data-level="6.33" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t3-2-13.2-true-false"><i class="fa fa-check"></i><b>6.33</b> 1 no no t3 2 13.2 TRUE FALSE</a></li>
+<li class="chapter" data-level="6.34" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no-t1-1-10.2-true-false"><i class="fa fa-check"></i><b>6.34</b> 2 yes no t1 1 10.2 TRUE FALSE</a></li>
+<li class="chapter" data-level="6.35" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no-t1-3-13.2-true-false"><i class="fa fa-check"></i><b>6.35</b> 3 yes no t1 3 13.2 TRUE FALSE</a></li>
+<li class="chapter" data-level="6.36" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no-t1-4-10.2-true-false"><i class="fa fa-check"></i><b>6.36</b> 4 yes no t1 4 10.2 TRUE FALSE</a></li>
+<li class="chapter" data-level="6.37" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no-t2-10-15.3-true-false"><i class="fa fa-check"></i><b>6.37</b> 5 yes no t2 10 15.3 TRUE FALSE</a></li>
+<li class="chapter" data-level="6.38" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-12-x-6"><i class="fa fa-check"></i><b>6.38</b> # A tibble: 12 x 6</a></li>
+<li class="chapter" data-level="6.39" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-time-variable-statistic-p"><i class="fa fa-check"></i><b>6.39</b> diet exercises time variable statistic p</a></li>
+<li class="chapter" data-level="6.40" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-4"><i class="fa fa-check"></i><b>6.40</b> <fct> <fct> <fct> <chr> <dbl> <dbl></a></li>
+<li class="chapter" data-level="6.41" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t1-score-0.917-0.264"><i class="fa fa-check"></i><b>6.41</b> 1 no no t1 score 0.917 0.264</a></li>
+<li class="chapter" data-level="6.42" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t2-score-0.957-0.743"><i class="fa fa-check"></i><b>6.42</b> 2 no no t2 score 0.957 0.743</a></li>
+<li class="chapter" data-level="6.43" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-t3-score-0.965-0.851"><i class="fa fa-check"></i><b>6.43</b> 3 no no t3 score 0.965 0.851</a></li>
+<li class="chapter" data-level="6.44" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t1-score-0.922-0.306"><i class="fa fa-check"></i><b>6.44</b> 4 no yes t1 score 0.922 0.306</a></li>
+<li class="chapter" data-level="6.45" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t2-score-0.912-0.229"><i class="fa fa-check"></i><b>6.45</b> 5 no yes t2 score 0.912 0.229</a></li>
+<li class="chapter" data-level="6.46" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-t3-score-0.953-0.674"><i class="fa fa-check"></i><b>6.46</b> 6 no yes t3 score 0.953 0.674</a></li>
+<li class="chapter" data-level="6.47" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#with-6-more-rows-2"><i class="fa fa-check"></i><b>6.47</b> # … with 6 more rows</a></li>
+<li class="chapter" data-level="6.48" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#anova-table-type-iii-tests"><i class="fa fa-check"></i><b>6.48</b> ANOVA Table (type III tests)</a></li>
+<li class="chapter" data-level="6.49" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-5"><i class="fa fa-check"></i><b>6.49</b> </a></li>
+<li class="chapter" data-level="6.50" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#effect-dfn-dfd-f-p-p.05-ges"><i class="fa fa-check"></i><b>6.50</b> Effect DFn DFd F p p&lt;.05 ges</a></li>
+<li class="chapter" data-level="6.51" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-1.00-11.0-6.021-3.20e-02-0.028"><i class="fa fa-check"></i><b>6.51</b> 1 diet 1.00 11.0 6.021 3.20e-02 * 0.028</a></li>
+<li class="chapter" data-level="6.52" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#exercises-1.00-11.0-58.928-9.65e-06-0.284"><i class="fa fa-check"></i><b>6.52</b> 2 exercises 1.00 11.0 58.928 9.65e-06 * 0.284</a></li>
+<li class="chapter" data-level="6.53" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#time-2.00-22.0-110.942-3.22e-12-0.541"><i class="fa fa-check"></i><b>6.53</b> 3 time 2.00 22.0 110.942 3.22e-12 * 0.541</a></li>
+<li class="chapter" data-level="6.54" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#dietexercises-1.00-11.0-75.356-2.98e-06-0.157"><i class="fa fa-check"></i><b>6.54</b> 4 diet:exercises 1.00 11.0 75.356 2.98e-06 * 0.157</a></li>
+<li class="chapter" data-level="6.55" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diettime-1.38-15.2-0.603-5.01e-01-0.013"><i class="fa fa-check"></i><b>6.55</b> 5 diet:time 1.38 15.2 0.603 5.01e-01 0.013</a></li>
+<li class="chapter" data-level="6.56" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#exercisestime-2.00-22.0-20.826-8.41e-06-0.274"><i class="fa fa-check"></i><b>6.56</b> 6 exercises:time 2.00 22.0 20.826 8.41e-06 * 0.274</a></li>
+<li class="chapter" data-level="6.57" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#dietexercisestime-2.00-22.0-14.246-1.07e-04-0.147"><i class="fa fa-check"></i><b>6.57</b> 7 diet:exercises:time 2.00 22.0 14.246 1.07e-04 * 0.147</a></li>
+<li class="chapter" data-level="6.58" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-2-x-2"><i class="fa fa-check"></i><b>6.58</b> # A tibble: 2 x 2</a></li>
+<li class="chapter" data-level="6.59" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-anova"><i class="fa fa-check"></i><b>6.59</b> diet anova</a></li>
+<li class="chapter" data-level="6.60" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-6"><i class="fa fa-check"></i><b>6.60</b> <fct> <list></a></li>
+<li class="chapter" data-level="6.61" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no"><i class="fa fa-check"></i><b>6.61</b> 1 no <anov_tst></a></li>
+<li class="chapter" data-level="6.62" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes"><i class="fa fa-check"></i><b>6.62</b> 2 yes <anov_tst></a></li>
+<li class="chapter" data-level="6.63" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-6-x-8"><i class="fa fa-check"></i><b>6.63</b> # A tibble: 6 x 8</a></li>
+<li class="chapter" data-level="6.64" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-effect-dfn-dfd-f-p-p.05-ges"><i class="fa fa-check"></i><b>6.64</b> diet Effect DFn DFd F p <code>p&lt;.05</code> ges</a></li>
+<li class="chapter" data-level="6.65" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-7"><i class="fa fa-check"></i><b>6.65</b> <fct> <chr> <dbl> <dbl> <dbl> <dbl> <chr> <dbl></a></li>
+<li class="chapter" data-level="6.66" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-exercises-1-11-72.8-3.53e--6-0.526"><i class="fa fa-check"></i><b>6.66</b> 1 no exercises 1 11 72.8 3.53e- 6 * 0.526</a></li>
+<li class="chapter" data-level="6.67" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-time-2-22-71.7-2.32e-10-0.587"><i class="fa fa-check"></i><b>6.67</b> 2 no time 2 22 71.7 2.32e-10 * 0.587</a></li>
+<li class="chapter" data-level="6.68" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-exercisestime-2-22-28.9-6.92e--7-0.504"><i class="fa fa-check"></i><b>6.68</b> 3 no exercises:time 2 22 28.9 6.92e- 7 * 0.504</a></li>
+<li class="chapter" data-level="6.69" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-exercises-1-11-13.4-4.00e--3-0.038"><i class="fa fa-check"></i><b>6.69</b> 4 yes exercises 1 11 13.4 4.00e- 3 * 0.038</a></li>
+<li class="chapter" data-level="6.70" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-time-2-22-20.5-9.30e--6-0.49"><i class="fa fa-check"></i><b>6.70</b> 5 yes time 2 22 20.5 9.30e- 6 * 0.49</a></li>
+<li class="chapter" data-level="6.71" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-exercisestime-2-22-2.57-9.90e--2-0.06"><i class="fa fa-check"></i><b>6.71</b> 6 yes exercises:time 2 22 2.57 9.90e- 2 "" 0.06</a></li>
+<li class="chapter" data-level="6.72" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-4-x-3"><i class="fa fa-check"></i><b>6.72</b> # A tibble: 4 x 3</a></li>
+<li class="chapter" data-level="6.73" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-anova"><i class="fa fa-check"></i><b>6.73</b> diet exercises anova</a></li>
+<li class="chapter" data-level="6.74" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-8"><i class="fa fa-check"></i><b>6.74</b> <fct> <fct> <list></a></li>
+<li class="chapter" data-level="6.75" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no"><i class="fa fa-check"></i><b>6.75</b> 1 no no <anov_tst></a></li>
+<li class="chapter" data-level="6.76" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes"><i class="fa fa-check"></i><b>6.76</b> 2 no yes <anov_tst></a></li>
+<li class="chapter" data-level="6.77" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-no"><i class="fa fa-check"></i><b>6.77</b> 3 yes no <anov_tst></a></li>
+<li class="chapter" data-level="6.78" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#yes-yes"><i class="fa fa-check"></i><b>6.78</b> 4 yes yes <anov_tst></a></li>
+<li class="chapter" data-level="6.79" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-2-x-9"><i class="fa fa-check"></i><b>6.79</b> # A tibble: 2 x 9</a></li>
+<li class="chapter" data-level="6.80" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-effect-dfn-dfd-f-p-p.05-ges"><i class="fa fa-check"></i><b>6.80</b> diet exercises Effect DFn DFd F p <code>p&lt;.05</code> ges</a></li>
+<li class="chapter" data-level="6.81" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-9"><i class="fa fa-check"></i><b>6.81</b> <fct> <fct> <chr> <dbl> <dbl> <dbl> <dbl> <chr> <dbl></a></li>
+<li class="chapter" data-level="6.82" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-no-time-2-22-1.32-2.86e--1-0.075"><i class="fa fa-check"></i><b>6.82</b> 1 no no time 2 22 1.32 2.86e- 1 "" 0.075</a></li>
+<li class="chapter" data-level="6.83" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-time-2-22-78.8-9.30e-11-0.801"><i class="fa fa-check"></i><b>6.83</b> 2 no yes time 2 22 78.8 9.30e-11 * 0.801</a></li>
+<li class="chapter" data-level="6.84" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#a-tibble-3-x-9"><i class="fa fa-check"></i><b>6.84</b> # A tibble: 3 x 9</a></li>
+<li class="chapter" data-level="6.85" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#diet-exercises-.y.-group1-group2-n1-n2-p.adj-p.adj.signif"><i class="fa fa-check"></i><b>6.85</b> diet exercises .y. group1 group2 n1 n2 p.adj p.adj.signif</a></li>
+<li class="chapter" data-level="6.86" data-path="anova-à-trois-facteurs-sur-mesures-répétées.html"><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#section-10"><i class="fa fa-check"></i><b>6.86</b> <fct> <fct> <chr> <chr> <chr> <int> <int> <dbl> <chr></a></li>
+<li><a href="anova-à-trois-facteurs-sur-mesures-répétées.html#no-yes-score-t1-t2-12-12-0.000741-2-no-yes-score-t1-t3-12-12-0.0000000121-3-no-yes-score-t2-t3-12-12-0.000257"><span class="toc-section-number">6.87</span> 1 no yes score t1 t2 12 12 0.000741 ***<br />
+## 2 no yes score t1 t3 12 12 0.0000000121 ****<br />
+## 3 no yes score t2 t3 12 12 0.000257 ***</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><i class="fa fa-check"></i><b>7</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses sont satisfaites</span></a><ul>
+<li class="chapter" data-level="7.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#liste-des-packages"><i class="fa fa-check"></i><b>7.1</b> Liste des packages</a></li>
+<li class="chapter" data-level="7.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-1"><i class="fa fa-check"></i><b>7.2</b> Jeu de données</a></li>
+<li class="chapter" data-level="7.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#exploration-visuelle"><i class="fa fa-check"></i><b>7.3</b> Exploration visuelle</a></li>
+<li class="chapter" data-level="7.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance"><i class="fa fa-check"></i><b>7.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="7.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-de-linteraction-probable"><i class="fa fa-check"></i><b>7.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="7.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#réalisation-de-lanova-à-deux-facteurs"><i class="fa fa-check"></i><b>7.6</b> Réalisation de l’ANOVA à deux facteurs</a></li>
+<li class="chapter" data-level="7.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-des-résultats"><i class="fa fa-check"></i><b>7.7</b> Visualisation des résultats</a></li>
+<li class="chapter" data-level="7.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#vérification-des-hypothèses-de-validité"><i class="fa fa-check"></i><b>7.8</b> Vérification des hypothèses de validité</a><ul>
+<li class="chapter" data-level="7.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#indépendance-des-résidus"><i class="fa fa-check"></i><b>7.8.1</b> Indépendance des résidus</a></li>
+<li class="chapter" data-level="7.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#normalité-des-résidus"><i class="fa fa-check"></i><b>7.8.2</b> Normalité des résidus</a></li>
+<li class="chapter" data-level="7.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#homogénéité-des-variances"><i class="fa fa-check"></i><b>7.8.3</b> Homogénéité des variances</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-significative"><i class="fa fa-check"></i><b>7.9</b> Démarche en cas d’interaction significative</a><ul>
+<li class="chapter" data-level="7.9.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#anova-à-un-facteur-group-et-comparaisons-2-à-2"><i class="fa fa-check"></i><b>7.9.1</b> ANOVA à un facteur (<code>group</code>) et comparaisons 2 à 2</a></li>
+<li class="chapter" data-level="7.9.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-à-lintérieur-dune-modalité"><i class="fa fa-check"></i><b>7.9.2</b> Comparaisons à l’intérieur d’une modalité</a></li>
+</ul></li>
+<li class="chapter" data-level="7.10" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-quantitative-significative"><i class="fa fa-check"></i><b>7.10</b> Démarche en cas d’interaction quantitative significative</a></li>
+<li class="chapter" data-level="7.11" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#démarche-en-cas-dinteraction-non-significative"><i class="fa fa-check"></i><b>7.11</b> Démarche en cas d’interaction non significative</a><ul>
+<li class="chapter" data-level="7.11.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#jeu-de-données-2"><i class="fa fa-check"></i><b>7.11.1</b> Jeu de données</a></li>
+<li class="chapter" data-level="7.11.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#visualisation-3"><i class="fa fa-check"></i><b>7.11.2</b> Visualisation</a></li>
+<li class="chapter" data-level="7.11.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#lanova"><i class="fa fa-check"></i><b>7.11.3</b> L’ANOVA</a></li>
+<li class="chapter" data-level="7.11.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#ajustement-du-modèle-sans-le-terme-dinteraction"><i class="fa fa-check"></i><b>7.11.4</b> Ajustement du modèle sans le terme d’interaction</a></li>
+<li class="chapter" data-level="7.11.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#comparaisons-multiples"><i class="fa fa-check"></i><b>7.11.5</b> Comparaisons multiples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.12" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-sont-satisfaites.html#conclusion"><i class="fa fa-check"></i><b>7.12</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><i class="fa fa-check"></i><b>8</b> ANOVA à 2 facteurs avec R : <span>Quand les hypothèses ne sont pas satisfaites</span></a><ul>
+<li class="chapter" data-level="8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#rappels-concernant-les-hypothèses-de-validité-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>8.1</b> Rappels concernant les hypothèses de validité de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#libraires"><i class="fa fa-check"></i><b>8.2</b> Libraires</a></li>
+<li class="chapter" data-level="8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-des-données"><i class="fa fa-check"></i><b>8.3</b> Visualisation des données</a></li>
+<li class="chapter" data-level="8.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#calculer-les-moyennes-et-leurs-intervalles-de-confiance-1"><i class="fa fa-check"></i><b>8.4</b> Calculer les moyennes et leurs intervalles de confiance</a></li>
+<li class="chapter" data-level="8.5" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#visualisation-de-linteraction-probable-1"><i class="fa fa-check"></i><b>8.5</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="8.6" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#mise-en-évidence-des-défauts-de-normalité-et-dhomogénéité"><i class="fa fa-check"></i><b>8.6</b> Mise en évidence des défauts de normalité et d’homogénéité</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs"><i class="fa fa-check"></i><b>8.6.1</b> Réalisation de l’ANOVA à 2 facteurs</a></li>
+<li class="chapter" data-level="8.6.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus"><i class="fa fa-check"></i><b>8.6.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="8.6.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus"><i class="fa fa-check"></i><b>8.6.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-log-de-la-réponse"><i class="fa fa-check"></i><b>8.7</b> Utilisation d’une transformation log de la réponse</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#réalisation-de-lanova-à-2-facteurs-avec-le-log-de-la-réponse"><i class="fa fa-check"></i><b>8.7.1</b> Réalisation de l’ANOVA à 2 facteurs avec le log de la réponse</a></li>
+<li class="chapter" data-level="8.7.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité"><i class="fa fa-check"></i><b>8.7.2</b> Evaluation de l’hypothèse de normalité</a></li>
+<li class="chapter" data-level="8.7.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité"><i class="fa fa-check"></i><b>8.7.3</b> Evaluation de l’hypothèse d’homogénéité</a></li>
+<li class="chapter" data-level="8.7.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#résultats"><i class="fa fa-check"></i><b>8.7.4</b> Résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#utilisation-dune-transformation-boxcox-de-la-réponse"><i class="fa fa-check"></i><b>8.8</b> Utilisation d’une transformation BoxCox de la réponse</a><ul>
+<li class="chapter" data-level="8.8.1" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#définition-et-réalisation"><i class="fa fa-check"></i><b>8.8.1</b> Définition et réalisation</a></li>
+<li class="chapter" data-level="8.8.2" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-de-normalité-des-résidus-1"><i class="fa fa-check"></i><b>8.8.2</b> Evaluation de l’hypothèse de normalité des résidus</a></li>
+<li class="chapter" data-level="8.8.3" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#evaluation-de-lhypothèse-dhomogénéité-des-résidus-1"><i class="fa fa-check"></i><b>8.8.3</b> Evaluation de l’hypothèse d’homogénéité des résidus</a></li>
+<li class="chapter" data-level="8.8.4" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#exploitation-des-résultats"><i class="fa fa-check"></i><b>8.8.4</b> Exploitation des résultats</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html"><a href="anova-à-2-facteurs-avec-r-quand-les-hypothèses-ne-sont-pas-satisfaites.html#conclusion-1"><i class="fa fa-check"></i><b>8.9</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html"><i class="fa fa-check"></i><b>9</b> <span>MANOVA à 1 facteur dans R</span></a><ul>
+<li class="chapter" data-level="9.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#introduction-1"><i class="fa fa-check"></i><b>9.1</b> Introduction</a></li>
+<li class="chapter" data-level="9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#prérequis-1"><i class="fa fa-check"></i><b>9.2</b> Prérequis</a></li>
+<li class="chapter" data-level="9.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#jeu-de-données-3"><i class="fa fa-check"></i><b>9.3</b> Jeu de données</a></li>
+<li class="chapter" data-level="9.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-4"><i class="fa fa-check"></i><b>9.4</b> Visualisation</a></li>
+<li class="chapter" data-level="9.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#statistiques-descriptives-2"><i class="fa fa-check"></i><b>9.5</b> Statistiques descriptives</a></li>
+<li class="chapter" data-level="9.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#visualisation-de-linteraction-probable-2"><i class="fa fa-check"></i><b>9.6</b> Visualisation de l’interaction probable</a></li>
+<li class="chapter" data-level="9.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#hypothèses-et-tests-préliminaires"><i class="fa fa-check"></i><b>9.7</b> Hypothèses et tests préliminaires</a><ul>
+<li class="chapter" data-level="9.7.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-taille-des-échantillons"><i class="fa fa-check"></i><b>9.7.1</b> Vérifier l’hypothèse de taille des échantillons</a></li>
+<li class="chapter" data-level="9.7.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-les-valeurs-aberrantes-univariées"><i class="fa fa-check"></i><b>9.7.2</b> Identifier les valeurs aberrantes univariées</a></li>
+<li class="chapter" data-level="9.7.3" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#détecter-les-valeurs-aberrantes-multivariées"><i class="fa fa-check"></i><b>9.7.3</b> Détecter les valeurs aberrantes multivariées</a></li>
+<li class="chapter" data-level="9.7.4" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-normalité-univariée"><i class="fa fa-check"></i><b>9.7.4</b> Vérifier l’hypothèse de normalité univariée</a></li>
+<li class="chapter" data-level="9.7.5" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#normalité-à-plusieurs-variables"><i class="fa fa-check"></i><b>9.7.5</b> Normalité à plusieurs variables</a></li>
+<li class="chapter" data-level="9.7.6" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#identifier-la-multicollinéarité"><i class="fa fa-check"></i><b>9.7.6</b> Identifier la multicollinéarité</a></li>
+<li class="chapter" data-level="9.7.7" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-de-linéarité"><i class="fa fa-check"></i><b>9.7.7</b> Vérifier l’hypothèse de linéarité</a></li>
+<li class="chapter" data-level="9.7.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-des-covariances"><i class="fa fa-check"></i><b>9.7.8</b> Vérifier l’hypothèse d’homogénéité des covariances</a></li>
+<li class="chapter" data-level="9.7.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#vérifier-lhypothèse-dhomogénéité-de-la-variance"><i class="fa fa-check"></i><b>9.7.9</b> Vérifier l’hypothèse d’homogénéité de la variance</a></li>
+</ul></li>
+<li class="chapter" data-level="9.8" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#manova-le-test"><i class="fa fa-check"></i><b>9.8</b> MANOVA, le test</a></li>
+<li class="chapter" data-level="9.9" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#tests-post-hoc-2"><i class="fa fa-check"></i><b>9.9</b> Tests post-hoc</a><ul>
+<li class="chapter" data-level="9.9.1" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#calculer-lanova-à-un-facteur"><i class="fa fa-check"></i><b>9.9.1</b> Calculer l’ANOVA à un facteur</a></li>
+<li class="chapter" data-level="9.9.2" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#les-comparaisons-par-paires"><i class="fa fa-check"></i><b>9.9.2</b> Les comparaisons par paires</a></li>
+</ul></li>
+<li class="chapter" data-level="9.10" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#interprétation-des-résultats"><i class="fa fa-check"></i><b>9.10</b> Interprétation des résultats</a></li>
+<li class="chapter" data-level="9.11" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#résumé"><i class="fa fa-check"></i><b>9.11</b> Résumé</a></li>
+<li class="chapter" data-level="9.12" data-path="manova-à-1-facteur-dans-r.html"><a href="manova-à-1-facteur-dans-r.html#references-1"><i class="fa fa-check"></i><b>9.12</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mes apprentissages avec R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="anova-à-deux-facteurs-sur-mesures-répétées" class="section level1">
+<h1><span class="header-section-number">Chapitre 4</span> <a href="https://www.datanovia.com/en/fr/lessons/anova-sur-mesures-repetees-dans-r/">ANOVA à deux facteurs sur mesures répétées</a></h1>
+<div id="les-librairies-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Les librairies</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(tidyverse) <span class="co"># pour la manipulation et la visualisation des données</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(ggpubr)    <span class="co"># pour créer facilement des graphiques prêts à la publication</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(rstatix)   <span class="co"># contient des fonctions R facilitant les analyses statistiques</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(datarium)  <span class="co"># contient les jeux de données requis pour ce chapitre</span></a></code></pre></div>
+</div>
+<div id="préparation-des-données-1" class="section level2">
+<h2><span class="header-section-number">4.2</span> Préparation des données</h2>
+<p>Nous utiliserons le jeu de données <code>selfesteem2 [package datarium]</code> qui contient les mesures de l’estime de soi de 12 personnes incluses à 2 essais successifs de court terme (4 semaines) :</p>
+<ul>
+<li>essais contrôle (placebo)</li>
+<li>et essais avec un régime alimentaire spécial.</li>
+</ul>
+<p>Chaque participant a effectué les deux essais. L’ordre des essais a été contrebalancé et un délai suffisant a été respecté entre les essais pour que les effets des essais précédents puissent se dissiper.</p>
+<p>Le score d’estime de soi a été enregistré à trois moments : au début (t1), à mi-chemin (t2) et à la fin (t3) des essais.</p>
+<p>La question est de savoir si ce traitement diététique à court terme peut induire une augmentation significative de l’estime de soi avec le temps.</p>
+<blockquote>
+<p><strong>En d’autres termes, nous aimerions savoir s’il y a une interaction significative entre la diète et le temps sur le score de l’estime de soi.</strong></p>
+<p>L’ANOVA à deux facteurs sur mesures répétées peut être effectuée afin de <strong>déterminer s’il y a une interaction significative entre l’alimentation et le temps sur le score de l’estime de soi.</strong></p>
+</blockquote>
+<p>Charger et afficher une ligne aléatoire par groupe de traitement:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">data</span>(<span class="st">&quot;selfesteem2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;datarium&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb2-4" title="4">selfesteem2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n_by</span>(treatment, <span class="dt">size =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   id    treatment    t1    t2    t3
+##   &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 3     ctr          93    92    89
+## 2 12    ctr          79    69    62
+## 3 10    ctr          92    84    81
+## 4 2     Diet        100    99    97
+## 5 6     Diet         76    75    76
+## 6 5     Diet         74    76    72</code></pre>
+<p>Rassemblez les colonnes t1, t2 et t3 en format long. Convertir l’identifiant et le temps en facteurs.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">selfesteem2 &lt;-<span class="st"> </span>selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;temps&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;score&quot;</span>, t1, t2, t3) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw">convert_as_factor</span>(id, temps)</a></code></pre></div>
+<p>Inspecter quelques lignes aléatoires des données par groupes</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2">selfesteem2 <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n_by</span>(treatment, temps, <span class="dt">size =</span> <span class="dv">1</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   id    treatment temps score
+##   &lt;fct&gt; &lt;fct&gt;     &lt;fct&gt; &lt;dbl&gt;
+## 1 3     ctr       t1       93
+## 2 3     ctr       t2       92
+## 3 10    ctr       t3       81
+## 4 2     Diet      t1      100
+## 5 6     Diet      t2       75
+## 6 11    Diet      t3       91</code></pre>
+<blockquote>
+<p>**Dans cet exemple</p>
+</blockquote>
+<blockquote>
+<p>l’effet du “temps” sur l’estime de soi est notre variable focale, c’est-à-dire notre première cible.</p>
+<p>Cependant, on pense que l’effet “temps” sera différent si le traitement est effectué ou non. Dans ce contexte, la variable “traitement” est considérée comme variable modératrice.**</p>
+</blockquote>
+</div>
+<div id="statistiques-descriptives-1" class="section level2">
+<h2><span class="header-section-number">4.3</span> Statistiques descriptives</h2>
+<p>Regrouper les données par traitement (treatment) et temps (time), puis calculer quelques statistiques sommaires de la variable score : moyenne et sd (écart-type).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(treatment, temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="st">  </span><span class="kw">get_summary_stats</span>(score, <span class="dt">type =</span> <span class="st">&quot;mean_sd&quot;</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 6
+##   treatment temps variable     n  mean    sd
+##   &lt;fct&gt;     &lt;fct&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 ctr       t1    score       12  88    8.08
+## 2 ctr       t2    score       12  83.8 10.2 
+## 3 ctr       t3    score       12  78.7 10.5 
+## 4 Diet      t1    score       12  87.6  7.62
+## 5 Diet      t2    score       12  87.8  7.42
+## 6 Diet      t3    score       12  87.7  8.14</code></pre>
+</div>
+<div id="visualisation-2" class="section level2">
+<h2><span class="header-section-number">4.4</span> Visualisation</h2>
+<p>Créez des boxplots du score colorée par groupes de traitement :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">bxp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(selfesteem2, <span class="kw">aes</span>(<span class="dt">x =</span> temps, <span class="dt">y =</span> score, <span class="dt">color =</span> treatment)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a>
+<a class="sourceLine" id="cb9-3" title="3">bxp</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="vérifier-les-valeurs-extrêmes-aberrantes" class="section level2">
+<h2><span class="header-section-number">4.5</span> Vérifier les valeurs extrêmes aberrantes</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(treatment, temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="st">  </span><span class="kw">identify_outliers</span>(score)</a></code></pre></div>
+<pre><code>## [1] treatment  temps      id         score      is.outlier is.extreme
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<p>Il n’y a pas de valeurs extrêmes aberrantes.</p>
+</div>
+<div id="le-modèle-1" class="section level2">
+<h2><span class="header-section-number">4.6</span> Le modèle</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">lm &lt;-<span class="st"> </span><span class="kw">anova_test</span>(<span class="dt">data =</span> selfesteem2, </a>
+<a class="sourceLine" id="cb12-2" title="2">                 <span class="dt">dv =</span> score, </a>
+<a class="sourceLine" id="cb12-3" title="3">                 <span class="dt">wid =</span> id,  </a>
+<a class="sourceLine" id="cb12-4" title="4">                 <span class="dt">within =</span> <span class="kw">c</span>(treatment, temps))</a>
+<a class="sourceLine" id="cb12-5" title="5"></a>
+<a class="sourceLine" id="cb12-6" title="6"><span class="kw">get_anova_table</span>(lm)</a></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+##            Effect  DFn   DFd      F        p p&lt;.05   ges
+## 1       treatment 1.00 11.00 15.541 2.00e-03     * 0.059
+## 2           temps 1.31 14.37 27.369 5.03e-05     * 0.049
+## 3 treatment:temps 2.00 22.00 30.424 4.63e-07     * 0.050</code></pre>
+<p>Il existe une interaction statistiquement significative entre le traitement et le temps, F(2, 22) = 30,4, p &lt; 0,0001.</p>
+<p>Mais vérifions les hypothèses de validité de l’ANOVA.</p>
+</div>
+<div id="vérification-des-hypothèses-1" class="section level2">
+<h2><span class="header-section-number">4.7</span> Vérification des hypothèses</h2>
+<div id="hypothèse-de-normalité-1" class="section level3">
+<h3><span class="header-section-number">4.7.1</span> Hypothèse de normalité</h3>
+<p>Calculer le test de Shapiro-Wilk pour chaque combinaison de niveaux des facteurs :</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(treatment, temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="st">  </span><span class="kw">shapiro_test</span>(score)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 5
+##   treatment temps variable statistic      p
+##   &lt;fct&gt;     &lt;fct&gt; &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 ctr       t1    score        0.828 0.0200
+## 2 ctr       t2    score        0.868 0.0618
+## 3 ctr       t3    score        0.887 0.107 
+## 4 Diet      t1    score        0.919 0.279 
+## 5 Diet      t2    score        0.923 0.316 
+## 6 Diet      t3    score        0.886 0.104</code></pre>
+<p>Le score d’estime de soi est normalement distribué à chaque point dans le temps (p &gt; 0,05), sauf pour le traitement ctr à t1, tel qu’évalué par le test de Shapiro-Wilk.</p>
+</div>
+<div id="qq-plot-pour-chaque-cellule-du-plan" class="section level3">
+<h3><span class="header-section-number">4.7.2</span> QQ-plot pour chaque cellule du plan</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">ggqqplot</span>(selfesteem2, <span class="st">&quot;score&quot;</span>, <span class="dt">ggtheme =</span> <span class="kw">theme_bw</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="st">  </span><span class="kw">facet_grid</span>(temps <span class="op">~</span><span class="st"> </span>treatment, <span class="dt">labeller =</span> <span class="st">&quot;label_both&quot;</span>)</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>D’après le graphique ci-dessus, comme tous les points se situent approximativement le long de la ligne de référence, nous pouvons supposer une normalité.</p>
+<blockquote>
+<p>Les résultats de l’ANOVA sont donc valides.</p>
+</blockquote>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">get_anova_table</span>(lm)</a></code></pre></div>
+<pre><code>## ANOVA Table (type III tests)
+## 
+##            Effect  DFn   DFd      F        p p&lt;.05   ges
+## 1       treatment 1.00 11.00 15.541 2.00e-03     * 0.059
+## 2           temps 1.31 14.37 27.369 5.03e-05     * 0.049
+## 3 treatment:temps 2.00 22.00 30.424 4.63e-07     * 0.050</code></pre>
+</div>
+</div>
+<div id="tests-post-hoc-1" class="section level2">
+<h2><span class="header-section-number">4.8</span> Tests post-hoc</h2>
+<p>Une interaction significative à deux facteurs indique que l’impact d’un facteur (p. ex., le traitement) sur la variable-réponse (p. ex., l’estime de soi) dépend du niveau de l’autre facteur (p. ex., le temps) (et vice versa). Ainsi, vous pouvez décomposer une interaction significative, à deux facteurs, en :</p>
+<ul>
+<li><p>Effet principal : exécuter le modèle à un facteur avec la première variable (facteur A) à chaque niveau de la deuxième variable (facteur B),</p></li>
+<li><p>Comparaisons par paires : si l’effet principal est significatif, effectuez plusieurs comparaisons par paires pour déterminer quels groupes sont différents.</p></li>
+<li><p>Dans le cas d’une interaction à deux facteurs non significative, vous devez déterminer si vous avez des effets principaux statistiquement significatifs dans le résultat de l’ANOVA.</p></li>
+</ul>
+<div id="procédure-pour-une-interaction-significative-à-deux-facteurs" class="section level3">
+<h3><span class="header-section-number">4.8.1</span> Procédure pour une interaction significative à deux facteurs</h3>
+<div id="effet-du-traitement-à-chaque-instant" class="section level4">
+<h4><span class="header-section-number">4.8.1.1</span> Effet du traitement à chaque instant</h4>
+<p>Dans notre exemple, nous analyserons l’effet du traitement sur l’estime de soi à chaque instant.</p>
+<p>Notez que la variable treatment n’a que deux niveaux (“ctr” et “Diet”) ; ainsi, le test ANOVA et le test t apparié donneront les mêmes p-values.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">one.way &lt;-<span class="st"> </span>selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> score, <span class="dt">wid =</span> id, <span class="dt">within =</span> treatment) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb19-5" title="5"><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</a>
+<a class="sourceLine" id="cb19-6" title="6">one.way</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 9
+##   temps Effect      DFn   DFd      F       p `p&lt;.05`      ges   p.adj
+## * &lt;fct&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+## 1 t1    treatment     1    11  0.376 0.552   &quot;&quot;      0.000767 1      
+## 2 t2    treatment     1    11  9.03  0.012   &quot;*&quot;     0.052    0.036  
+## 3 t3    treatment     1    11 30.9   0.00017 &quot;*&quot;     0.199    0.00051</code></pre>
+<p><strong>Comparaisons par paires entre les groupes de traitement</strong></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">pwc &lt;-<span class="st"> </span>selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-3" title="3"><span class="st">  </span><span class="kw">pairwise_t_test</span>(score <span class="op">~</span><span class="st"> </span>treatment, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-4" title="4"><span class="st">  </span><span class="kw">select</span>(temps, group1, group2, statistic, p, p.adj, p.adj.signif)</a>
+<a class="sourceLine" id="cb21-5" title="5">pwc</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 7
+##   temps group1 group2 statistic       p   p.adj p.adj.signif
+##   &lt;fct&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;       
+## 1 t1    ctr    Diet       0.613 0.552   0.552   ns          
+## 2 t2    ctr    Diet      -3.00  0.012   0.012   *           
+## 3 t3    ctr    Diet      -5.56  0.00017 0.00017 ***</code></pre>
+<p>Si l’on considère la p-value corrigée de Bonferroni (p.adj), on peut voir que l’effet principal du traitement n’était pas significatif à t1 (p = 0.552). Elle devient significative à t2 (p = 0,012) et t3 (p = 0,00017).</p>
+<p>Les comparaisons par paires montrent que le score moyen d’estime de soi est significativement différent entre le groupe ctr et le groupe Diet à t2 (p = 0,012) et t3 (p = 0,00017) mais pas à t1 (p = 0,55).</p>
+</div>
+<div id="effet-du-temps-à-chaque-niveau-de-traitement" class="section level4">
+<h4><span class="header-section-number">4.8.1.2</span> Effet du temps à chaque niveau de traitement</h4>
+<p>Notez qu’il est également possible d’effectuer la même analyse pour l’option temps variable à chaque niveau du traitement. Vous n’avez pas nécessairement besoin de faire cette analyse.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">one.way2 &lt;-<span class="st"> </span>selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(treatment) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="st">  </span><span class="kw">anova_test</span>(<span class="dt">dv =</span> score, <span class="dt">wid =</span> id, <span class="dt">within =</span> temps) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="st">  </span><span class="kw">get_anova_table</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-5" title="5"><span class="st">  </span><span class="kw">adjust_pvalue</span>(<span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</a>
+<a class="sourceLine" id="cb23-6" title="6">one.way2</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 9
+##   treatment Effect   DFn   DFd      F          p `p&lt;.05`      ges     p.adj
+##   &lt;fct&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1 ctr       temps      2    22 39.7   0.00000005 &quot;*&quot;     0.145    0.0000001
+## 2 Diet      temps      2    22  0.078 0.925      &quot;&quot;      0.000197 1</code></pre>
+<p><strong>Comparaisons par paires entre les points dans le temps</strong></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">pwc2 &lt;-<span class="st"> </span>selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(treatment) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw">pairwise_t_test</span>(score <span class="op">~</span><span class="st"> </span>temps, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb25-4" title="4"><span class="st">  </span><span class="kw">select</span>(treatment, group1, group2, statistic, p, p.adj, p.adj.signif)</a>
+<a class="sourceLine" id="cb25-5" title="5">pwc2</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 7
+##   treatment group1 group2 statistic         p     p.adj p.adj.signif
+##   &lt;fct&gt;     &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       
+## 1 ctr       t1     t2         4.53  0.000858  0.003     **          
+## 2 ctr       t1     t3         6.91  0.0000255 0.0000765 ****        
+## 3 ctr       t2     t3         6.49  0.0000449 0.000135  ***         
+## 4 Diet      t1     t2        -0.522 0.612     1         ns          
+## 5 Diet      t1     t3        -0.102 0.921     1         ns          
+## 6 Diet      t2     t3         0.283 0.782     1         ns</code></pre>
+<p>Après avoir exécuté ces codes, vous pouvez voir que l’effet du temps n’est significatif que pour l’essai contrôle, F(2, 22) = 39.7, p &lt; 0.0001. Les comparaisons par paires montrent que toutes les comparaisons entre les différents temps étaient statistiquement significatives pour l’essai contrôle.</p>
+</div>
+</div>
+<div id="procédure-pour-une-interaction-non-significative-à-deux-facteurs" class="section level3">
+<h3><span class="header-section-number">4.8.2</span> Procédure pour une interaction non significative à deux facteurs</h3>
+<p>Si l’interaction n’est pas significative, il faut interpréter les principaux effets pour chacune des deux variables : treatment et temps. Un effet principal significatif peut être suivi par des comparaisons par paires.</p>
+<p>Dans notre exemple (voir tableau ANOVA dans <code>lm</code>), il y avait un effet principal statistiquement significatif du traitement (F(1, 11) = 15,5, p = 0,002) et du temps (F(2, 22) = 27,4, p &lt; 0,0001) sur le score de l’estime de soi.</p>
+<div id="comparaisons-par-paires-à-laide-du-t-test-apparié" class="section level4">
+<h4><span class="header-section-number">4.8.2.1</span> Comparaisons par paires à l’aide du t-test apparié:</h4>
+<p><strong>comparaisons pour la variable traitement</strong></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">pairwise_t_test</span>(score <span class="op">~</span><span class="st"> </span>treatment, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-3" title="3"><span class="st">  </span><span class="kw">select</span>(group1, group2, statistic, p, p.adj, p.adj.signif)</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 6
+##   group1 group2 statistic        p    p.adj p.adj.signif
+##   &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;       
+## 1 ctr    Diet       -4.35 0.000113 0.000113 ***</code></pre>
+<p><strong>comparaisons pour la variable temps</strong></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">selfesteem2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="st">  </span><span class="kw">pairwise_t_test</span>(score <span class="op">~</span><span class="st"> </span>temps, <span class="dt">paired =</span> <span class="ot">TRUE</span>, <span class="dt">p.adjust.method =</span> <span class="st">&quot;bonferroni&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="st">  </span><span class="kw">select</span>(group1, group2, statistic, p, p.adj, p.adj.signif)</a></code></pre></div>
+<pre><code>## # A tibble: 3 x 6
+##   group1 group2 statistic     p p.adj p.adj.signif
+##   &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       
+## 1 t1     t2          2.86 0.009 0.027 *           
+## 2 t1     t3          3.70 0.001 0.004 **          
+## 3 t2     t3          3.75 0.001 0.003 **</code></pre>
+<p>Toutes les comparaisons par paires sont significatives.</p>
+</div>
+</div>
+<div id="rapporter-1" class="section level3">
+<h3><span class="header-section-number">4.8.3</span> Rapporter</h3>
+<p>Nous pourrions rapporter le résultat comme suit :</p>
+<blockquote>
+<p>Une ANOVA à deux facteurs sur mesures répétées a été effectuée pour évaluer l’effet de différents traitements diététiques sur l’estime de soi au fil du temps.</p>
+<p>Il y avait une interaction statistiquement significative entre le traitement et le temps sur l’estime de soi, F(2, 22) = 30,4, p &lt; 0,0001. Par conséquent, l’effet de la variable treatment a été analysé à chaque point de time. Les p-values ont été ajustées à l’aide de la méthode de correction des tests multiples de Bonferroni. L’effet du traitement était significatif à t2 (p = 0,036) et t3 (p = 0,00051), mais pas au temps t1 (p = 1).</p>
+<p>Des comparaisons par paires, utilisant le test t apparié, montrent que le score moyen d’estime de soi était significativement différent entre l’essai ctr et l’essai Diet aux temps t2 (p = 0,012) et t3 (p = 0,00017) mais pas à t1 (p = 0,55).</p>
+</blockquote>
+</div>
+<div id="visualisation-boxplots-avec-p-values-2" class="section level3">
+<h3><span class="header-section-number">4.8.4</span> Visualisation : Boxplots avec p-values</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">pwc &lt;-<span class="st"> </span>pwc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_xy_position</span>(<span class="dt">x =</span> <span class="st">&quot;temps&quot;</span>)</a>
+<a class="sourceLine" id="cb31-2" title="2"></a>
+<a class="sourceLine" id="cb31-3" title="3">bxp <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-4" title="4"><span class="st">  </span><span class="kw">stat_pvalue_manual</span>(pwc, <span class="dt">tip.length =</span> <span class="dv">0</span>, <span class="dt">hide.ns =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb31-5" title="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="kw">get_test_label</span>(lm, <span class="dt">detailed =</span> <span class="ot">TRUE</span>), <span class="dt">caption =</span> <span class="kw">get_pwc_label</span>(pwc)</a>
+<a class="sourceLine" id="cb31-6" title="6">  )</a></code></pre></div>
+<p><img src="Tutozco_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="test-de-friedman-avec-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="test-de-chi-deux-avec-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Tutozco.pdf", "Tutozco.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

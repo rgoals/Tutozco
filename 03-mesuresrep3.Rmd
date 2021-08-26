@@ -1,0 +1,267 @@
+---
+title: "Mesures répétées 3"
+author: "zco"
+date: "22/08/2021"
+output: html_document
+---
+
+
+# [ANOVA à trois facteurs sur mesures répétées](https://www.datanovia.com/en/fr/lessons/anova-sur-mesures-repetees-dans-r/)
+
+
+## Les librairies
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse) # pour la manipulation et la visualisation des données
+library(ggpubr)    # pour créer facilement des graphiques prêts à la publication
+library(rstatix)   # contient des fonctions R facilitant les analyses statistiques
+library(datarium)  # contient les jeux de données requis pour ce chapitre
+```
+
+
+## Préparation des données
+
+Nous utiliserons le jeu de données `weightloss [package datarium]`. Dans cette étude, un chercheur voulait évaluer les effets de l’alimentation et de l’exercice sur la perte de poids chez 10 personnes sédentaires.
+
+Les participants ont été inclus dans quatre essais : 
+
+1. pas de régime et pas d’exercices 
+1. régime seulement
+1. exercices seulement
+1. régime et exercices combinés.
+
+Chaque participant a effectué les quatre essais. L’ordre des essais a été contrebalancé et un délai suffisant a été respecté entre les essais pour que les effets des essais précédents puissent se dissiper.
+
+Chaque essai a duré neuf semaines et le score de perte de poids a été mesuré 
+
+- au début (`t1`), 
+- au milieu (`t2`) 
+- et à la fin (`t3`) de chaque essai.
+
+L’ANOVA à trois facteurs, sur mesures répétées, peut être effectuée afin de déterminer s’il y a une interaction significative entre le régime alimentaire, les exercices et le temps sur le score de perte de poids.
+
+Charger les données et afficher quelques lignes aléatoires par groupes :
+
+```{r}
+data("weightloss", package = "datarium")
+set.seed(123)
+weightloss %>% sample_n_by(diet, exercises, size = 2)
+```
+
+Rassemblez les colonnes `t1`, `t2` et `t3` en format long. Convertir l'identifiant et le temps en facteurs.
+
+```{r}
+weightloss <- weightloss %>%
+  gather(key = "temps", value = "score", t1, t2, t3) %>%
+  convert_as_factor(id, temps)
+```
+
+Inspecter quelques lignes aléatoires des données par groupes.
+
+```{r}
+set.seed(123)
+weightloss %>% sample_n_by(diet, exercises, temps, size = 1)
+```
+
+Dans cet exemple, l’effet du “temps” est notre variable focale, c’est-à-dire notre première cible.
+
+On pense que l’effet du “temps” sur le score de perte de poids dépendra des deux autres facteurs, “régime” et “exercices”, que l’on appelle variables modératrices.
+
+## Statistiques descriptives
+
+Regroupez les données par `diet`, `exercises` et `temps`, puis calculez quelques statistiques sommaires de la variable score : moyenne et sd (écart type)
+
+```{r}
+weightloss %>%
+  group_by(diet, exercises, temps) %>%
+  get_summary_stats(score, type = "mean_sd")
+```
+
+
+## Visualisation
+
+Créer des box plots :
+
+```{r}
+bxp <- ggplot(weightloss, aes(x = exercises, y = score, color = temps)) +
+          geom_boxplot() +
+          facet_grid(. ~ diet)
+bxp
+```
+
+
+## Vérifier les hypothèses
+
+### Valeurs aberrantes
+
+```{r}
+weightloss %>%
+  group_by(diet, exercises, temps) %>%
+  identify_outliers(score)
+```
+
+Il n’y a pas de valeurs extrêmes aberrantes.
+
+
+### Hypothèse de normalité
+
+Calculer le test de Shapiro-Wilk pour chaque combinaison de niveaux des facteurs :
+
+```{r}
+weightloss %>%
+  group_by(diet, exercises, temps) %>%
+  shapiro_test(score)
+```
+
+Le score de perte de poids était normalement distribué, tel qu’évalué par le test de normalité de Shapiro-Wilk (p > .05).
+
+### Créer un QQ plot pour chaque cellule du plan
+
+```{r}
+ggqqplot(weightloss, "score", ggtheme = theme_bw()) +
+  facet_grid(diet + exercises ~ temps, labeller = "label_both")
+```
+
+D’après le graphique ci-dessus, comme tous les points se situent approximativement le long de la ligne de référence, nous pouvons supposer une normalité.
+
+
+### Le modèle
+
+```{r}
+lm <- anova_test(data = weightloss, 
+                 dv = score, 
+                 wid = id, 
+                 within = c(diet, exercises, temps))
+get_anova_table(lm)
+```
+
+D’après les résultats ci-dessus, on peut voir qu’il existe une interaction, à trois facteurs, statistiquement significative entre le régime alimentaire, les exercices et le temps, F(2, 22) = 14,24, p = 0,00011.
+
+Notez que, si l’interaction à trois facteurs n’est pas statistiquement significative, vous devez consulter les interactions à deux facteurs dans le résultat.
+
+Dans notre exemple, il y avait des interactions statistiquement significatives: diet:exercises (p < 0,0001) et exercises:temps (p < 0,0001). L’interaction diet:temps (régime:temps) n’était pas statistiquement significative (p = 0,05).
+
+
+## Tests post-hoc
+
+S’il y a un effet significatif d’interaction à trois facteurs, vous pouvez le décomposer en :
+
+- Interaction à deux facteurs : exécuter l’interaction, à deux facteurs, à chaque niveau de la troisième variable,
+
+- Effet principal : exécuter un modèle, à un facteur, à chaque niveau de la deuxième variable, et,
+
+- Comparaisons par paires : effectuer des comparaisons par paires ou d’autres comparaisons post-hoc si nécessaire.
+
+## Calculer l’interaction à deux facteurs
+
+Vous êtes libre de décider des deux variables qui formeront les interactions à deux facteurs et quelle variable agira comme troisième variable (modératrice). Dans le code R suivant, nous avons considéré l’interaction exercices*temps à chaque niveau de diet.
+
+Regroupez les données par diet (régime) et analysez l’interaction entre exercises et temps:
+
+### ANOVA à deux facteurs à chaque niveau de diet
+
+```{r}
+two.way <- weightloss %>%
+  group_by(diet) %>%
+  anova_test(dv = score, wid = id, within = c(exercises, temps))
+two.way
+```
+
+**Extraire le tableau anova**
+
+```{r}
+get_anova_table(two.way)
+```
+
+Il y a une interaction statistiquement significative entre les exercices et le temps pour l’essai “diet no” (sans régime), F(2, 22) = 28,9, p < 0,0001, mais pas pour l’essai “diet yes” (avec régime), F(2, 22) = 2,6, p = 0,099.
+
+> **Notez
+>
+> qu’il est recommandé d’ajuster la p-value pour les tests multiples. Une approche courante consiste à appliquer un ajustement de Bonferroni pour réduire le niveau auquel vous déclarez la significativité statistique.
+>
+> Pour ce faire, divisez le niveau actuel auquel vous déclarez une significativité statistique (p < 0,05) par le nombre d’interactions, à deux facteurs, que vous analysez (c.-à-d. 2).
+>
+> Ainsi, vous ne déclarez une interaction comme statistiquement significative que lorsque p < 0,025 (c.-à-d. p < 0,05/2). En appliquant cela à notre exemple actuel, nous tirerions toujours les mêmes conclusions.
+
+**Calculer l’effet principal**
+
+Une interaction à deux facteurs statistiquement significative peut être suivie par une analyse des effets principaux.
+
+Dans notre exemple, vous pourriez donc étudier l’effet du temps (temps) sur le score de la perte de poids (score) à chaque niveau de la variable exercices ou étudier l’effet de la variable exercices à chaque niveau de temps.
+
+Vous n’aurez qu’à tenir compte du résultat des analyses des effets principaux de l’essai “diet no” (pas de régime), car il s’agit de la seule interaction, à deux facteur, statistiquement significative (voir section précédente).
+
+Regrouper les données par diet and exercises, et analyser l’effet principal simple de temps. L’ajustement de Bonferroni sera considéré, ce qui conduit à un seuil de significativité statistique p < 0,025 (soit 0,05 divisé par le nombre de tests (ici 2) considérés pour l’essai “diet:no”.
+
+### Effet du temps à chaque cellule de régime x exercices
+
+```{r}
+temps.effect <- weightloss %>%
+  group_by(diet, exercises) %>%
+  anova_test(dv = score, wid = id, within = temps)
+temps.effect
+```
+
+**Extraire le tableau anova**
+
+```{r}
+get_anova_table(temps.effect) %>%
+  filter(diet == "no")
+```
+
+Il y avait un effet principal statistiquement significatif du temps sur le score de perte de poids pour le groupe “diet:no,exercises:yes” (p < 0,0001), mais pas pour les cas où ni régime ni exercices n’ont été effectués (p = 0,286).
+Calculer les comparaisons entre groupes
+
+Un effet principal statistiquement significatif peut être suivi de multiples comparaisons par paires pour déterminer quelles moyennes de groupe sont différentes.
+
+Regroupez les données par diet et exercices, et effectuez des comparaisons par paires entre les points de temps en appliquant l’ajustement de Bonferroni:
+
+## Comparaisons par paires
+
+```{r}
+pwc <- weightloss %>%
+  group_by(diet, exercises) %>%
+  pairwise_t_test(score ~ temps, paired = TRUE, p.adjust.method = "bonferroni") %>%
+  select(-df, -statistic) # Supprimer les détails
+```
+
+**Afficher les résultats de la comparaison pour les groupes `diet:no, exercises:yes`**
+
+```{r}
+pwc %>% 
+  filter(diet == "no", exercises == "yes") %>%
+  select(-p)     # enlever les colonnes p
+```
+
+Dans le tableau de comparaison par paires ci-dessus, nous ne nous intéressons qu’aux comparaisons pour les groupes “diet:no,exercises:yes”. Dans notre exemple, il existe trois combinaisons possibles de différences de groupe. Nous pourrions présenter les résultats de la comparaison par paires comme suit.
+
+Toutes les comparaisons par paires ont été effectuées entre les différents temps pour l’essai “diet:no,exercises:yes”. L’ajustement Bonferroni a été appliqué. Le score moyen de perte de poids était significativement différent dans toutes les comparaisons à tous les temps lorsque des exercices sont effectués (p < 0,05).
+Rapporter
+
+L’ANOVA à trois facteurs sur mesures répétées a été effectuée pour évaluer les effets de l’alimentation, de l’exercice et du temps sur la perte de poids. Il y avait une interaction, à trois facteurs, statistiquement significative entre l’alimentation, les exercices et le temps, F(2, 22) = 14,2, p = 0,00011.
+
+Pour les interactions à deux facteurs et les effets principaux, un ajustement de Bonferroni a été appliqué conduisant à un seuil de significativité statistique accepté de p < 0,025.
+
+Il y a une interaction statistiquement significative entre les exercices et le temps pour l’essai “diet no” (sans régime), F(2, 22) = 28,9, p < 0,0001, mais pas pour l’essai “diet yes” (avec régime), F(2, 22) = 2,6, p = 0,099.
+
+Il y avait un effet principal statistiquement significatif du temps sur le score de perte de poids pour l’essai “diet:no,exercises:yes” (p < 0.0001), mais pas pour les cas où ni le régime ni les exercices n’étaient effectués (p = 0.286).
+
+Toutes les comparaisons par paires ont été effectuées entre les différents temps pour l’essai “diet:no,exercises:yes” avec un ajustement de Bonferroni appliqué. Le score moyen de perte de poids était significativement différent dans toutes les comparaisons à tous les temps lorsque des exercices sont effectués (p < 0,05).
+
+## Visualisation : Boxplots avec p-values
+
+```{r}
+pwc <- pwc %>% add_xy_position(x = "exercises")
+
+pwc.filtered <- pwc %>% 
+  filter(diet == "no", exercises == "yes")
+
+bxp + 
+  stat_pvalue_manual(pwc.filtered, tip.length = 0, hide.ns = TRUE) +
+  labs(subtitle = get_test_label(lm, detailed = TRUE), caption = get_pwc_label(pwc))
+```
+
+
+## Résumé
+
+Ce chapitre décrit comment calculer, interpréter et rapporter l’ANOVA sur mesures répétées dans R. Nous expliquons également les hypothèses faites par les tests ANOVA sur mesures répétées et fournissons des exemples pratiques de codes R pour vérifier si les hypothèses des tests sont respectées.

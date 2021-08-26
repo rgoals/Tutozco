@@ -399,7 +399,7 @@ Notez qu’il existe différentes fonctions R pour calculer l’ANOVA à 1 facte
 
 - `welch_anova_test()` [rstatix] : peut être utilisé lorsque l’hypothèse d’homogénéité de variance est violée (_alors que normalité est respectée ? - vérifier_), comme dans notre exemple.
 
-- `kruskal_test()` [rstatix] : Test de Kruskal-Wallis, une alternative non paramétrique au test ANOVA à 1 facteur
+- `kruskal_test()` [rstatix] : Test de Kruskal-Wall is, une alternative non paramétrique au test ANOVA à 1 facteur
 
 Les codes R suivants montrent comment utiliser chacune de ces fonctions :
 
