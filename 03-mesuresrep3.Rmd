@@ -21,7 +21,7 @@ library(datarium)  # contient les jeux de données requis pour ce chapitre
 
 ## Préparation des données
 
-Nous utiliserons le jeu de données `weightloss [package datarium]`. Dans cette étude, un chercheur voulait évaluer les effets de l’alimentation et de l’exercice sur la perte de poids chez 10 personnes sédentaires.
+Nous utiliserons le jeu de données `weightloss [package datarium]`. Dans cette étude, un chercheur voulait évaluer les effets de l’alimentation et de l’exercice sur la perte de poids chez 12 personnes sédentaires.
 
 Les participants ont été inclus dans quatre essais : 
 
@@ -38,7 +38,7 @@ Chaque essai a duré neuf semaines et le score de perte de poids a été mesuré
 - au milieu (`t2`) 
 - et à la fin (`t3`) de chaque essai.
 
-L’ANOVA à trois facteurs, sur mesures répétées, peut être effectuée afin de déterminer s’il y a une interaction significative entre le régime alimentaire, les exercices et le temps sur le score de perte de poids.
+L’ANOVA à 3 facteurs, sur mesures répétées, peut être effectuée afin de déterminer s’il y a une interaction significative entre le régime alimentaire, les exercices et le temps sur le score de perte de poids.
 
 Charger les données et afficher quelques lignes aléatoires par groupes :
 

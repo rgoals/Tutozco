@@ -290,7 +290,7 @@ Dans ce cas de figure, deux solutions sont envisageables :
 
 - La seconde solution consiste à réaliser les comparaisons des moyennes relatives aux modalités d’un facteur, séparément pour chacune des modalités de l’autre facteur. Par exemple, comparer les moyennes des usures des tensions Faible, Moyenne et Élevée pour les laines de type A d’une part, et de type B d’autre part.
 
-> Dans l’esprit, c’est un peu comme si on faisait une ANOVA à un facteur (qui serait la Tension) et ses comparaisons multiples subséquentes (pour chaque modalité de laine (A ou B)).
+> Dans l’esprit, c’est un peu comme si on faisait une ANOVA à un facteur (qui serait la Tension) et ses comparaisons multiples subséquentes (pour chaque modalité de laine, A ou B).
 >
 > En pratique, cette 2nde approche nécessite de construire une matrice de contrastes afin de définir les comparaisons souhaitées.
 
